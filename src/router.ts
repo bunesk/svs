@@ -1,9 +1,8 @@
-import {createRouter, createWebHashHistory} from 'vue-router';
-import Error404 from '../views/Error404.vue';
-import Home from '../views/Home.vue';
-import Song from '../views/Song.vue';
+import {createRouter, createMemoryHistory, createWebHistory} from 'vue-router';
+import Error404 from './views/Error404.vue';
+import Home from './views/Home.vue';
 
-export const install = (app: any) => {
+export default (app: any) => {
   const pages = ['imprint'];
   const capitalize = ([first, ...rest] : string) => first.toUpperCase() + rest.join('');
 
@@ -21,9 +20,14 @@ export const install = (app: any) => {
 
   // create router instance and pass the `routes` option
   const router = createRouter({
-    history: createWebHashHistory(),
+    // use appropriate history implementation for server/client
+    // import.meta.env.SSR is injected by Vite.
+    history: import.meta.env.SSR
+      ? createMemoryHistory()
+      : createWebHistory(),
     routes,
   });
 
   app.use(router);
+  return router;
 };
