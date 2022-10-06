@@ -19,7 +19,7 @@ export default defineConfig(({ command, ssrBuild }) => ({
   plugins: [
     vue(),
     // unplugin-vue-components
-    Components({}),
+    Components({dts: 'src/types/components.d.ts',}),
     {
       name: 'virtual',
       resolveId(id) {

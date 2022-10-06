@@ -25,6 +25,8 @@ The recommended IDE is [VSCode](https://code.visualstudio.com/) using the follow
 
 ## Project setup
 
+### Install dependencies
+
 ```
 npm install
 ```
@@ -37,18 +39,28 @@ npm start
 
 ### Build for production site
 
+If you want to build the app for production run:
+
 ```
 npm run build
 ```
+
+Then you can execute the build running:
+
+```
+npm run serve
+```
+
+If you want to build the app as a static site instead:
+
+```
+npm run build::static
+```
+
+After that you can copy the files within `dist/static` to your web server.
 
 ### Update dependencies
 
 ```
 npm run update
-```
-
-This requires `npm-check` to be globally installed. If you don't have it installed first run:
-
-```
-npm install --global npm-check
 ```

@@ -13,7 +13,7 @@ export default (app: any) => {
       name: page,
       path: `/${page}`,
       component: () =>
-        import(`../views/${capitalize(page as any)}.vue`).catch(() => Error404),
+        import(`./views/${capitalize(page as any)}.vue`).catch(() => Error404),
     })),
     {name: 'error404', path: '/:pathMatch(.*)*', component: Error404},
   ];
