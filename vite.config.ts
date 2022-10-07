@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import {defineConfig} from 'vite';
 import vue from '@vitejs/plugin-vue';
 import Components from 'unplugin-vue-components/vite';
 
@@ -14,12 +14,12 @@ const base = '/';
 globalThis.__vite_test_filename = __filename;
 globalThis.__vite_test_dirname = __dirname;
 
-export default defineConfig(({ command, ssrBuild }) => ({
+export default defineConfig(({command, ssrBuild}) => ({
   base,
   plugins: [
     vue(),
     // unplugin-vue-components
-    Components({dts: 'src/types/components.d.ts',}),
+    Components({dts: 'src/types/components.d.ts'}),
     {
       name: 'virtual',
       resolveId(id) {
@@ -28,7 +28,7 @@ export default defineConfig(({ command, ssrBuild }) => ({
         }
       },
       load(id, options) {
-        const ssrFromOptions = options?.ssr ?? false
+        const ssrFromOptions = options?.ssr ?? false;
         if (id === '@foo') {
           // Force a mismatch error if ssrBuild is different from ssrFromOptions
           return `export default { msg: '${
@@ -37,7 +37,7 @@ export default defineConfig(({ command, ssrBuild }) => ({
               : 'hi'
           }' }`;
         }
-      }
+      },
     },
     {
       name: 'virtual-module',
@@ -54,7 +54,7 @@ export default defineConfig(({ command, ssrBuild }) => ({
         } else if (id === nestedVirtualId) {
           return `export const msg = "[success] from conventional virtual file"`;
         }
-      }
+      },
     },
     // Example of a plugin that injects a helper from a virtual module that can
     // be used in renderBuiltUrl
@@ -64,7 +64,7 @@ export default defineConfig(({ command, ssrBuild }) => ({
       const cleanUrl = (url) => url.replace(hashRE, '').replace(queryRE, '');
       let config: any;
 
-      const virtualId = '\0virtual:ssr-vue-built-url'
+      const virtualId = '\0virtual:ssr-vue-built-url';
       return {
         name: 'built-url',
         enforce: 'post',
@@ -80,7 +80,7 @@ export default defineConfig(({ command, ssrBuild }) => ({
           if (id === virtualId) {
             return {
               code: `export const __ssr_vue_processAssetPath = (url) => '${base}' + url`,
-              moduleSideEffects: 'no-treeshake'
+              moduleSideEffects: 'no-treeshake',
             };
           }
         },
@@ -95,23 +95,23 @@ export default defineConfig(({ command, ssrBuild }) => ({
               code:
                 `import { __ssr_vue_processAssetPath } from '${virtualId}';__ssr_vue_processAssetPath;` +
                 code,
-              sourcemap: null // no sourcemap support to speed up CI
+              sourcemap: null, // no sourcemap support to speed up CI
             };
           }
-        }
-      }
-    })()
+        },
+      };
+    })(),
   ],
   experimental: {
-    renderBuiltUrl(filename, { hostType, type, ssr }) {
+    renderBuiltUrl(filename, {hostType, type, ssr}) {
       if (ssr && type === 'asset' && hostType === 'js') {
         return {
-          runtime: `__ssr_vue_processAssetPath(${JSON.stringify(filename)})`
+          runtime: `__ssr_vue_processAssetPath(${JSON.stringify(filename)})`,
         };
       }
-    }
+    },
   },
   build: {
-    minify: false
+    minify: false,
   },
 }));
