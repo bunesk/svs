@@ -1,9 +1,9 @@
-import { basename } from 'node:path';
-import { renderToString } from 'vue/server-renderer';
+import {basename} from 'node:path';
+import {renderToString} from 'vue/server-renderer';
 import createApp from '../main';
 
 export async function render(url: string, manifest: any) {
-  const { app, router } = createApp();
+  const {app, router} = createApp();
 
   // set the router to the desired URL before rendering
   await router.push(url);
@@ -20,7 +20,7 @@ export async function render(url: string, manifest: any) {
   // which we can then use to determine what files need to be preloaded for this
   // request.
   const preloadLinks = renderPreloadLinks(ctx.modules, manifest);
-  return [html, preloadLinks]
+  return [html, preloadLinks];
 }
 
 function renderPreloadLinks(modules: Array<string>, manifest: any) {
@@ -41,9 +41,9 @@ function renderPreloadLinks(modules: Array<string>, manifest: any) {
           }
           links += renderPreloadLink(file);
         }
-      })
+      });
     }
-  })
+  });
   return links;
 }
 

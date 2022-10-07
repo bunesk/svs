@@ -4,7 +4,8 @@ import Home from './views/Home.vue';
 
 export default (app: any) => {
   const pages = ['imprint'];
-  const capitalize = ([first, ...rest] : string) => first.toUpperCase() + rest.join('');
+  const capitalize = ([first, ...rest]: string) =>
+    first.toUpperCase() + rest.join('');
 
   // define some routes
   const routes = [
@@ -22,9 +23,7 @@ export default (app: any) => {
   const router = createRouter({
     // use appropriate history implementation for server/client
     // import.meta.env.SSR is injected by Vite.
-    history: import.meta.env.SSR
-      ? createMemoryHistory()
-      : createWebHistory(),
+    history: import.meta.env.SSR ? createMemoryHistory() : createWebHistory(),
     routes,
   });
 

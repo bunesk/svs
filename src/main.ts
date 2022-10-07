@@ -1,4 +1,4 @@
-import { createSSRApp } from 'vue';
+import {createSSRApp} from 'vue';
 import App from './App.vue';
 import createRouter from './router';
 
@@ -6,7 +6,9 @@ import createRouter from './router';
 // that creates a fresh app instance.
 export default function () {
   const app = createSSRApp(App);
-  const modules = Object.values(import.meta.glob('./modules/*.ts', {eager: true}));
+  const modules = Object.values(
+    import.meta.glob('./modules/*.ts', {eager: true})
+  );
 
   for (const mod of modules) {
     (mod as any).install?.(app);
@@ -14,4 +16,4 @@ export default function () {
   const router = createRouter(app);
 
   return {app, router};
-};
+}

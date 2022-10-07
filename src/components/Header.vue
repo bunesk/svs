@@ -2,11 +2,9 @@
 </script>
 
 <template>
-    <header>
-      <RouterLink to="/">
-        SVS
-      </RouterLink>
-    </header>
+  <header>
+    <RouterLink to="/"> SVS </RouterLink>
+  </header>
 </template>
 
 <style lang="scss" scoped>

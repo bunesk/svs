@@ -9,11 +9,15 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 const toAbsolute = (p: string) => path.resolve(__dirname, p);
 
+const manifest = // @ts-ignore
+(await import('../../dist/static/ssr-manifest.json', {assert: {type: 'json'}}))
+  .default;
+const template = fs.readFileSync(
+  toAbsolute('../../dist/static/index.html'),
+  'utf-8'
+);
 // @ts-ignore
-const manifest = (await import('../../dist/static/ssr-manifest.json', { assert: { type: "json" } })).default;
-const template = fs.readFileSync(toAbsolute('../../dist/static/index.html'), 'utf-8');
-// @ts-ignore
-const { render } = await import('../../dist/server/entry-server.js');
+const {render} = await import('../../dist/server/entry-server.js');
 
 // determine routes to pre-render from src/views
 const routesToPrerender = fs
