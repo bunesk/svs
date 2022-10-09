@@ -9,9 +9,15 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 const toAbsolute = (p: string) => path.resolve(__dirname, p);
 
-const manifest = // @ts-ignore
-(await import('../../dist/static/ssr-manifest.json', {assert: {type: 'json'}}))
-  .default;
+const manifest = (
+  await import(
+    // @ts-ignore
+    '../../dist/static/ssr-manifest.json',
+    {
+      assert: {type: 'json'},
+    }
+  )
+).default;
 const template = fs.readFileSync(
   toAbsolute('../../dist/static/index.html'),
   'utf-8'
@@ -23,7 +29,6 @@ const {render} = await import('../../dist/server/entry-server.js');
 const routesToPrerender = fs
   .readdirSync(toAbsolute('../../src/views'))
   .map((file) => {
-    console.log(file);
     const name = file.replace(/\.vue$/, '').toLowerCase();
     return name === 'home' ? `/` : `/${name}`;
   });
@@ -41,6 +46,18 @@ const routesToPrerender = fs
     fs.writeFileSync(toAbsolute(filePath), html);
     console.log('pre-rendered:', filePath);
   }
+
+  // create .htaccess
+  fs.copyFile(
+    toAbsolute('./.htaccess.template'),
+    toAbsolute('../../dist/static/.htaccess'),
+    (error) => {
+      if (error) {
+        throw error;
+      }
+      console.log('Successfully created .htaccess');
+    }
+  );
 
   // done, delete ssr manifest
   fs.unlinkSync(toAbsolute('../../dist/static/ssr-manifest.json'));
