@@ -5,12 +5,15 @@ The SVS is a role-based adminstration tool.
 ## Used technologies
 
 - [Vue 3](https://vuejs.org/) (using [`<script setup>` SFCs](https://vuejs.org/api/sfc-script-setup.html))
+- [Express](https://expressjs.com/)
+- [MySQL](https://www.mysql.com/)
 - [Vite](https://vitejs.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [SCSS](https://sass-lang.com/)
 
 ### Used packages
 
+- [Sequelize](https://sequelize.org/)
 - [Vue Router](https://router.vuejs.org/)
 - [VueUse](https://vueuse.org/)
 - [Unplugin Vue Components](https://www.npmjs.com/package/unplugin-vue-components)
@@ -18,6 +21,7 @@ The SVS is a role-based adminstration tool.
 ## Recommended IDE Setup
 
 The recommended IDE is [VSCode](https://code.visualstudio.com/) using the following extensions:
+
 - [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur)
 - [Volar](https://marketplace.visualstudio.com/items?itemName=vue.volar)
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
