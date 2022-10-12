@@ -8,33 +8,24 @@ import path from 'node:path';
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 const toAbsolute = (p: string) => path.resolve(__dirname, p);
+const baseUrl = toAbsolute('../..');
 
 const manifest = (
-  await import(
-    // @ts-ignore
-    '../../dist/static/ssr-manifest.json',
-    {
-      assert: {type: 'json'},
-    }
-  )
+  await import(`${baseUrl}/dist/static/ssr-manifest.json`, {
+    assert: {type: 'json'},
+  })
 ).default;
-const template = fs.readFileSync(
-  toAbsolute('../../dist/static/index.html'),
-  'utf-8'
-);
-// @ts-ignore
-const {render} = await import('../../dist/server/entry-server.js');
+const template = fs.readFileSync(`${baseUrl}/dist/static/index.html`, 'utf-8');
+const {render} = await import(`${baseUrl}/dist/server/entry-server.js`);
 
 // determine routes to pre-render from src/views
-const routesToPrerender = fs
-  .readdirSync(toAbsolute('../../src/views'))
-  .map((file) => {
-    const name = file.replace(/\.vue$/, '').toLowerCase();
-    return name === 'home' ? `/` : `/${name}`;
-  });
+const routesToPrerender = fs.readdirSync(`${baseUrl}/src/views`).map((file) => {
+  const name = file.replace(/\.vue$/, '').toLowerCase();
+  return name === 'home' ? `/` : `/${name}`;
+});
 
-(async () => {
-  // pre-render each route...
+// pre-render each route
+const prerenderRoutes = async () => {
   for (const url of routesToPrerender) {
     const [appHtml, preloadLinks] = await render(url, manifest);
 
@@ -42,15 +33,19 @@ const routesToPrerender = fs
       .replace(`<!--preload-links-->`, preloadLinks)
       .replace(`<!--app-html-->`, appHtml);
 
-    const filePath = `../../dist/static${url === '/' ? '/index' : url}.html`;
-    fs.writeFileSync(toAbsolute(filePath), html);
+    const filePath = `${baseUrl}/dist/static${
+      url === '/' ? '/index' : url
+    }.html`;
+    fs.writeFileSync(filePath, html);
     console.log('pre-rendered:', filePath);
   }
+};
 
-  // create .htaccess
+// define rules for redirects
+const createHtaccess = () => {
   fs.copyFile(
     toAbsolute('./.htaccess.template'),
-    toAbsolute('../../dist/static/.htaccess'),
+    `${baseUrl}/dist/static/.htaccess`,
     (error) => {
       if (error) {
         throw error;
@@ -58,7 +53,12 @@ const routesToPrerender = fs
       console.log('Successfully created .htaccess');
     }
   );
+};
+
+(async () => {
+  await prerenderRoutes();
+  createHtaccess();
 
   // done, delete ssr manifest
-  fs.unlinkSync(toAbsolute('../../dist/static/ssr-manifest.json'));
+  fs.unlinkSync(`${baseUrl}/dist/static/ssr-manifest.json`);
 })();
