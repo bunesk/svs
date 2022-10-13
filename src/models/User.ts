@@ -8,7 +8,6 @@ class User extends Model {
   declare isTutor: boolean;
 }
 
-// initialize by defining columns
 User.init({
   firstName: {
     type: DataTypes.STRING,
@@ -29,8 +28,5 @@ User.init({
     allowNull: false,
   },
 });
-
-// create table if not exists
-await User.sync();
 
 export default User;

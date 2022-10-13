@@ -36,8 +36,8 @@ class DatabaseConnection {
    */
   connectionEstablished: Promise<any>;
 
-  private resolveConnectionEstablished: any;
-  private rejectConnectionEstablished: any;
+  private resolveConnectionEstablished: Function = () => {};
+  private rejectConnectionEstablished: Function = () => {};
 
   constructor() {
     this.connectionEstablished = new Promise((resolve, reject) => {
@@ -61,8 +61,9 @@ class DatabaseConnection {
   private authenticate() {
     this.api
       .authenticate()
-      .then(this.resolveConnectionEstablished)
-      .catch(this.rejectConnectionEstablished);
+      .then(() => this.syncTables())
+      .then(() => this.resolveConnectionEstablished())
+      .catch((reason) => this.rejectConnectionEstablished(reason));
   }
 
   private createDatabase(reject: Function) {
@@ -79,6 +80,10 @@ class DatabaseConnection {
         this.resolveConnectionEstablished();
       }
     });
+  }
+
+  private async syncTables() {
+    return await this.api.sync();
   }
 }
 
