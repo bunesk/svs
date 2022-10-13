@@ -2,31 +2,35 @@ import Model from '../database/Model';
 import {DataTypes} from 'sequelize';
 
 class User extends Model {
-  declare first_name: string;
-  declare last_name: string;
-  declare is_admin: boolean;
-  declare is_tutor: boolean;
+  declare firstName: string;
+  declare lastName: string;
+  declare isAdmin: boolean;
+  declare isTutor: boolean;
 }
 
+// initialize by defining columns
 User.init({
-  first_name: {
+  firstName: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  last_name: {
+  lastName: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  is_admin: {
+  isAdmin: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
     allowNull: false,
   },
-  is_tutor: {
+  isTutor: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
     allowNull: false,
   },
 });
+
+// create table if not exists
+await User.sync();
 
 export default User;

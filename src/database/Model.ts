@@ -28,9 +28,7 @@ abstract class Model extends SequelizeModel {
     };
     const newOptions = {
       sequelize: db.api,
-      modelName: this.constructor.name,
       paranoid: true,
-      deletedAt: 'deleted_at',
       ...options,
     };
     // @ts-ignore
