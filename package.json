@@ -3,6 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=16.14",
+    "npm": ">=8.3"
+  },
   "scripts": {
     "start": "ts-node-esm server.ts",
     "build": "npm run build:client && npm run build:server",

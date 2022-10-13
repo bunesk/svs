@@ -29,11 +29,23 @@ The recommended IDE is [VSCode](https://code.visualstudio.com/) using the follow
 
 ## Project setup
 
-### Install dependencies
+### Installation
+
+First ensure to have [NodeJS](https://nodejs.org/en/) installed.
+It's recommended to use NodeJS 18 and the current version of NPM, required is NodeJS 16.14+.
+Also you need to have [MySQL](https://www.mysql.com/) installed.
+
+#### Install dependencies
 
 ```
 npm install
 ```
+
+#### Environment Variables
+
+In the root directory is a `.env.initial` file.
+Copy this file to the same directory naming it `.env`.
+Then customize the variables for the database configuration to your needs.
 
 ### Compiles and hot-reloads for development
 
