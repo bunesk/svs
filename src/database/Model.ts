@@ -7,14 +7,13 @@ import {Model as SequelizeModel, ModelAttributes, DataTypes} from 'sequelize';
  * It inherits from the Sequelize model and extends it's functionality by adding an
  * automatically generated integer primary key field 'id'.
  *
- * It also activates he paranoid mode where items can be just soft-deleted.
+ * It also activates the paranoid mode where items can be just soft-deleted.
  * @see https://sequelize.org/docs/v6/core-concepts/paranoid/
  *
  * @see https://sequelize.org/api/v6/class/src/model.js~model
  */
 abstract class Model extends SequelizeModel {
   declare id: number;
-  declare active: boolean;
 
   static init(attributes: ModelAttributes<any, any>, options?: object): any {
     const newAttributes = {
