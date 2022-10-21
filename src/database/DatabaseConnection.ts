@@ -1,6 +1,7 @@
 import {Sequelize} from 'sequelize';
 import mysql from 'mysql2';
 import * as dotenv from 'dotenv';
+import setAssociations from './associations';
 dotenv.config();
 
 const DB_NAME = process.env.DB_NAME || 'svs';
@@ -61,6 +62,7 @@ class DatabaseConnection {
   private authenticate() {
     this.api
       .authenticate()
+      .then(() => setAssociations())
       .then(() => this.syncTables())
       .then(() => this.resolveConnectionEstablished())
       .catch((reason) => this.rejectConnectionEstablished(reason));

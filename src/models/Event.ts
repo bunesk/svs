@@ -1,5 +1,4 @@
 import Model from '../database/Model';
-import Test from './Test';
 import {DataTypes} from 'sequelize';
 
 /**
@@ -43,6 +42,7 @@ Event.init({
   visible: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
+    defaultValue: false,
   },
 });
 

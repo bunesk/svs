@@ -10,8 +10,6 @@ class Task extends Model {
   declare pointsMax: number;
 }
 
-Task.hasOne(Test, {foreignKey: 'testId'});
-
 Task.init({
   number: {
     type: DataTypes.INTEGER.UNSIGNED,

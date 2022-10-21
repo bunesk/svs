@@ -1,6 +1,10 @@
 import Model from '../database/Model';
 import {DataTypes} from 'sequelize';
-import {isEmail, hasOnlyLettersAndSpaces, isSecurePassword} from '../utils/validators';
+import {
+  isEmail,
+  hasOnlyLettersAndSpaces,
+  isSecurePassword,
+} from '../utils/validators';
 
 /**
  * A user is a student, tutor or administrator.
@@ -29,7 +33,7 @@ class User extends Model {
     }
   }
 
-  private validateMatricleNumber(number: string) {
+  private validateMatriculationNumber(number: string) {
     if (number.length !== 7) {
       throw Error('Matrikelnummer muss 7 Zeichen lang sein.');
     }
@@ -46,7 +50,9 @@ class User extends Model {
 
   private validatePassword(password: string) {
     if (!isSecurePassword(password)) {
-      throw Error('Die E-Mail-Adresse ist ungültig.');
+      throw Error(
+        'Verwende für das Passwort Kleinbuchstaben, Großbuchstaben, Ziffern, Symbole und mindestens 8 Zeichen.'
+      );
     }
   }
 }
@@ -57,7 +63,7 @@ User.init({
     allowNull: false,
     set(value: string) {
       this.validateName(value);
-      this.setDataValue('lastName', value);
+      this.setDataValue('firstName', value);
     },
   },
   lastName: {
@@ -72,10 +78,10 @@ User.init({
     type: DataTypes.ENUM('male', 'female', 'diverse'),
     allowNull: false,
   },
-  matricleNumber: {
+  matriculationNumber: {
     type: DataTypes.STRING,
     set(value: string) {
-      this.validateMatricleNumber(value);
+      this.validateMatriculationNumber(value);
       this.setDataValue('matricleNumber', value);
     },
   },

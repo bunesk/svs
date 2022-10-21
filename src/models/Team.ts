@@ -12,8 +12,6 @@ class Team extends Model {
   declare commentTeam: string;
 }
 
-Team.hasOne(Event, {foreignKey: 'eventId'});
-
 Team.init({
   number: {
     type: DataTypes.INTEGER.UNSIGNED,

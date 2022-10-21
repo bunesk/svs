@@ -1,6 +1,4 @@
 import Model from '../database/Model';
-import User from './User';
-import Event from './Event';
 import {DataTypes} from 'sequelize';
 
 /**
@@ -12,9 +10,6 @@ class Test extends Model {
   declare walkingNumber: number;
   declare isSheet: boolean;
 }
-
-Test.hasOne(User, {foreignKey: 'userId'});
-Test.hasOne(Event, {foreignKey: 'eventId'});
 
 Test.init({
   points: {
