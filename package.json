@@ -17,26 +17,26 @@
     "update": "npm-check --skip-unused -u"
   },
   "dependencies": {
-    "@vueuse/core": "^9.3.0",
-    "@vueuse/integrations": "^9.3.0",
-    "express": "^4.18.1",
-    "sequelize": "^6.24.0",
-    "vue": "^3.2.40",
+    "@vueuse/core": "^9.3.1",
+    "@vueuse/integrations": "^9.3.1",
+    "express": "^4.18.2",
+    "sequelize": "^6.25.3",
+    "vue": "^3.2.41",
     "vue-router": "^4.1.5"
   },
   "devDependencies": {
-    "@babel/types": "^7.19.3",
+    "@babel/types": "^7.19.4",
     "@types/compression": "^1.7.2",
     "@types/express": "^4.17.14",
     "@types/mysql": "^2.15.21",
-    "@types/node": "^18.7.23",
-    "@vitejs/plugin-vue": "^3.1.0",
+    "@types/node": "^18.11.3",
+    "@vitejs/plugin-vue": "^3.1.2",
     "compression": "^1.7.4",
     "dotenv": "^16.0.3",
-    "eslint": "^8.24.0",
+    "eslint": "^8.26.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-jsdoc": "^39.3.6",
-    "eslint-plugin-vue": "^9.5.1",
+    "eslint-plugin-jsdoc": "^39.3.17",
+    "eslint-plugin-vue": "^9.6.0",
     "mysql2": "^2.3.3",
     "npm-check": "^6.0.1",
     "pg-hstore": "^2.3.4",
@@ -45,8 +45,8 @@
     "serve-static": "^1.15.0",
     "ts-node": "^10.9.1",
     "typescript": "^4.8.4",
-    "unplugin-vue-components": "^0.22.7",
-    "vite": "^3.1.4",
-    "vue-tsc": "^0.40.13"
+    "unplugin-vue-components": "^0.22.8",
+    "vite": "^3.1.8",
+    "vue-tsc": "^1.0.8"
   }
 }
