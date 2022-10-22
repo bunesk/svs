@@ -1,5 +1,4 @@
 import Model from '../database/Model';
-import Test from './Test';
 import {DataTypes} from 'sequelize';
 
 /**

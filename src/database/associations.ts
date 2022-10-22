@@ -27,10 +27,10 @@ const manyToMany = (
   through?: string
 ) => {
   if (!through) {
-    through = hasMany.constructor.name + belongsToMany.constructor.name;
+    through = hasMany.name + belongsToMany.name;
   }
-  hasMany.belongsToMany(hasMany, {through: through});
-  belongsToMany.belongsToMany(belongsToMany, {through: through});
+  hasMany.belongsToMany(belongsToMany, {through: through});
+  belongsToMany.belongsToMany(hasMany, {through: through});
 };
 
 /**
@@ -52,8 +52,8 @@ const setAssociations = async () => {
   oneToMany(User, Test);
   oneToMany(Event, Test);
   oneToMany(Test, Task);
-  // manyToMany(User, Event);
-  // manyToMany(User, Team);
+  manyToMany(User, Event);
+  manyToMany(User, Team);
 };
 
 export default setAssociations;
