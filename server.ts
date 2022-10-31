@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import express from 'express';
+import express, {Request, Response} from 'express';
 
 const isTest = process.env.NODE_ENV === 'test' || !!process.env.VITE_TEST_BUILD;
 
@@ -65,7 +65,43 @@ export async function createServer(
     );
   }
 
-  app.use('*', async (req, res) => {
+  app.use('/api', async (req: Request, res: Response) => {
+    const urlParts = req.originalUrl.split('/');
+    const controllerUrl = urlParts[2];
+    const controllerFunctionName = urlParts[3];
+    if (!controllerUrl) {
+      res.status(404).json({
+        message: 'You must provide the controller name you want the data from.',
+      });
+      return;
+    }
+    try {
+      const controller = await import(
+        `./src/controllers/${controllerUrl}.controller.ts`
+      );
+      const kebabToCamelCase = (str: string) =>
+        str.replace(/-./g, (x) => x[1].toUpperCase());
+      if (controllerFunctionName) {
+        const controllerFunctionNameParsed = kebabToCamelCase(
+          controllerFunctionName
+        );
+        console.log(controllerFunctionNameParsed);
+        if (controller[controllerFunctionNameParsed]) {
+          controller[controllerFunctionNameParsed](req, res);
+        } else {
+          controller.index(req, res);
+        }
+      } else {
+        controller.index(req, res);
+      }
+    } catch (e: any) {
+      res.status(404).json({
+        message: `Controller for ${controllerUrl} not found.`,
+      });
+    }
+  });
+
+  app.use('*', async (req: Request, res: Response) => {
     try {
       const url = req.originalUrl;
 
