@@ -19,26 +19,39 @@ const template = fs.readFileSync(`${baseUrl}/dist/static/index.html`, 'utf-8');
 const {render} = await import(`${baseUrl}/dist/server/entry-server.js`);
 
 // determine routes to pre-render from src/views
-const routesToPrerender = fs.readdirSync(`${baseUrl}/src/views`).map((file) => {
+const viewsToPrerender = fs.readdirSync(`${baseUrl}/src/views`).map((file) => {
   const name = file.replace(/\.vue$/, '').toLowerCase();
   return name === 'home' ? `/` : `/${name}`;
 });
 
+// determine routes to pre-render from src/templates
+const templatesToPrerender = fs
+  .readdirSync(`${baseUrl}/src/templates`)
+  .map((file) => {
+    const name = file.replace(/\.vue$/, '').toLowerCase();
+    return `/${name}`;
+  });
+
 // pre-render each route
 const prerenderRoutes = async () => {
-  for (const url of routesToPrerender) {
-    const [appHtml, preloadLinks] = await render(url, manifest);
-
-    const html = template
-      .replace(`<!--preload-links-->`, preloadLinks)
-      .replace(`<!--app-html-->`, appHtml);
-
-    const filePath = `${baseUrl}/dist/static${
-      url === '/' ? '/index' : url
-    }.html`;
-    fs.writeFileSync(filePath, html);
-    console.log('pre-rendered:', filePath);
+  for (const url of viewsToPrerender) {
+    await prerenderRoute(url);
   }
+  for (const url of templatesToPrerender) {
+    await prerenderRoute(url);
+  }
+};
+
+const prerenderRoute = async (url: string) => {
+  const [appHtml, preloadLinks] = await render(url, manifest);
+
+  const html = template
+    .replace(`<!--preload-links-->`, preloadLinks)
+    .replace(`<!--app-html-->`, appHtml);
+
+  const filePath = `${baseUrl}/dist/static${url === '/' ? '/index' : url}.html`;
+  fs.writeFileSync(filePath, html);
+  console.log('pre-rendered:', filePath);
 };
 
 // define rules for redirects
