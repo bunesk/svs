@@ -2,8 +2,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import express, {Request, Response} from 'express';
+import defineRules from './rules.js';
+import * as dotenv from 'dotenv';
 
+dotenv.config();
 const isTest = process.env.NODE_ENV === 'test' || !!process.env.VITE_TEST_BUILD;
+const SERVER_PORT = process.env.SERVER_PORT || 5173;
 
 export async function createServer(
   root = process.cwd(),
@@ -12,15 +16,15 @@ export async function createServer(
 ) {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const resolve = (p: string) => path.resolve(__dirname, p);
+  const resolveDist = (path: string) => resolve(`../../dist/${path}`);
 
   const indexProd = isProd
-    ? fs.readFileSync(resolve('dist/client/index.html'), 'utf-8')
+    ? fs.readFileSync(resolveDist('client/index.html'), 'utf-8')
     : '';
 
   const manifest = isProd
-    ? // @ts-ignore
-      (
-        await import('./dist/client/ssr-manifest.json', {
+    ? (
+        await import(resolveDist('client/ssr-manifest.json'), {
           assert: {type: 'json'},
         })
       ).default
@@ -59,47 +63,14 @@ export async function createServer(
     app.use((await import('compression')).default());
     app.use(
       '/',
-      (await import('serve-static')).default(resolve('dist/client'), {
+      (await import('serve-static')).default(resolveDist('client'), {
         index: false,
       })
     );
   }
 
-  app.use('/api', async (req: Request, res: Response) => {
-    const urlParts = req.originalUrl.split('/');
-    const controllerUrl = urlParts[2];
-    const controllerFunctionName = urlParts[3];
-    if (!controllerUrl) {
-      res.status(404).json({
-        message: 'You must provide the controller name you want the data from.',
-      });
-      return;
-    }
-    try {
-      const controller = await import(
-        `./src/controllers/${controllerUrl}.controller.ts`
-      );
-      const kebabToCamelCase = (str: string) =>
-        str.replace(/-./g, (x) => x[1].toUpperCase());
-      if (controllerFunctionName) {
-        const controllerFunctionNameParsed = kebabToCamelCase(
-          controllerFunctionName
-        );
-        console.log(controllerFunctionNameParsed);
-        if (controller[controllerFunctionNameParsed]) {
-          controller[controllerFunctionNameParsed](req, res);
-        } else {
-          controller.index(req, res);
-        }
-      } else {
-        controller.index(req, res);
-      }
-    } catch (e: any) {
-      res.status(404).json({
-        message: `Controller for ${controllerUrl} not found.`,
-      });
-    }
-  });
+  // define custom routing rules
+  defineRules(app);
 
   app.use('*', async (req: Request, res: Response) => {
     try {
@@ -109,14 +80,14 @@ export async function createServer(
       let render: Function;
       if (!isProd) {
         // always read fresh template in dev
-        template = fs.readFileSync(resolve('index.html'), 'utf-8');
+        template = fs.readFileSync(resolve('../../index.html'), 'utf-8');
         template = await vite.transformIndexHtml(url, template);
-        render = (await vite.ssrLoadModule('/src/build/entry-server.ts'))
+        render = (await vite.ssrLoadModule('src/server/entry-server.ts'))
           .render;
       } else {
         template = indexProd;
         // @ts-ignore
-        render = (await import('./dist/server/entry-server.js')).render;
+        render = (await import(resolveDist('server/entry-server.js'))).render;
       }
 
       const [appHtml, preloadLinks] = await render(url, manifest);
@@ -138,8 +109,8 @@ export async function createServer(
 
 if (!isTest) {
   createServer().then(({app}) =>
-    app.listen(5173, () => {
-      console.log('http://localhost:5173');
+    app.listen(SERVER_PORT, () => {
+      console.log(`Listening on http://localhost:${SERVER_PORT}`);
     })
   );
 }

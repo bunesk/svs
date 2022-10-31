@@ -1,9 +1,9 @@
 import {createRouter, createMemoryHistory, createWebHistory} from 'vue-router';
-import Error404 from './templates/Error404.vue';
+import Error404 from '../templates/Error404.vue';
 
 export default (app: any) => {
   // Auto generates routes from vue files under ./views
-  const views = import.meta.glob('./views/*.vue');
+  const views = import.meta.glob('../views/*.vue');
 
   const generatedRoutes = Object.keys(views).map((path: any) => {
     const name = path.match(/\.\/views(.*)\.vue$/)[1].toLowerCase();
