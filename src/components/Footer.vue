@@ -6,7 +6,7 @@
     <p>
       © Copyright
       {{ new Date().getFullYear() }}
-      <RouterLink to="/imprint">Imprint</RouterLink>
+      <RouterLink to="/imprint">Impressum</RouterLink>
     </p>
   </footer>
 </template>

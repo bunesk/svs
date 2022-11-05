@@ -4,7 +4,7 @@ import {
   isEmail,
   hasOnlyLettersAndSpaces,
   isSecurePassword,
-} from '../utils/validators';
+} from '../services/validators';
 
 /**
  * A user is a student, tutor or administrator.
