@@ -1,6 +1,7 @@
 import {defineConfig} from 'vite';
 import vue from '@vitejs/plugin-vue';
 import Components from 'unplugin-vue-components/vite';
+import {PrimeVueResolver} from 'unplugin-vue-components/resolvers';
 
 const virtualFile = '@virtual-file';
 const virtualId = '\0' + virtualFile;
@@ -19,7 +20,10 @@ export default defineConfig(({command, ssrBuild}) => ({
   plugins: [
     vue(),
     // unplugin-vue-components
-    Components({dts: 'src/types/components.d.ts'}),
+    Components({
+      dts: 'src/types/components.d.ts',
+      resolvers: [PrimeVueResolver()],
+    }),
     {
       name: 'virtual',
       resolveId(id) {
