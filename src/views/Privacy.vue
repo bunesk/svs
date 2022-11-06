@@ -10,6 +10,7 @@
       Der Zweck des Systems ist eine effiziente und transparente Erfassung und Verwaltung Ihrer eigenen Leistungen sowie Ihrer Team-Leistungen im Rahmen von zu erbringenden Studienleistungen.
       Weitere Informationen zum Datenschutz finden Sie in der
       <a
+        class="color-primary"
         href="https://www.hs-mannheim.de/datenschutzerklaerung.html"
         target="_blank"
       >Datenschutzerklärung der Hochschule Mannheim</a>.

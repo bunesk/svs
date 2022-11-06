@@ -3,13 +3,33 @@
 
 <template>
   <header>
-    <img src="/logo.jpg">
-    <RouterLink to="/"> SVS </RouterLink>
+    <RouterLink to="/">
+      <img src="/logo.jpg">
+      <span class="title">SVS</span>
+    </RouterLink>
   </header>
 </template>
 
 <style lang="scss" scoped>
-img {
-  max-width: 5em;
+header {
+  text-align: center;
+  padding: 0.75em 0;
+  border-bottom: 0.1em solid var(--color-primary);
+
+  :deep(a) {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: #000;
+
+    .title {
+      font-size: 3em;
+      padding-left: 0.25em;
+    }
+
+    img {
+      max-width: 4em;
+    }
+  }
 }
 </style>

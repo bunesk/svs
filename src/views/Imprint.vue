@@ -8,6 +8,7 @@
     <p>
       Weitere Informationen finden Sie im
       <a
+        class="color-primary"
         href="https://www.hs-mannheim.de/impressum.html"
         target="_blank"
       >Impressum der Hochschule Mannheim</a>.
