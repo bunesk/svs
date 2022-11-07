@@ -17,6 +17,7 @@ declare module '@vue/runtime-core' {
     LoginForm: typeof import('./../components/forms/LoginForm.vue')['default']
     Password: typeof import('primevue/password')['default']
     PasswordSecure: typeof import('./../components/PasswordSecure.vue')['default']
+    RegisterForm: typeof import('./../components/forms/RegisterForm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

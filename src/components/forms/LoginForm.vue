@@ -1,24 +1,10 @@
 <script setup lang="ts">
 import {ref} from 'vue';
+import {validate} from './validation';
 
 const form = ref(null);
 const username = ref('');
 const password = ref('');
-
-const validate = (event: Event) => {
-  const input = event.target as HTMLInputElement;
-  if (
-    event instanceof KeyboardEvent &&
-    !input.classList.contains('invalid-border')
-  ) {
-    return;
-  }
-  if (input && !input.checkValidity()) {
-    input.classList.add('invalid-border');
-  } else {
-    input.classList.remove('invalid-border');
-  }
-};
 </script>
 
 <template>
