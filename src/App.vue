@@ -13,6 +13,8 @@ import './assets/css/base.scss';
 </template>
 
 <style lang="scss" scoped>
+@import './assets/css/primevue-corrections.scss';
+
 #root {
   margin: 0 auto;
   width: 85%;

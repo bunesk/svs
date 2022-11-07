@@ -8,8 +8,14 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Address: typeof import('./../components/Address.vue')['default']
+    Button: typeof import('primevue/button')['default']
+    Divider: typeof import('primevue/divider')['default']
     Footer: typeof import('./../components/Footer.vue')['default']
     Header: typeof import('./../components/Header.vue')['default']
+    InputNumber: typeof import('primevue/inputnumber')['default']
+    InputText: typeof import('primevue/inputtext')['default']
+    Password: typeof import('primevue/password')['default']
+    PasswordSecure: typeof import('./../components/PasswordSecure.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

@@ -1,0 +1,9 @@
+/* prevent eye get's invisible on focused password in input group */
+:deep(.pi-eye) {
+  z-index: 1;
+}
+/** add space between label and input */
+:deep(label + .p-component),
+:deep(label + span.p-inputwrapper) {
+  margin-top: 0.25em;
+}

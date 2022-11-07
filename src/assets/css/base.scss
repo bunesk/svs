@@ -1,5 +1,7 @@
 :root {
   --color-primary: #122d85;
+  --color-invalid: rgb(141, 23, 23);
+  --color-valid: var(--green-900);
 }
 body {
   padding: 0;
@@ -10,6 +12,12 @@ body {
 }
 .color-primary {
   color: var(--color-primary);
+}
+.valid {
+  color: var(--color-valid);
+}
+.invalid {
+  color: var(--color-invalid);
 }
 .bold {
   font-weight: bold;
