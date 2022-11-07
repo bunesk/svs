@@ -19,6 +19,14 @@ body {
 .invalid {
   color: var(--color-invalid);
 }
+.invalid-border {
+  border-color: var(--color-invalid);
+
+  &:enabled:hover,
+  &:enabled:focus {
+    border-color: var(--color-invalid);
+  }
+}
 .bold {
   font-weight: bold;
 }
