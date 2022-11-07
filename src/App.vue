@@ -19,7 +19,9 @@ import './assets/css/base.scss';
   margin: 0 auto;
   width: 85%;
   max-width: 1600px;
+  min-height: 60vh;
   background-color: #fff;
+  border-radius: 0 0 0.25em 0.25em;
 
   main {
     padding: 1em 2em;
