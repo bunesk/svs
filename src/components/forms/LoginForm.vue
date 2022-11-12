@@ -42,7 +42,7 @@ const password = ref('');
       label="Anmelden"
       type="submit"
       :disabled="!form?.checkValidity()"
-    ></Button>
+    />
   </form>
 </template>
 

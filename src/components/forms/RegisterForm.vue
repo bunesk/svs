@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import {ref} from 'vue';
-import {validate} from './services/validation';
+import {Ref, ref} from 'vue';
+import {validate, registerFormIsValid} from './services/validation';
+
+const form: Ref<HTMLFormElement | null> = ref(null);
+const formIsValid = ref(false);
 
 const username = ref('');
 const firstName = ref('');
@@ -12,7 +15,11 @@ const passwordRepeat = ref('');
 </script>
 
 <template>
-  <div class="register-form">
+  <form
+    ref="form"
+    class="register-form"
+    @input="formIsValid = registerFormIsValid(form)"
+  >
     <div class="p-fluid">
       <div class="field">
         <label for="reg_username">Benutzername</label>
@@ -89,8 +96,12 @@ const passwordRepeat = ref('');
       </div>
     </div>
     <p>Verwenden Sie wenn möglich Ihre E-Mail-Adresse der Hochschule. Neben Datenschutzgründen kann auch eine Zustellung an andere Provider nicht garantiert werden.</p>
-    <Button label="Registrieren"></Button>
-  </div>
+    <Button
+      label="Registrieren"
+      type="submit"
+      :disabled="!formIsValid"
+    />
+  </form>
 </template>
 
 <style lang="scss" scoped>

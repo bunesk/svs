@@ -14,34 +14,7 @@ export const validate = (event: Event) => {
   ) {
     return;
   }
-  let validationFunction: Function | null = null;
-  switch (input.id) {
-    case 'reg_username':
-      validationFunction = validateUsername;
-      break;
-    case 'reg_firstName':
-    case 'reg_lastName':
-      validationFunction = validateName;
-      break;
-    case 'reg_matriculationNumber':
-      validationFunction = validateMatriculationNumber;
-      break;
-    case 'reg_email':
-      validationFunction = validateEmail;
-      break;
-    case 'reg_password':
-      validationFunction = validatePassword;
-      break;
-    case 'reg_passwordRepeat':
-      validationFunction = (value: string) => {
-        const password = document.getElementById(
-          'reg_password'
-        ) as HTMLInputElement;
-        if (value !== password.value) {
-          throw Error('Passwörter stimmen nicht überein.');
-        }
-      };
-  }
+  const validationFunction = getValidationFunction(input.id);
   const help = document.getElementById(`${input.id}_help`) as HTMLElement;
   let validity = false;
   if (validationFunction) {
@@ -59,5 +32,52 @@ export const validate = (event: Event) => {
     input.classList.add('invalid-border');
   } else {
     input.classList.remove('invalid-border');
+  }
+};
+
+export const registerFormIsValid = (form: HTMLFormElement | null) => {
+  console.log(form);
+  if (!form?.checkValidity()) {
+    return false;
+  }
+  const formElements = form?.elements as HTMLFormControlsCollection;
+  if (formElements) {
+    for (const formElement of Object.values(formElements)) {
+      const validationFunction = getValidationFunction(formElement.id);
+      if (validationFunction) {
+        try {
+          validationFunction((formElement as HTMLInputElement).value);
+        } catch (e: any) {
+          return false;
+        }
+      }
+    }
+  }
+  return true;
+};
+
+const getValidationFunction = (id: string): Function | null => {
+  switch (id) {
+    case 'reg_username':
+      return validateUsername;
+    case 'reg_firstName':
+    case 'reg_lastName':
+      return validateName;
+    case 'reg_matriculationNumber':
+      return validateMatriculationNumber;
+    case 'reg_email':
+      return validateEmail;
+    case 'reg_password':
+      return validatePassword;
+    case 'reg_passwordRepeat':
+      return validatePasswordRepeat;
+  }
+  return null;
+};
+
+const validatePasswordRepeat = (value: string) => {
+  const password = document.getElementById('reg_password') as HTMLInputElement;
+  if (value !== password.value) {
+    throw Error('Passwörter stimmen nicht überein.');
   }
 };
