@@ -13,6 +13,15 @@ body {
 .color-primary {
   color: var(--color-primary);
 }
+.bold {
+  font-weight: bold;
+}
+.vertical-center {
+  display: flex;
+  align-items: center;
+}
+
+/** validation */
 .valid {
   color: var(--color-valid);
 }
@@ -27,10 +36,6 @@ body {
     border-color: var(--color-invalid);
   }
 }
-.bold {
-  font-weight: bold;
-}
-.vertical-center {
-  display: flex;
-  align-items: center;
+small {
+  color: var(--color-invalid);
 }

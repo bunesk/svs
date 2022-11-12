@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref} from 'vue';
-import {validate} from './validation';
+import {validate} from './services/validation';
 
 const form = ref(null);
 const username = ref('');

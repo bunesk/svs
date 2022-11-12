@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import {validate} from '../services/validation';
+
 const props = defineProps({
   id: {type: String, required: true},
   value: {type: String, default: ''},
@@ -28,15 +30,27 @@ const requirements = [
     valid: () => /[^\da-zA-Z]/.test(props.value),
   },
 ];
+
+const valid = () => {
+  for (const requirement of requirements) {
+    if (!requirement.valid()) {
+      return false;
+    }
+  }
+  return true;
+};
 </script>
 
 <template>
   <div class="field">
     <label :for="id">Passwort</label>
     <Password
-      :id="id"
+      :class="{'invalid-border': !valid()}"
+      :inputId="id"
       v-model="value"
       toggleMask
+      @blur="validate"
+      @keyup="validate"
     >
       <template #content>Wähle ein Passwort.</template>
       <template #footer>
@@ -61,6 +75,7 @@ const requirements = [
         </ul>
       </template>
     </Password>
+    <small id="reg_password_help"></small>
   </div>
 </template>
 

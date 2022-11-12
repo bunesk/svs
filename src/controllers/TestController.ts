@@ -9,6 +9,7 @@ import User from '../models/User';
   await db.connectionEstablished;
 
   const user = new User({
+    username: 't.maier',
     firstName: 'Tim',
     lastName: 'Maier',
     gender: 'male',

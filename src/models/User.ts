@@ -1,15 +1,18 @@
 import Model from '../database/Model';
 import {DataTypes} from 'sequelize';
 import {
-  isEmail,
-  hasOnlyLettersAndSpaces,
-  isSecurePassword,
+  validateUsername,
+  validateName,
+  validateMatriculationNumber,
+  validateEmail,
+  validatePassword,
 } from '../services/validators';
 
 /**
  * A user is a student, tutor or administrator.
  */
 class User extends Model {
+  declare username: string;
   declare firstName: string;
   declare lastName: string;
   declare gender: gender;
@@ -23,46 +26,23 @@ class User extends Model {
   getFullName(): string {
     return `${this.firstName} ${this.lastName}`;
   }
-
-  private validateName(name: string) {
-    if (name.length < 2) {
-      throw Error('Namen müssen mindestens zwei Zeichen lang sein.');
-    }
-    if (!hasOnlyLettersAndSpaces(name)) {
-      throw Error('Namen dürfen nur Buchstaben und Leerzeichen enthalten.');
-    }
-  }
-
-  private validateMatriculationNumber(number: string) {
-    if (number.length !== 7) {
-      throw Error('Matrikelnummer muss 7 Zeichen lang sein.');
-    }
-    if (!/^[0-9]*$/.test(number)) {
-      throw Error('Matrikelnummer darf nur eine Ganzzahl sein.');
-    }
-  }
-
-  private validateEmail(email: string) {
-    if (!isEmail(email)) {
-      throw Error('Die E-Mail-Adresse ist ungültig.');
-    }
-  }
-
-  private validatePassword(password: string) {
-    if (!isSecurePassword(password)) {
-      throw Error(
-        'Verwende für das Passwort Kleinbuchstaben, Großbuchstaben, Ziffern, Symbole und mindestens 8 Zeichen.'
-      );
-    }
-  }
 }
 
 User.init({
+  username: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+    set(value: string) {
+      validateUsername(value);
+      this.setDataValue('username', value);
+    },
+  },
   firstName: {
     type: DataTypes.STRING,
     allowNull: false,
     set(value: string) {
-      this.validateName(value);
+      validateName(value);
       this.setDataValue('firstName', value);
     },
   },
@@ -70,7 +50,7 @@ User.init({
     type: DataTypes.STRING,
     allowNull: false,
     set(value: string) {
-      this.validateName(value);
+      validateName(value);
       this.setDataValue('lastName', value);
     },
   },
@@ -81,7 +61,7 @@ User.init({
   matriculationNumber: {
     type: DataTypes.STRING,
     set(value: string) {
-      this.validateMatriculationNumber(value);
+      validateMatriculationNumber(value);
       this.setDataValue('matricleNumber', value);
     },
   },
@@ -89,7 +69,7 @@ User.init({
     type: DataTypes.STRING,
     allowNull: false,
     set(value: string) {
-      this.validateEmail(value);
+      validateEmail(value);
       this.setDataValue('email', value);
     },
   },
@@ -97,7 +77,7 @@ User.init({
     type: DataTypes.STRING,
     allowNull: false,
     set(value: string) {
-      this.validatePassword(value);
+      validatePassword(value);
       this.setDataValue('password', value);
     },
   },

@@ -19,5 +19,10 @@
   h1 {
     padding-bottom: 0.25em;
   }
+
+  p :deep(a) {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
 }
 </style>

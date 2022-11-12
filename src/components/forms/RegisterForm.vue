@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {ref} from 'vue';
+import {validate} from './services/validation';
 
 const username = ref('');
 const firstName = ref('');
@@ -18,28 +19,44 @@ const passwordRepeat = ref('');
         <InputText
           id="reg_username"
           v-model="username"
+          required
+          @blur="validate"
+          @keyup="validate"
         />
+        <small id="reg_username_help"></small>
       </div>
       <div class="field">
         <label for="reg_firstName">Vorname</label>
         <InputText
           id="reg_firstName"
           v-model="firstName"
+          required
+          @blur="validate"
+          @keyup="validate"
         />
+        <small id="reg_firstName_help"></small>
       </div>
       <div class="field">
         <label for="reg_lastName">Nachname</label>
         <InputText
           id="reg_lastName"
           v-model="lastName"
+          required
+          @blur="validate"
+          @keyup="validate"
         />
+        <small id="reg_lastName_help"></small>
       </div>
       <div class="field">
-        <label for="reg_matricleNumber">Matrikelnummer</label>
-        <InputNumber
-          inputId="reg_matricleNumber"
+        <label for="reg_matriculationNumber">Matrikelnummer</label>
+        <InputText
+          id="reg_matriculationNumber"
           v-model="matricleNumber"
+          required
+          @blur="validate"
+          @keyup="validate"
         />
+        <small id="reg_matriculationNumber_help"></small>
       </div>
       <div class="field">
         <label for="reg_email">E-Mail-Adresse</label>
@@ -47,20 +64,28 @@ const passwordRepeat = ref('');
           type="email"
           id="reg_email"
           v-model="email"
+          required
+          @blur="validate"
+          @keyup="validate"
         />
+        <small id="reg_email_help"></small>
       </div>
       <PasswordSecure
         v-model="password"
         id="reg_password"
       />
       <div class="field">
-        <label for="reg_password_repeat">Passwort wiederholen</label>
+        <label for="reg_passwordRepeat">Passwort wiederholen</label>
         <Password
-          id="reg_password_repeat"
+          inputId="reg_passwordRepeat"
           v-model="passwordRepeat"
           :feedback="false"
           toggleMask
+          required
+          @blur="validate"
+          @keyup="validate"
         />
+        <small id="reg_passwordRepeat_help"></small>
       </div>
     </div>
     <p>Verwenden Sie wenn möglich Ihre E-Mail-Adresse der Hochschule. Neben Datenschutzgründen kann auch eine Zustellung an andere Provider nicht garantiert werden.</p>
