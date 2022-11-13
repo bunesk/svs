@@ -12,7 +12,6 @@ declare module '@vue/runtime-core' {
     Divider: typeof import('primevue/divider')['default']
     Footer: typeof import('./../components/Footer.vue')['default']
     Header: typeof import('./../components/Header.vue')['default']
-    InputNumber: typeof import('primevue/inputnumber')['default']
     InputText: typeof import('primevue/inputtext')['default']
     LoginForm: typeof import('./../components/forms/LoginForm.vue')['default']
     Password: typeof import('primevue/password')['default']

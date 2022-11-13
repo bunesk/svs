@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {ref} from 'vue';
+import {ref, Ref} from 'vue';
 import {validate} from './services/validation';
 
-const form = ref(null);
+const form: Ref<HTMLFormElement | null> = ref(null);
 const username = ref('');
 const password = ref('');
 </script>
