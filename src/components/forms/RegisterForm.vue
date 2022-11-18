@@ -8,7 +8,7 @@ const formIsValid = ref(false);
 const username = ref('');
 const firstName = ref('');
 const lastName = ref('');
-const matricleNumber = ref();
+const matriculationNumber = ref();
 const email = ref('');
 const password = ref('');
 const passwordRepeat = ref('');
@@ -58,7 +58,7 @@ const passwordRepeat = ref('');
         <label for="reg_matriculationNumber">Matrikelnummer</label>
         <InputText
           id="reg_matriculationNumber"
-          v-model="matricleNumber"
+          v-model="matriculationNumber"
           required
           @blur="validate"
           @keyup="validate"
