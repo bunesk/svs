@@ -7,6 +7,7 @@ The SVS is a role-based adminstration tool.
 - [Vue 3](https://vuejs.org/) (using [`<script setup>` SFCs](https://vuejs.org/api/sfc-script-setup.html))
 - [Express](https://expressjs.com/)
 - [MySQL](https://www.mysql.com/)
+- [LDAP](https://ldap.com/)
 - [Vite](https://vitejs.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [SCSS](https://sass-lang.com/)
@@ -45,7 +46,7 @@ npm install
 
 In the root directory is a `.env.initial` file.
 Copy this file to the same directory naming it `.env`.
-Then customize the variables for the database configuration to your needs.
+Then customize the variables for the database and LDAP configuration to your needs.
 
 ### Compiles and hot-reloads for development
 
