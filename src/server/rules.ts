@@ -14,8 +14,7 @@ const defineRules = (app: any) => {
 };
 export default defineRules;
 
-const kebabToCamelCase = (str: string) =>
-  str.replace(/-./g, (x) => x[1].toUpperCase());
+const kebabToCamelCase = (str: string) => str.replace(/-./g, (x) => x[1].toUpperCase());
 
 // route 'api' urls to backend controllers
 const apiHandler = async (req: Request, res: Response) => {
@@ -29,13 +28,9 @@ const apiHandler = async (req: Request, res: Response) => {
     return;
   }
   try {
-    const controller = await import(
-      `../controllers/${controllerUrl}.controller.ts`
-    );
+    const controller = await import(`../controllers/${controllerUrl}.controller.ts`);
     if (controllerFunctionName) {
-      const controllerFunctionNameParsed = kebabToCamelCase(
-        controllerFunctionName
-      );
+      const controllerFunctionNameParsed = kebabToCamelCase(controllerFunctionName);
       if (controller[controllerFunctionNameParsed]) {
         controller[controllerFunctionNameParsed](req, res);
       } else {

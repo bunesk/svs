@@ -1,11 +1,6 @@
 import {Request, Response} from 'express';
 import User from '../models/User';
-import {
-  checkRequiredParams,
-  paramsToObject,
-  sendJsonError,
-  sendJsonSuccess,
-} from '../server/json';
+import {checkRequiredParams, paramsToObject, sendJsonError, sendJsonSuccess} from '../server/json';
 
 export const index = (req: Request, res: Response) => {
   return getAll(req, res);
@@ -17,10 +12,7 @@ export const getName = async (req: Request, res: Response) => {
   }
   const user = await User.findByPk(req.params.id);
   if (!user) {
-    return sendJsonError(
-      res,
-      `Benutzer mit der ID ${req.params.id} nicht gefunden.`
-    );
+    return sendJsonError(res, `Benutzer mit der ID ${req.params.id} nicht gefunden.`);
   }
   return res.json({
     status: true,
@@ -34,14 +26,7 @@ export const getAll = async (req: Request, res: Response) => {
 };
 
 export const register = async (req: Request, res: Response) => {
-  const requiredParams = [
-    'username',
-    'firstName',
-    'lastName',
-    'matriculationNumber',
-    'email',
-    'password',
-  ];
+  const requiredParams = ['username', 'firstName', 'lastName', 'matriculationNumber', 'email', 'password'];
   const message = checkRequiredParams(req, requiredParams);
   if (message) {
     return sendJsonError(res, message);

@@ -7,10 +7,7 @@ import {Request, Response} from 'express';
  * @param params
  * @returns
  */
-export const checkRequiredParams = (
-  req: Request,
-  params: string[]
-): string | undefined => {
+export const checkRequiredParams = (req: Request, params: string[]): string | undefined => {
   for (const param of params) {
     if (req.params[param] === undefined) {
       return `Parameter '${param}' is missing.`;
@@ -33,11 +30,7 @@ export const paramsToObject = (req: Request, params: string[]) => {
  * @param message success message
  * @returns json response object
  */
-export const sendJsonSuccess = (
-  res: Response,
-  result: object | Array<object> = [],
-  message = 'Success'
-) => {
+export const sendJsonSuccess = (res: Response, result: object | Array<object> = [], message = 'Success') => {
   return res.json({
     status: true,
     message: message,

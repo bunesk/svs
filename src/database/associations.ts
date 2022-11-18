@@ -5,27 +5,17 @@ const importModel = async (modelName: string): Promise<ModelStatic<Model>> => {
   return (await import(`../models/${modelName}.ts`)).default;
 };
 
-const oneToOne = (
-  hasOne: ModelStatic<Model>,
-  belongsTo: ModelStatic<Model>
-) => {
+const oneToOne = (hasOne: ModelStatic<Model>, belongsTo: ModelStatic<Model>) => {
   hasOne.hasOne(belongsTo);
   belongsTo.belongsTo(hasOne);
 };
 
-const oneToMany = (
-  hasMany: ModelStatic<Model>,
-  belongsTo: ModelStatic<Model>
-) => {
+const oneToMany = (hasMany: ModelStatic<Model>, belongsTo: ModelStatic<Model>) => {
   hasMany.hasMany(belongsTo);
   belongsTo.belongsTo(hasMany);
 };
 
-const manyToMany = (
-  hasMany: ModelStatic<Model>,
-  belongsToMany: ModelStatic<Model>,
-  through?: string
-) => {
+const manyToMany = (hasMany: ModelStatic<Model>, belongsToMany: ModelStatic<Model>, through?: string) => {
   if (!through) {
     through = hasMany.name + belongsToMany.name;
   }

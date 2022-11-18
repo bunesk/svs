@@ -18,9 +18,7 @@ export async function createServer(
   const resolve = (p: string) => path.resolve(__dirname, p);
   const resolveDist = (path: string) => resolve(`../../dist/${path}`);
 
-  const indexProd = isProd
-    ? fs.readFileSync(resolveDist('client/index.html'), 'utf-8')
-    : '';
+  const indexProd = isProd ? fs.readFileSync(resolveDist('client/index.html'), 'utf-8') : '';
 
   const manifest = isProd
     ? (
@@ -82,8 +80,7 @@ export async function createServer(
         // always read fresh template in dev
         template = fs.readFileSync(resolve('../../index.html'), 'utf-8');
         template = await vite.transformIndexHtml(url, template);
-        render = (await vite.ssrLoadModule('src/server/entry-server.ts'))
-          .render;
+        render = (await vite.ssrLoadModule('src/server/entry-server.ts')).render;
       } else {
         template = indexProd;
         // @ts-ignore
@@ -92,9 +89,7 @@ export async function createServer(
 
       const [appHtml, preloadLinks] = await render(url, manifest);
 
-      const html = template
-        .replace(`<!--preload-links-->`, preloadLinks)
-        .replace(`<!--app-html-->`, appHtml);
+      const html = template.replace(`<!--preload-links-->`, preloadLinks).replace(`<!--app-html-->`, appHtml);
 
       res.status(200).set({'Content-Type': 'text/html'}).end(html);
     } catch (e: any) {

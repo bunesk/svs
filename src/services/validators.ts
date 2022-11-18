@@ -13,9 +13,7 @@ const IS_SECURE_PASSWORD_REGEX = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}/;
  */
 export const validateUsername = (name: string) => {
   if (!IS_USERNAME_REGEX.test(name)) {
-    throw Error(
-      'Der Benutzername muss dem Schema "m.mueller" folgen und darf keine Umlaute o.ä. enthalten.'
-    );
+    throw Error('Der Benutzername muss dem Schema "m.mueller" folgen und darf keine Umlaute o.ä. enthalten.');
   }
 };
 
@@ -27,14 +25,10 @@ export const validateUsername = (name: string) => {
  */
 export const validateName = (name: string) => {
   if (name.length < 2) {
-    throw Error(
-      'Vor- und Nachname müssen jeweils mindestens zwei Zeichen lang sein.'
-    );
+    throw Error('Vor- und Nachname müssen jeweils mindestens zwei Zeichen lang sein.');
   }
   if (!HAS_ONLY_LETTERS_AND_SPACES_REGEX.test(name)) {
-    throw Error(
-      'Vor- und Nachname dürfen nur Buchstaben und Leerzeichen enthalten.'
-    );
+    throw Error('Vor- und Nachname dürfen nur Buchstaben und Leerzeichen enthalten.');
   }
 };
 
