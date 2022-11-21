@@ -1,4 +1,4 @@
-import Model from '../database/Model';
+import Model from '../database/Model.js';
 import {DataTypes} from 'sequelize';
 import {
   validateUsername,
@@ -6,7 +6,9 @@ import {
   validateMatriculationNumber,
   validateEmail,
   validatePassword,
-} from '../services/validators';
+} from '../services/validators.js';
+
+declare type gender = 'male' | 'female' | 'diverse';
 
 /**
  * A user is a student, tutor or administrator.

@@ -1,5 +1,4 @@
-import Model from '../database/Model';
-import Event from './Event';
+import Model from '../database/Model.js';
 import {DataTypes} from 'sequelize';
 
 /**

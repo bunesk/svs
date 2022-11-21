@@ -1,7 +1,7 @@
 import {Sequelize} from 'sequelize';
 import mysql from 'mysql2';
 import * as dotenv from 'dotenv';
-import setAssociations from './associations';
+import setAssociations from './associations.js';
 dotenv.config();
 
 const DB_NAME = process.env.DB_NAME || 'svs';

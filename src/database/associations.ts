@@ -1,5 +1,5 @@
 import {ModelStatic} from 'sequelize';
-import Model from './Model';
+import Model from './Model.js';
 
 const importModel = async (modelName: string): Promise<ModelStatic<Model>> => {
   return (await import(`../models/${modelName}.ts`)).default;
