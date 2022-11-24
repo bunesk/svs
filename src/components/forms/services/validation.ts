@@ -8,10 +8,7 @@ import {
 
 export const validate = (event: Event) => {
   let input = event.target as HTMLInputElement;
-  if (
-    event instanceof KeyboardEvent &&
-    !input.classList.contains('invalid-border')
-  ) {
+  if (event instanceof KeyboardEvent && !input.classList.contains('invalid-border')) {
     return;
   }
   const validationFunction = getValidationFunction(input.id);
@@ -36,7 +33,6 @@ export const validate = (event: Event) => {
 };
 
 export const registerFormIsValid = (form: HTMLFormElement | null) => {
-  console.log(form);
   if (!form?.checkValidity()) {
     return false;
   }

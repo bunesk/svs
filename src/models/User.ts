@@ -64,7 +64,7 @@ User.init({
     type: DataTypes.STRING,
     set(value: string) {
       validateMatriculationNumber(value);
-      this.setDataValue('matricleNumber', value);
+      this.setDataValue('matriculationNumber', value);
     },
   },
   email: {

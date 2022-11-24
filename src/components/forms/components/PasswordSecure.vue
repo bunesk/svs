@@ -51,6 +51,7 @@ const valid = () => {
       toggleMask
       @blur="validate"
       @keyup="validate"
+      @input="$emit('input')"
     >
       <template #content>Wähle ein Passwort.</template>
       <template #footer>

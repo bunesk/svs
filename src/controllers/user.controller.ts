@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
-import User from '../models/User';
-import {checkRequiredParams, paramsToObject, sendJsonError, sendJsonSuccess} from '../server/json';
+import User from '../models/User.js';
+import {checkRequiredParams, paramsToObject, sendJsonError, sendJsonSuccess} from '../server/json.js';
 
 export const index = (req: Request, res: Response) => {
   return getAll(req, res);
@@ -26,7 +26,7 @@ export const getAll = async (req: Request, res: Response) => {
 };
 
 export const register = async (req: Request, res: Response) => {
-  const requiredParams = ['username', 'firstName', 'lastName', 'matriculationNumber', 'email', 'password'];
+  const requiredParams = ['username', 'firstName', 'lastName', 'gender', 'matriculationNumber', 'email', 'password'];
   const message = checkRequiredParams(req, requiredParams);
   if (message) {
     return sendJsonError(res, message);

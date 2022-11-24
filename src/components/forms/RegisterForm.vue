@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {Ref, ref} from 'vue';
+import sendRequest from '../../client/request';
 import {validate, registerFormIsValid} from './services/validation';
 
 const form: Ref<HTMLFormElement | null> = ref(null);
@@ -8,17 +9,51 @@ const formIsValid = ref(false);
 const username = ref('');
 const firstName = ref('');
 const lastName = ref('');
+const gender: Ref<{name: string; code: string} | null> = ref(null);
 const matriculationNumber = ref();
 const email = ref('');
 const password = ref('');
 const passwordRepeat = ref('');
+
+const genderOptions = ref([
+  {name: 'Männlich', code: 'male'},
+  {name: 'Weiblich', code: 'female'},
+  {name: 'Divers', code: 'diverse'},
+]);
+
+const submit = async () => {
+  const params = {
+    username: username.value,
+    firstName: firstName.value,
+    lastName: lastName.value,
+    gender: gender.value?.code,
+    matriculationNumber: matriculationNumber.value,
+    email: email.value,
+    password: password.value,
+  };
+  const response = await sendRequest('user', 'register', params);
+  if (response.status === 200) {
+    console.log('Great success');
+  } else {
+    console.log('Tja, hättste gedacht');
+    console.log(response);
+    console.log(await response.json());
+  }
+};
+
+const handlePasswordInput = (event: InputEvent) => {
+  const input = event?.target as HTMLInputElement;
+  if (input) {
+    password.value = input.value;
+  }
+};
 </script>
 
 <template>
   <form
     ref="form"
     class="register-form"
-    @input="formIsValid = registerFormIsValid(form)"
+    @input="formIsValid = registerFormIsValid(form) && gender"
   >
     <div class="p-fluid">
       <div class="field">
@@ -55,6 +90,15 @@ const passwordRepeat = ref('');
         <small id="reg_lastName_help"></small>
       </div>
       <div class="field">
+        <label for="reg_lastName">Geschlecht</label>
+        <Dropdown
+          id="reg_gender"
+          v-model="gender"
+          :options="genderOptions"
+          optionLabel="name"
+        />
+      </div>
+      <div class="field">
         <label for="reg_matriculationNumber">Matrikelnummer</label>
         <InputText
           id="reg_matriculationNumber"
@@ -78,15 +122,16 @@ const passwordRepeat = ref('');
         <small id="reg_email_help"></small>
       </div>
       <PasswordSecure
-        v-model="password"
+        :value="password"
+        @input="handlePasswordInput"
         id="reg_password"
       />
       <div class="field">
         <label for="reg_passwordRepeat">Passwort wiederholen</label>
         <Password
           inputId="reg_passwordRepeat"
-          v-model="passwordRepeat"
           :feedback="false"
+          v-model="passwordRepeat"
           toggleMask
           required
           @blur="validate"
@@ -98,7 +143,7 @@ const passwordRepeat = ref('');
     <p>Verwenden Sie wenn möglich Ihre E-Mail-Adresse der Hochschule. Neben Datenschutzgründen kann auch eine Zustellung an andere Provider nicht garantiert werden.</p>
     <Button
       label="Registrieren"
-      type="submit"
+      @click="submit"
       :disabled="!formIsValid"
     />
   </form>

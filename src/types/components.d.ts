@@ -10,6 +10,7 @@ declare module '@vue/runtime-core' {
     Address: typeof import('./../components/Address.vue')['default']
     Button: typeof import('primevue/button')['default']
     Divider: typeof import('primevue/divider')['default']
+    Dropdown: typeof import('primevue/dropdown')['default']
     Footer: typeof import('./../components/Footer.vue')['default']
     Header: typeof import('./../components/Header.vue')['default']
     InputText: typeof import('primevue/inputtext')['default']
@@ -19,5 +20,6 @@ declare module '@vue/runtime-core' {
     RegisterForm: typeof import('./../components/forms/RegisterForm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SelectButton: typeof import('primevue/selectbutton')['default']
   }
 }

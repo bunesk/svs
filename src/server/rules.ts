@@ -1,4 +1,5 @@
 import {Request, Response} from 'express';
+import {sendJsonError} from './json.js';
 
 /**
  * Defines custom routing rules.
@@ -6,10 +7,14 @@ import {Request, Response} from 'express';
  * @param app app
  */
 const defineRules = (app: any) => {
-  const rules = [{path: '/api', handler: apiHandler}];
+  const rules = [{path: '/api/*', handler: apiHandler, post: true}];
 
   for (const rule of rules) {
-    app.use(rule.path, rule.handler);
+    if (rule.post) {
+      app.post(rule.path, rule.handler);
+    } else {
+      app.get(rule.path, rule.handler);
+    }
   }
 };
 export default defineRules;
@@ -22,9 +27,7 @@ const apiHandler = async (req: Request, res: Response) => {
   const controllerUrl = urlParts[2];
   const controllerFunctionName = urlParts[3];
   if (!controllerUrl) {
-    res.status(404).json({
-      message: 'You must provide the controller name you want the data from.',
-    });
+    sendJsonError(res, 'You must provide the controller name you want the data from.', 404);
     return;
   }
   try {
@@ -40,8 +43,7 @@ const apiHandler = async (req: Request, res: Response) => {
       controller.index(req, res);
     }
   } catch (e: any) {
-    res.status(404).json({
-      message: `Controller for ${controllerUrl} not found.`,
-    });
+    console.log(e.message);
+    sendJsonError(res, `Controller for '${controllerUrl}' not found.`, 404);
   }
 };

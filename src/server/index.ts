@@ -67,10 +67,14 @@ export async function createServer(
     );
   }
 
+  // support json and url-encoded bodies
+  app.use(express.json());
+  app.use(express.urlencoded({extended: true}));
+
   // define custom routing rules
   defineRules(app);
 
-  app.use('*', async (req: Request, res: Response) => {
+  app.get('*', async (req: Request, res: Response) => {
     try {
       const url = req.originalUrl;
 
