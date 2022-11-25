@@ -36,7 +36,11 @@ export const register = async (req: Request, res: Response) => {
     await User.create(params);
     return sendJsonSuccess(res, [], 'Benutzer erfolgreich angelegt.');
   } catch (e: any) {
-    return sendJsonError(res, `Benutzer anlegen fehlgeschlagen: ${e.message}`);
+    let message = 'Benutzer anlegen fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.';
+    if (e.parent.code === 'ER_DUP_ENTRY') {
+      message = 'Benutzername bereits vergeben. Bitte wählen Sie einen anderen.';
+    }
+    return sendJsonError(res, message);
   }
 };
 

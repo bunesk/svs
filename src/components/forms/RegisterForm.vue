@@ -14,6 +14,7 @@ const matriculationNumber = ref();
 const email = ref('');
 const password = ref('');
 const passwordRepeat = ref('');
+const error: Ref<HTMLParagraphElement | null> = ref(null);
 
 const genderOptions = ref([
   {name: 'Männlich', code: 'male'},
@@ -32,12 +33,11 @@ const submit = async () => {
     password: password.value,
   };
   const response = await sendRequest('user', 'register', params);
+  const resData = await response.json();
   if (response.status === 200) {
-    console.log('Great success');
+    window.location.href = window.location.href.split('register')[0];
   } else {
-    console.log('Tja, hättste gedacht');
-    console.log(response);
-    console.log(await response.json());
+    (error.value as HTMLParagraphElement).textContent = resData.message;
   }
 };
 
@@ -141,6 +141,10 @@ const handlePasswordInput = (event: InputEvent) => {
       </div>
     </div>
     <p>Verwenden Sie wenn möglich Ihre E-Mail-Adresse der Hochschule. Neben Datenschutzgründen kann auch eine Zustellung an andere Provider nicht garantiert werden.</p>
+    <p
+      ref="error"
+      class="invalid"
+    ></p>
     <Button
       label="Registrieren"
       @click="submit"
