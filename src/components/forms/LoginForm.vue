@@ -1,10 +1,26 @@
 <script setup lang="ts">
 import {ref, Ref} from 'vue';
+import sendRequest from '../../client/request';
 import {validate} from './services/validation';
 
 const form: Ref<HTMLFormElement | null> = ref(null);
 const username = ref('');
 const password = ref('');
+const error: Ref<HTMLParagraphElement | null> = ref(null);
+
+const submit = async () => {
+  const params = {
+    username: username.value,
+    password: password.value,
+  };
+  const response = await sendRequest('user', 'login', params);
+  const resData = await response.json();
+  if (response.status === 200) {
+    window.location.href = window.location.href.split('login')[0];
+  } else {
+    (error.value as HTMLParagraphElement).textContent = resData.message;
+  }
+};
 </script>
 
 <template>
@@ -38,10 +54,14 @@ const password = ref('');
         @keyup="validate"
       />
     </div>
+    <p
+      ref="error"
+      class="invalid"
+    ></p>
     <Button
       label="Anmelden"
-      type="submit"
       :disabled="!form?.checkValidity()"
+      @click="submit"
     />
   </form>
 </template>
@@ -57,6 +77,11 @@ const password = ref('');
 
   .p-button {
     width: 100%;
+  }
+
+  p.invalid {
+    margin-top: 0;
+    text-align: left;
   }
 }
 </style>

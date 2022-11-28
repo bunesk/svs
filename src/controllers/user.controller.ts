@@ -2,6 +2,12 @@ import {Request, Response} from 'express';
 import User from '../models/User.js';
 import {checkRequiredParams, paramsToObject, sendJsonError, sendJsonSuccess} from '../server/json.js';
 
+import * as dotenv from 'dotenv';
+import {createJwtToken} from '../server/auth.js';
+dotenv.config();
+
+const JWT_SECRET = process.env.JWT_SECRET as string;
+
 export const index = (req: Request, res: Response) => {
   return getAll(req, res);
 };
@@ -34,7 +40,8 @@ export const register = async (req: Request, res: Response) => {
   try {
     const params = paramsToObject(req, requiredParams);
     await User.create(params);
-    return sendJsonSuccess(res, [], 'Benutzer erfolgreich angelegt.');
+    const jwtToken = createJwtToken(req.params.username);
+    return sendJsonSuccess(res, {jwtToken: jwtToken}, 'Benutzer erfolgreich angelegt.');
   } catch (e: any) {
     let message = 'Benutzer anlegen fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.';
     if (e.parent.code === 'ER_DUP_ENTRY') {
@@ -51,9 +58,10 @@ export const login = async (req: Request, res: Response) => {
     return sendJsonError(res, message);
   }
   const params = paramsToObject(req, requiredParams);
-  const user = User.findOne({where: params});
+  const user = await User.findOne({where: params});
   if (!user) {
     return sendJsonError(res, 'Benutzername oder Password falsch.');
   }
-  return sendJsonSuccess(res, user);
+  const jwtToken = createJwtToken(req.params.username);
+  return sendJsonSuccess(res, {jwtToken: jwtToken});
 };
