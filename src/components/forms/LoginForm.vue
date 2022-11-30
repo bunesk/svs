@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref, Ref} from 'vue';
-import request from '../../client/request';
+import sendRequest from '../../client/request';
 import {validate} from './services/validation';
 
 const form: Ref<HTMLFormElement | null> = ref(null);
@@ -13,11 +13,10 @@ const submit = async () => {
     username: username.value,
     password: password.value,
   };
-  const response = await request.send('user', 'login', params);
+  const response = await sendRequest('user', 'login', params);
   const resData = await response.json();
   if (response.status === 200) {
-    request.jwtToken = resData.result.jwtToken;
-    // window.location.href = window.location.href.split('login')[0];
+    window.location.href = window.location.href.split('login')[0];
   } else {
     (error.value as HTMLParagraphElement).textContent = resData.message;
   }
