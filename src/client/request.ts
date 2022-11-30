@@ -1,3 +1,5 @@
+import cookies from './cookies';
+
 /**
  * Sends a json request to the express backend and returns the
  * received json response.
@@ -9,7 +11,10 @@
  */
 const sendRequest = async (controller: string, method = '', params: object = {}): Promise<Response> => {
   const url = `${window.location.protocol}//${window.location.host}/api/${controller}/${method}`;
-  const headers = new Headers({'Content-Type': 'application/json'});
+  const headers = new Headers({
+    Authorization: cookies.get('auth'),
+    'Content-Type': 'application/json',
+  });
   const options = {
     method: 'POST',
     headers: headers,

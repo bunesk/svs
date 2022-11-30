@@ -2,6 +2,7 @@
 import {Ref, ref} from 'vue';
 import sendRequest from '../../client/request';
 import {validate, registerFormIsValid} from './services/validation';
+import cookies from '../../client/cookies';
 
 const form: Ref<HTMLFormElement | null> = ref(null);
 const formIsValid = ref(false);
@@ -35,6 +36,7 @@ const submit = async () => {
   const response = await sendRequest('user', 'register', params);
   const resData = await response.json();
   if (response.status === 200) {
+    cookies.set('auth', resData.result.jwtToken);
     window.location.href = window.location.href.split('register')[0];
   } else {
     (error.value as HTMLParagraphElement).textContent = resData.message;
