@@ -1,5 +1,6 @@
 import db from './DatabaseConnection.js';
-import {Model as SequelizeModel, ModelAttributes, DataTypes} from 'sequelize';
+import {Model as SequelizeModel, ModelAttributes, DataTypes, BuildOptions, CreationOptional} from 'sequelize';
+import {MakeNullishOptional} from 'sequelize/types/utils.js';
 
 /**
  * The basic model class to inherit from for creating models.
@@ -12,8 +13,17 @@ import {Model as SequelizeModel, ModelAttributes, DataTypes} from 'sequelize';
  *
  * @see https://sequelize.org/api/v6/class/src/model.js~model
  */
-abstract class Model extends SequelizeModel {
-  declare id: number;
+abstract class Model<
+  TModelAttributes extends {} = any,
+  TCreationAttributes extends {} = TModelAttributes
+> extends SequelizeModel {
+  // Since TS cannot determine model attributes at compile time
+  // we have to declare them here virtually
+  declare id: CreationOptional<number>;
+  // these attributes are automatically created by Sequelize
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
+  declare deletedAt: Date | null;
 
   static init(attributes: ModelAttributes<any, any>, options?: object): any {
     const newAttributes = {
@@ -32,6 +42,13 @@ abstract class Model extends SequelizeModel {
     };
     // @ts-ignore
     return super.init(newAttributes, newOptions);
+  }
+
+  // override constructor to type-check model attributes
+  // always construct new instances this way using the 'new' operator
+  // using Model.create() instead doesn't provide you the attributes autocomplete
+  constructor(values?: MakeNullishOptional<TCreationAttributes>, options?: BuildOptions) {
+    super(values, options);
   }
 }
 
