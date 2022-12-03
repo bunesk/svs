@@ -13,12 +13,12 @@ export const index = (req: Request, res: Response) => {
 };
 
 export const getName = async (req: Request, res: Response) => {
-  if (!req.params.id) {
+  if (!req.body.id) {
     return sendJsonError(res, 'Benutzer-ID fehlt');
   }
-  const user = await User.findByPk(req.params.id);
+  const user = await User.findByPk(req.body.id);
   if (!user) {
-    return sendJsonError(res, `Benutzer mit der ID ${req.params.id} nicht gefunden.`);
+    return sendJsonError(res, `Benutzer mit der ID ${req.body.id} nicht gefunden.`);
   }
   return res.json({
     status: true,
@@ -27,7 +27,7 @@ export const getName = async (req: Request, res: Response) => {
 };
 
 export const getAll = async (req: Request, res: Response) => {
-  const users = await User.findAll({paranoid: !req.params.includeInactive});
+  const users = await User.findAll({paranoid: !req.body.includeInactive});
   return sendJsonSuccess(res, users);
 };
 
@@ -40,7 +40,7 @@ export const register = async (req: Request, res: Response) => {
   try {
     const params = paramsToObject(req, requiredParams);
     await User.create(params);
-    const jwtToken = createJwtToken(req.params.username);
+    const jwtToken = createJwtToken(req.body.username);
     return sendJsonSuccess(res, {jwtToken: jwtToken}, 'Benutzer erfolgreich angelegt.');
   } catch (e: any) {
     let message = 'Benutzer anlegen fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.';
@@ -62,6 +62,6 @@ export const login = async (req: Request, res: Response) => {
   if (!user) {
     return sendJsonError(res, 'Benutzername oder Password falsch.');
   }
-  const jwtToken = createJwtToken(req.params.username);
+  const jwtToken = createJwtToken(req.body.username);
   return sendJsonSuccess(res, {jwtToken: jwtToken});
 };
