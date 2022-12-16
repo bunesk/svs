@@ -31,6 +31,17 @@ export const getAll = async (req: Request, res: Response) => {
   return sendJsonSuccess(res, users);
 };
 
+export const getData = async (req: Request, res: Response) => {
+  if (!req.body.id) {
+    return sendJsonError(res, 'Benutzer-ID fehlt');
+  }
+  const user = await User.findOne({paranoid: !req.body.includeInactive});
+  if (!user) {
+    return sendJsonError(res, `Benutzer mit der ID ${req.body.id} nicht gefunden.`);
+  }
+  return sendJsonSuccess(res, user);
+};
+
 export const register = async (req: Request, res: Response) => {
   const requiredParams = ['username', 'firstName', 'lastName', 'gender', 'matriculationNumber', 'email', 'password'];
   const message = checkRequiredParams(req, requiredParams);
@@ -63,5 +74,43 @@ export const login = async (req: Request, res: Response) => {
     return sendJsonError(res, 'Benutzername oder Password falsch.');
   }
   const jwtToken = createJwtToken(req.body.username);
-  return sendJsonSuccess(res, {jwtToken: jwtToken});
+  return sendJsonSuccess(res, {jwtToken: jwtToken}, 'Anmeldung erfolgreich.');
+};
+
+export const update = async (req: Request, res: Response) => {
+  if (!req.body.id) {
+    return sendJsonError(res, 'Benutzer-ID fehlt');
+  }
+  try {
+    await User.update(req.body, {
+      where: {id: req.body.id},
+      fields: Object.keys(req.body),
+    });
+    return sendJsonSuccess(res, [], 'Benutzer erfolgreich aktualisiert.');
+  } catch (e: any) {
+    const message = 'Benutzer aktualisieren fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.';
+    return sendJsonError(res, message);
+  }
+};
+
+export const remove = async (req: Request, res: Response) => {
+  if (!req.body.id) {
+    return sendJsonError(res, 'Benutzer-ID fehlt');
+  }
+  const amountDestroyed = await User.destroy({
+    where: {id: req.body.id},
+    force: !!req.body.force,
+  });
+  if (!amountDestroyed) {
+    return sendJsonError(res, `Benutzer mit der ID ${req.body.id} ist entweder inexistent oder bereits gelöscht`);
+  }
+  return sendJsonSuccess(res, [], 'Benutzer erfolgreich gelöscht');
+};
+
+export const restore = async (req: Request, res: Response) => {
+  if (!req.body.id) {
+    return sendJsonError(res, 'Benutzer-ID fehlt');
+  }
+  await User.restore({where: {id: req.body.id}});
+  return sendJsonSuccess(res, [], 'Benutzer wiederhergestellt.');
 };
