@@ -4,6 +4,7 @@ import {fileURLToPath} from 'node:url';
 import express, {Request, Response} from 'express';
 import defineRules from './rules.js';
 import * as dotenv from 'dotenv';
+import db from '../database/DatabaseConnection.js';
 
 dotenv.config();
 const isTest = process.env.NODE_ENV === 'test' || !!process.env.VITE_TEST_BUILD;
@@ -102,6 +103,9 @@ export async function createServer(
       res.status(500).end(e.stack);
     }
   });
+
+  // connect database and sync models
+  await db.connectionEstablished;
 
   return {app, vite};
 }
