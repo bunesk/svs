@@ -2,7 +2,6 @@
 
 Enter your vue views here using pascal case. Every view will automatically added to the routing.
 So i.e. `/imprint` will load the `Imprint.vue` view.
-For component templates you will got open if custom routing rules match use the `templates` folder instead.
 
 ### File structure
 

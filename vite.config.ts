@@ -2,6 +2,7 @@ import {defineConfig} from 'vite';
 import vue from '@vitejs/plugin-vue';
 import Components from 'unplugin-vue-components/vite';
 import {PrimeVueResolver} from 'unplugin-vue-components/resolvers';
+import Pages from 'vite-plugin-pages';
 
 const virtualFile = '@virtual-file';
 const virtualId = '\0' + virtualFile;
@@ -23,6 +24,11 @@ export default defineConfig(({command, ssrBuild}) => ({
     Components({
       dts: 'src/types/components.d.ts',
       resolvers: [PrimeVueResolver()],
+    }),
+    // vite-plugin-pages
+    Pages({
+      dirs: 'src/views',
+      extensions: ['vue'],
     }),
     {
       name: 'virtual',
@@ -96,9 +102,7 @@ export default defineConfig(({command, ssrBuild}) => ({
             !code.includes('__ssr_vue_processAssetPath')
           ) {
             return {
-              code:
-                `import { __ssr_vue_processAssetPath } from '${virtualId}';__ssr_vue_processAssetPath;` +
-                code,
+              code: `import { __ssr_vue_processAssetPath } from '${virtualId}';__ssr_vue_processAssetPath;` + code,
               sourcemap: null, // no sourcemap support to speed up CI
             };
           }

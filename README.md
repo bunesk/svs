@@ -17,6 +17,7 @@ The SVS is a role-based adminstration tool.
 - [Sequelize](https://sequelize.org/)
 - [Vue Router](https://router.vuejs.org/)
 - [VueUse](https://vueuse.org/)
+- [Vite Plugin Pages](https://github.com/hannoeru/vite-plugin-pages)
 - [Unplugin Vue Components](https://www.npmjs.com/package/unplugin-vue-components)
 
 ## Recommended IDE Setup
