@@ -1,8 +1,10 @@
 import {
+  validateAmount,
   validateEmail,
   validateMatriculationNumber,
   validateName,
   validatePassword,
+  validatePoints,
   validateUsername,
 } from '../../../services/validators';
 
@@ -58,7 +60,14 @@ const getValidationFunction = (id: string): Function | null => {
       return validateUsername;
     case 'reg_firstName':
     case 'reg_lastName':
+    case 'reg_name':
       return validateName;
+    case 'reg_amountTests':
+    case 'reg_amountSheets':
+      return validateAmount;
+    case 'reg_pointsMax':
+    case 'reg_pointsPassed':
+      return validatePoints;
     case 'reg_matriculationNumber':
       return validateMatriculationNumber;
     case 'reg_email':

@@ -18,7 +18,7 @@ export const validateUsername = (name: string) => {
 };
 
 /**
- * Checks if the passed name is a valid first or last name by only containing letters and spaces.
+ * Checks if the passed name is a valid name by only containing letters and spaces.
  *
  * @param name name to check
  * @returns is valid name
@@ -77,6 +77,44 @@ export const validatePassword = (password: string) => {
     throw Error(
       'Verwende für das Passwort Kleinbuchstaben, Großbuchstaben, Ziffern, Symbole und mindestens 8 Zeichen.'
     );
+  }
+};
+
+/**
+ * Checks if the passed amount is an unsigned integer.
+ *
+ * @param name name to check
+ * @returns is valid name
+ */
+export const validateAmount = (amount: string) => {
+  const number = Number(amount);
+  if (!amount || isNaN(number)) {
+    throw Error('Angaben zur Anzahl müssen valide Zahlen sein.');
+  }
+  if (number < 0) {
+    throw Error('Angaben zur Anzahl müssen positive Zahlen sein.');
+  }
+  if (!Number.isInteger(number)) {
+    throw Error('Angaben zur Anzahl müssen Ganzzahlen sein.');
+  }
+};
+
+/**
+ * Checks if the passed points are a positive number.
+ *
+ * @param name name to check
+ * @returns is valid name
+ */
+export const validatePoints = (pointAmount: string) => {
+  const number = Number(pointAmount);
+  if (!pointAmount || isNaN(number)) {
+    throw Error('Punktzahl muss eine valide Zahl sein.');
+  }
+  if (number < 0) {
+    throw Error('Punktzahl muss positive Zahl sein.');
+  }
+  if (number % 0.5) {
+    throw Error('Punktzahl muss in 0.5-er Schritten angegeben werden.');
   }
 };
 

@@ -22,7 +22,7 @@ onBeforeMount(() => {
     <RouterLink
       v-for="event of events"
       :key="event.id"
-      :to="`/event/${event.id}`"
+      :to="`/events/${event.id}`"
       class="list-element"
     >
       {{event.name}}
