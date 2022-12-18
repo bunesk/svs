@@ -84,11 +84,11 @@ Event.init({
     allowNull: false,
   },
   pointsMax: {
-    type: DataTypes.INTEGER.UNSIGNED,
+    type: DataTypes.FLOAT.UNSIGNED,
     allowNull: false,
   },
   pointsPassed: {
-    type: DataTypes.INTEGER.UNSIGNED,
+    type: DataTypes.FLOAT.UNSIGNED,
     allowNull: false,
   },
   visible: {

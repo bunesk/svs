@@ -30,7 +30,7 @@ Task.init({
     allowNull: false,
   },
   pointsMax: {
-    type: DataTypes.INTEGER.UNSIGNED,
+    type: DataTypes.FLOAT.UNSIGNED,
     allowNull: false,
   },
 });
