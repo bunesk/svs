@@ -1,4 +1,5 @@
 import {Request, Response} from 'express';
+import auth from './auth.js';
 import {sendJsonError} from './json.js';
 
 /**
@@ -11,7 +12,7 @@ const defineRules = (app: any) => {
 
   for (const rule of rules) {
     if (rule.post) {
-      app.post(rule.path, rule.handler);
+      app.post(rule.path, auth, rule.handler);
     } else {
       app.get(rule.path, rule.handler);
     }

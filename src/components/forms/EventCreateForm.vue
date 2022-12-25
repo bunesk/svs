@@ -2,7 +2,6 @@
 import {Ref, ref} from 'vue';
 import sendRequest from '../../client/request';
 import {validate, registerFormIsValid} from './services/validation';
-import cookies from '../../client/cookies';
 
 const form: Ref<HTMLFormElement | null> = ref(null);
 const formIsValid = ref(false);

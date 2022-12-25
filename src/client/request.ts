@@ -12,7 +12,7 @@ import cookies from './cookies';
 const sendRequest = async (controller: string, method = '', params: object = {}): Promise<Response> => {
   const url = `${window.location.protocol}//${window.location.host}/api/${controller}/${method}`;
   const headers = new Headers({
-    Authorization: cookies.get('auth'),
+    Authorization: 'Bearer ' + cookies.get('auth'),
     'Content-Type': 'application/json',
   });
   const options = {
