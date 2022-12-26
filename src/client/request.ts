@@ -10,9 +10,10 @@ import cookies from './cookies';
  * @returns response
  */
 const sendRequest = async (controller: string, method = '', params: object = {}): Promise<Response> => {
+  const jwtToken = cookies.get('auth');
   const url = `${window.location.protocol}//${window.location.host}/api/${controller}/${method}`;
   const headers = new Headers({
-    Authorization: 'Bearer ' + cookies.get('auth'),
+    Authorization: jwtToken ? 'Bearer ' + jwtToken : '',
     'Content-Type': 'application/json',
   });
   const options = {

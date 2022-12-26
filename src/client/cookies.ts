@@ -19,7 +19,7 @@ const cookiesHandler = {
    * @param value the value to set
    * @param lifetime how long the cookie should be there (in seconds, default: 90 days)
    */
-  set: (name: string, value: string, lifetime = 86400 * 90) => {
+  set: (name: string, value: string, lifetime = 1000 * 86400 * 90) => {
     const timestamp = new Date().getTime() + lifetime;
     const expireDate = new Date(timestamp);
     cookies.set(name, value, {expires: expireDate});
