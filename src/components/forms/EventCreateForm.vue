@@ -50,7 +50,7 @@ const handlePasswordInput = (event: InputEvent) => {
   >
     <div class="p-fluid">
       <div class="field">
-        <label for="reg_name">Benutzername</label>
+        <label for="reg_name">Name</label>
         <InputText
           id="reg_name"
           v-model="name"

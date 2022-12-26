@@ -27,5 +27,6 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SelectButton: typeof import('primevue/selectbutton')['default']
+    UserCreateForm: typeof import('./../components/forms/UserCreateForm.vue')['default']
   }
 }
