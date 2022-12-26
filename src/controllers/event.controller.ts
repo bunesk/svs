@@ -1,4 +1,5 @@
-import {Request, Response} from 'express';
+import {Request} from 'express-jwt';
+import {Response} from 'express';
 import Event from '../models/Event.js';
 import User from '../models/User.js';
 import {checkRequiredParams, paramsToObject, sendJsonError, sendJsonSuccess} from '../server/json.js';
@@ -8,11 +9,17 @@ export const index = (req: Request, res: Response) => {
 };
 
 export const getAll = async (req: Request, res: Response) => {
+  if (!req.auth || !req.auth.username) {
+    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
+  }
   const users = await Event.findAll({paranoid: !req.body.includeInactive});
   return sendJsonSuccess(res, users);
 };
 
 export const getData = async (req: Request, res: Response) => {
+  if (!req.auth || !req.auth.username) {
+    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
+  }
   if (!req.body.id) {
     return sendJsonError(res, 'Veranstaltungs-ID fehlt');
   }
@@ -20,10 +27,26 @@ export const getData = async (req: Request, res: Response) => {
   if (!event) {
     return sendJsonError(res, `Keine Veranstaltung mit der ID ${req.body.userId} gefunden.`, 404);
   }
+  // event.hasUser(user);
   return sendJsonSuccess(res, event);
 };
 
 export const getByUser = async (req: Request, res: Response) => {
+  if (!req.auth || !req.auth.username) {
+    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
+  }
+  const user = await User.findOne({where: {username: req.auth.username}});
+  if (!user) {
+    return sendJsonError(res, `Benutzer '${req.auth.username}' nicht gefunden.`, 404);
+  }
+  const events = user.getEvents();
+  return sendJsonSuccess(res, events);
+};
+
+export const getByUserId = async (req: Request, res: Response) => {
+  if (!req.auth || !req.auth.username) {
+    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
+  }
   if (!req.body.userId) {
     return sendJsonError(res, 'Benutzer-ID fehlt');
   }
@@ -48,6 +71,13 @@ export const getUsers = async (req: Request, res: Response) => {
 };
 
 export const create = async (req: Request, res: Response) => {
+  if (!req.auth || !req.auth.username) {
+    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
+  }
+  const user = await User.findOne({where: {username: req.auth.username}});
+  if (user && user.isAdmin) {
+    return sendJsonError(res, 'Sie sind nicht berechtigt eine Veranstaltung zu erstellen.', 403);
+  }
   const requiredParams = ['name', 'password', 'amountTests', 'amountSheets', 'pointsMax', 'pointsPassed'];
   const message = checkRequiredParams(req, requiredParams);
   if (message) {
@@ -64,6 +94,13 @@ export const create = async (req: Request, res: Response) => {
 };
 
 export const update = async (req: Request, res: Response) => {
+  if (!req.auth || !req.auth.username) {
+    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
+  }
+  const user = await User.findOne({where: {username: req.auth.username}});
+  if (user && user.isAdmin) {
+    return sendJsonError(res, 'Sie sind nicht berechtigt eine Veranstaltung zu erstellen.', 403);
+  }
   if (!req.body.id) {
     return sendJsonError(res, 'Veranstaltungs-ID fehlt');
   }
@@ -81,6 +118,13 @@ export const update = async (req: Request, res: Response) => {
 };
 
 export const remove = async (req: Request, res: Response) => {
+  if (!req.auth || !req.auth.username) {
+    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
+  }
+  const user = await User.findOne({where: {username: req.auth.username}});
+  if (user && user.isAdmin) {
+    return sendJsonError(res, 'Sie sind nicht berechtigt eine Veranstaltung zu erstellen.', 403);
+  }
   if (!req.body.id) {
     return sendJsonError(res, 'Veranstaltung-ID fehlt');
   }
@@ -95,6 +139,13 @@ export const remove = async (req: Request, res: Response) => {
 };
 
 export const restore = async (req: Request, res: Response) => {
+  if (!req.auth || !req.auth.username) {
+    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
+  }
+  const user = await User.findOne({where: {username: req.auth.username}});
+  if (user && user.isAdmin) {
+    return sendJsonError(res, 'Sie sind nicht berechtigt eine Veranstaltung zu erstellen.', 403);
+  }
   if (!req.body.id) {
     return sendJsonError(res, 'Veranstaltung-ID fehlt');
   }
@@ -103,6 +154,9 @@ export const restore = async (req: Request, res: Response) => {
 };
 
 export const isMember = async (req: Request, res: Response) => {
+  if (!req.auth || !req.auth.username) {
+    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
+  }
   const requiredParams = ['eventId', 'userId'];
   const message = checkRequiredParams(req, requiredParams);
   if (message) {
