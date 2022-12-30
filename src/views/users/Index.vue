@@ -9,8 +9,13 @@
       class="create-button"
     >
       <Button>Benutzer anlegen</Button>
+    </RouterLink>&nbsp;
+    <RouterLink
+      to="/users/profile"
+      class="create-button"
+    >
+      <Button>Profil</Button>
     </RouterLink>
-    <EventList />
   </div>
 </template>
 

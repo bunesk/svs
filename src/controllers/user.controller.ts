@@ -32,13 +32,24 @@ export const getAll = async (req: Request, res: Response) => {
   return sendJsonSuccess(res, users);
 };
 
+// export const getData = async (req: Request, res: Response) => {
+//   if (!req.body.id) {
+//     return sendJsonError(res, 'Benutzer-ID fehlt');
+//   }
+//   const user = await User.findOne({paranoid: !req.body.includeInactive});
+//   if (!user) {
+//     return sendJsonError(res, `Benutzer mit der ID ${req.body.id} nicht gefunden.`);
+//   }
+//   return sendJsonSuccess(res, user);
+// };
+
 export const getData = async (req: Request, res: Response) => {
-  if (!req.body.id) {
-    return sendJsonError(res, 'Benutzer-ID fehlt');
+  if (!req.auth || !req.auth.username) {
+    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
   }
-  const user = await User.findOne({paranoid: !req.body.includeInactive});
+  const user = await User.findOne({where: {username: req.auth.username}});
   if (!user) {
-    return sendJsonError(res, `Benutzer mit der ID ${req.body.id} nicht gefunden.`);
+    return sendJsonError(res, `Benutzer '${req.auth.username}' nicht gefunden.`, 404);
   }
   return sendJsonSuccess(res, user);
 };
