@@ -42,7 +42,6 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare matriculationNumber: string | null;
   declare email: string;
   declare password: string;
-  declare activationCode: string | null;
   declare isAdmin: CreationOptional<boolean>;
   declare isTutor: CreationOptional<boolean>;
 
@@ -145,9 +144,6 @@ User.init({
       const password = encryptPassword(value);
       this.setDataValue('password', password);
     },
-  },
-  activationCode: {
-    type: DataTypes.STRING,
   },
   isAdmin: {
     type: DataTypes.BOOLEAN,
