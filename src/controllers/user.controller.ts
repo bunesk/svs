@@ -1,7 +1,7 @@
 import {Request} from 'express-jwt';
 import {Response} from 'express';
 import User from '../models/User.js';
-import {checkRequiredParams, paramsToObject, sendJsonError, sendJsonSuccess} from '../server/json.js';
+import {checkRequiredParams, copy, paramsToObject, sendJsonError, sendJsonSuccess} from '../server/json.js';
 
 import * as dotenv from 'dotenv';
 import {createJwtToken, encryptPassword} from '../server/auth.js';
@@ -51,7 +51,8 @@ export const getData = async (req: Request, res: Response) => {
   if (!user) {
     return sendJsonError(res, `Benutzer '${req.auth.username}' nicht gefunden.`, 404);
   }
-  return sendJsonSuccess(res, user);
+  const userData = copy(user, ['password']);
+  return sendJsonSuccess(res, userData);
 };
 
 export const register = async (req: Request, res: Response) => {

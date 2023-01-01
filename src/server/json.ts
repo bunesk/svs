@@ -1,5 +1,13 @@
 import {Request, Response} from 'express';
 
+export const copy = (object: object, entriesToRemove: Array<string> = []) => {
+  const copiedObject = JSON.parse(JSON.stringify(object));
+  for (const entry of entriesToRemove) {
+    delete copiedObject[entry];
+  }
+  return copiedObject;
+};
+
 /**
  * Checks if all the passed parameters exist
  *
