@@ -3,8 +3,13 @@
 
 <template>
   <div>
-    <h1>Veranstaltungen</h1>
-    <EventList />
+    <h1>Benutzer</h1>
+    <RouterLink
+      to="/users/create"
+      class="create-button"
+    >
+      <Button>Benutzer anlegen</Button>
+    </RouterLink>
   </div>
 </template>
 

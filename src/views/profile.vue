@@ -1,23 +1,11 @@
 <script setup lang="ts">
-import {genderOptions, default as user} from '../../client/user';
-
-const getGenderLabel = (code: string): string => {
-  for (const option of genderOptions) {
-    if (option.code === code) {
-      return option.name;
-    }
-  }
-  return '';
-};
+import {getGenderLabel, getRole, default as user} from '../client/user';
 </script>
 
 <template>
-  <div>
+  <div v-if="user">
     <h1>Profil</h1>
-    <div
-      v-if="user"
-      class="table"
-    >
+    <div class="table">
       <span class="row-title">Benutzername:</span>
       <span class="row-value">{{user.username}}</span>
       <span class="row-title">Vorname:</span>
@@ -30,10 +18,12 @@ const getGenderLabel = (code: string): string => {
       <span class="row-value">{{user.matriculationNumber}}</span>
       <span class="row-title">E-Mail:</span>
       <span class="row-value">{{user.email}}</span>
+      <span class="row-title">Rolle:</span>
+      <span class="row-value">{{getRole(user.isAdmin, user.isTutor)}}</span>
     </div>
+    <ChangeGenderForm />
+    <ChangePasswordForm />
   </div>
-  <ChangeGenderForm />
-  <ChangePasswordForm />
 </template>
 
 <style lang="scss" scoped>

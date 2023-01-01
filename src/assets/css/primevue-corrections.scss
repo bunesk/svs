@@ -7,3 +7,7 @@
 :deep(label + span.p-inputwrapper) {
   margin-top: 0.25em;
 }
+/** remove text decoration from button links */
+:deep(a:has(button.p-button)) {
+  text-decoration: none;
+}

@@ -5,17 +5,12 @@
   <div>
     <h1>Veranstaltungen</h1>
     <RouterLink
-      to="/users/create"
+      to="/events/create"
       class="create-button"
     >
-      <Button>Benutzer anlegen</Button>
-    </RouterLink>&nbsp;
-    <RouterLink
-      to="/users/profile"
-      class="create-button"
-    >
-      <Button>Profil</Button>
+      <Button>Veranstaltung anlegen</Button>
     </RouterLink>
+    <EventList />
   </div>
 </template>
 
