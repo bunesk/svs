@@ -25,6 +25,8 @@ import {
 } from 'sequelize';
 import User from './User.js';
 import Test from './Test.js';
+import {validatePassword} from '../services/validators.js';
+import {encryptPassword} from '../server/auth.js';
 
 /**
  * An event is a lecture students can attend.
@@ -74,6 +76,11 @@ Event.init({
   password: {
     type: DataTypes.STRING,
     allowNull: false,
+    set(value: string) {
+      validatePassword(value);
+      const password = encryptPassword(value);
+      this.setDataValue('password', password);
+    },
   },
   amountTests: {
     type: DataTypes.INTEGER.UNSIGNED,

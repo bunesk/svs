@@ -4,8 +4,6 @@ import sendRequest from '../../client/request';
 import user from '../../client/user';
 import {validate, formIsValid, handlePasswordInput} from './services/validation';
 
-console.log(user);
-
 const form: Ref<HTMLFormElement | null> = ref(null);
 const isValid = ref(false);
 const status = ref(false);

@@ -25,6 +25,7 @@ import {
 } from '../services/validators.js';
 import Test from './Test.js';
 import Team from './Team.js';
+import {encryptPassword} from '../server/auth.js';
 
 declare type gender = 'male' | 'female' | 'diverse';
 
@@ -141,7 +142,8 @@ User.init({
     allowNull: false,
     set(value: string) {
       validatePassword(value);
-      this.setDataValue('password', value);
+      const password = encryptPassword(value);
+      this.setDataValue('password', password);
     },
   },
   activationCode: {

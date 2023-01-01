@@ -4,7 +4,7 @@ import User from '../models/User.js';
 import {checkRequiredParams, paramsToObject, sendJsonError, sendJsonSuccess} from '../server/json.js';
 
 import * as dotenv from 'dotenv';
-import {createJwtToken} from '../server/auth.js';
+import {createJwtToken, encryptPassword} from '../server/auth.js';
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
@@ -67,7 +67,7 @@ export const register = async (req: Request, res: Response) => {
     return sendJsonSuccess(res, {jwtToken: jwtToken}, 'Benutzer erfolgreich angelegt.');
   } catch (e: any) {
     let message = 'Benutzer anlegen fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.';
-    if (e.parent.code === 'ER_DUP_ENTRY') {
+    if (e.parent?.code === 'ER_DUP_ENTRY') {
       message = 'Benutzername bereits vergeben. Bitte wählen Sie einen anderen.';
     }
     return sendJsonError(res, message);
@@ -81,6 +81,7 @@ export const login = async (req: Request, res: Response) => {
     return sendJsonError(res, message);
   }
   const params = paramsToObject(req, requiredParams);
+  params.password = encryptPassword(params.password);
   const user = await User.findOne({where: params});
   if (!user) {
     return sendJsonError(res, 'Benutzername oder Password falsch.');
@@ -142,8 +143,6 @@ export const changePassword = async (req: Request, res: Response) => {
   if (!req.auth || !req.auth.username) {
     return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
   }
-  console.log(req.body.passwordOld);
-  console.log(req.body.passwordNew);
   if (!req.body.passwordOld || !req.body.passwordNew) {
     return sendJsonError(res, 'Kein Passwort angegeben.');
   }
@@ -151,7 +150,7 @@ export const changePassword = async (req: Request, res: Response) => {
   if (!user) {
     return sendJsonError(res, 'Authentifizierter Benutzer existiert nicht mehr.', 404);
   }
-  if (user.password !== req.body.passwordOld) {
+  if (user.password !== encryptPassword(req.body.passwordOld)) {
     return sendJsonError(res, 'Altes Passwort fehlerhaft.');
   }
   await User.update({password: req.body.passwordNew}, {where: {username: req.auth.username}});
