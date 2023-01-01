@@ -1,5 +1,12 @@
+import {reactive} from 'vue';
 import cookies from './cookies';
 import sendRequest from './request';
+
+export const genderOptions = [
+  {name: 'Männlich', code: 'male'},
+  {name: 'Weiblich', code: 'female'},
+  {name: 'Divers', code: 'diverse'},
+];
 
 const getUser = async () => {
   const jwtToken = cookies.get('auth');
@@ -18,4 +25,4 @@ const getUser = async () => {
 
 const user = await getUser();
 
-export default user;
+export default reactive(user);

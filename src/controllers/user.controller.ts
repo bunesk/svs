@@ -126,3 +126,34 @@ export const restore = async (req: Request, res: Response) => {
   await User.restore({where: {id: req.body.id}});
   return sendJsonSuccess(res, [], 'Benutzer wiederhergestellt.');
 };
+
+export const changeGender = async (req: Request, res: Response) => {
+  if (!req.auth || !req.auth.username) {
+    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
+  }
+  if (!req.body.gender) {
+    return sendJsonError(res, 'Kein Geschlecht angegeben.');
+  }
+  await User.update({gender: req.body.gender}, {where: {username: req.auth.username}});
+  return sendJsonSuccess(res, [], 'Geschlecht erfolgreich aktualisiert.');
+};
+
+export const changePassword = async (req: Request, res: Response) => {
+  if (!req.auth || !req.auth.username) {
+    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
+  }
+  console.log(req.body.passwordOld);
+  console.log(req.body.passwordNew);
+  if (!req.body.passwordOld || !req.body.passwordNew) {
+    return sendJsonError(res, 'Kein Passwort angegeben.');
+  }
+  const user = await User.findOne({where: {username: req.auth.username}});
+  if (!user) {
+    return sendJsonError(res, 'Authentifizierter Benutzer existiert nicht mehr.', 404);
+  }
+  if (user.password !== req.body.passwordOld) {
+    return sendJsonError(res, 'Altes Passwort fehlerhaft.');
+  }
+  await User.update({password: req.body.passwordNew}, {where: {username: req.auth.username}});
+  return sendJsonSuccess(res, [], 'Passwort erfolgreich aktualisiert.');
+};

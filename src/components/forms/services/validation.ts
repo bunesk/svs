@@ -26,6 +26,11 @@ export const validate = (event: Event) => {
     }
   } else {
     validity = input.checkValidity();
+    if (validity) {
+      help.textContent = '';
+    } else {
+      help.textContent = input.validationMessage;
+    }
   }
   if (!validity) {
     input.classList.add('invalid-border');
@@ -34,7 +39,7 @@ export const validate = (event: Event) => {
   }
 };
 
-export const registerFormIsValid = (form: HTMLFormElement | null) => {
+export const formIsValid = (form: HTMLFormElement | null) => {
   if (!form?.checkValidity()) {
     return false;
   }
@@ -52,6 +57,17 @@ export const registerFormIsValid = (form: HTMLFormElement | null) => {
     }
   }
   return true;
+};
+
+export const handlePasswordInput = (event: InputEvent, password: string) => {
+  if (!event || !event.target) {
+    return password;
+  }
+  const input = event.target as HTMLInputElement;
+  if (input) {
+    return input.value;
+  }
+  return password;
 };
 
 const getValidationFunction = (id: string): Function | null => {
@@ -73,15 +89,18 @@ const getValidationFunction = (id: string): Function | null => {
     case 'reg_email':
       return validateEmail;
     case 'reg_password':
+    case 'profile_passwordNew':
       return validatePassword;
     case 'reg_passwordRepeat':
+    case 'profile_passwordRepeat':
       return validatePasswordRepeat;
   }
   return null;
 };
 
 const validatePasswordRepeat = (value: string) => {
-  const password = document.getElementById('reg_password') as HTMLInputElement;
+  const password = (document.getElementById('reg_password') ||
+    document.getElementById('profile_passwordNew')) as HTMLInputElement;
   if (value !== password.value) {
     throw Error('Passwörter stimmen nicht überein.');
   }

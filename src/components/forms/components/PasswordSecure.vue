@@ -4,6 +4,7 @@ import {validate} from '../services/validation';
 const props = defineProps({
   id: {type: String, required: true},
   value: {type: String, default: ''},
+  label: {type: String, default: 'Passwort'},
 });
 const pwLength = 8;
 
@@ -43,7 +44,7 @@ const valid = () => {
 
 <template>
   <div class="field">
-    <label :for="id">Passwort</label>
+    <label :for="id">{{label}}</label>
     <Password
       :class="{'invalid-border': !valid()}"
       :inputId="id"
@@ -76,7 +77,7 @@ const valid = () => {
         </ul>
       </template>
     </Password>
-    <small id="reg_password_help"></small>
+    <small :id="`${id}_help`"></small>
   </div>
 </template>
 

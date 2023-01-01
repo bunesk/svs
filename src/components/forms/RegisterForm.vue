@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import {Ref, ref} from 'vue';
 import sendRequest from '../../client/request';
-import {validate, registerFormIsValid} from './services/validation';
+import {validate, formIsValid, handlePasswordInput} from './services/validation';
 import cookies from '../../client/cookies';
+import {genderOptions} from '../../client/user';
 
 const form: Ref<HTMLFormElement | null> = ref(null);
-const formIsValid = ref(false);
+const isValid = ref(false);
 
 const username = ref('');
 const firstName = ref('');
@@ -16,12 +17,6 @@ const email = ref('');
 const password = ref('');
 const passwordRepeat = ref('');
 const error: Ref<HTMLParagraphElement | null> = ref(null);
-
-const genderOptions = ref([
-  {name: 'Männlich', code: 'male'},
-  {name: 'Weiblich', code: 'female'},
-  {name: 'Divers', code: 'diverse'},
-]);
 
 const submit = async () => {
   const params = {
@@ -42,20 +37,13 @@ const submit = async () => {
     (error.value as HTMLParagraphElement).textContent = resData.message;
   }
 };
-
-const handlePasswordInput = (event: InputEvent) => {
-  const input = event?.target as HTMLInputElement;
-  if (input) {
-    password.value = input.value;
-  }
-};
 </script>
 
 <template>
   <form
     ref="form"
     class="register-form"
-    @input="formIsValid = registerFormIsValid(form) && gender"
+    @input="isValid = formIsValid(form) && gender"
   >
     <div class="p-fluid">
       <div class="field">
@@ -92,7 +80,7 @@ const handlePasswordInput = (event: InputEvent) => {
         <small id="reg_lastName_help"></small>
       </div>
       <div class="field">
-        <label for="reg_lastName">Geschlecht</label>
+        <label for="reg_gender">Geschlecht</label>
         <Dropdown
           id="reg_gender"
           v-model="gender"
@@ -125,7 +113,7 @@ const handlePasswordInput = (event: InputEvent) => {
       </div>
       <PasswordSecure
         :value="password"
-        @input="handlePasswordInput"
+        @input="password = handlePasswordInput($event, password)"
         id="reg_password"
       />
       <div class="field">
@@ -150,7 +138,7 @@ const handlePasswordInput = (event: InputEvent) => {
     <Button
       label="Registrieren"
       @click="submit"
-      :disabled="!formIsValid"
+      :disabled="!isValid"
     />
   </form>
 </template>

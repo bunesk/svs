@@ -10,6 +10,8 @@ declare module '@vue/runtime-core' {
     Address: typeof import('./../components/Address.vue')['default']
     Button: typeof import('primevue/button')['default']
     Card: typeof import('primevue/card')['default']
+    ChangeGenderForm: typeof import('./../components/forms/ChangeGenderForm.vue')['default']
+    ChangePasswordForm: typeof import('./../components/forms/ChangePasswordForm.vue')['default']
     Checkbox: typeof import('primevue/checkbox')['default']
     Divider: typeof import('primevue/divider')['default']
     Dropdown: typeof import('primevue/dropdown')['default']
