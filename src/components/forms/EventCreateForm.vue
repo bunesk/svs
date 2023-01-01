@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {Ref, ref} from 'vue';
 import sendRequest from '../../client/request';
-import {validate, registerFormIsValid} from './services/validation';
+import {validate, formIsValid} from './services/validation';
 
 const form: Ref<HTMLFormElement | null> = ref(null);
-const formIsValid = ref(false);
+const isValid = ref(false);
 
 const name = ref('');
 const password = ref('');
@@ -46,7 +46,7 @@ const handlePasswordInput = (event: InputEvent) => {
   <form
     ref="form"
     class="register-form"
-    @input="formIsValid = registerFormIsValid(form)"
+    @input="isValid = formIsValid(form)"
   >
     <div class="p-fluid">
       <div class="field">
@@ -135,7 +135,7 @@ const handlePasswordInput = (event: InputEvent) => {
       <Button
         label="Anlegen"
         @blur="submit"
-        :disabled="!formIsValid"
+        :disabled="!isValid"
       />
     </div>
   </form>
