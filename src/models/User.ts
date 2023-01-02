@@ -28,6 +28,7 @@ import Team from './Team.js';
 import {encryptPassword} from '../server/auth.js';
 
 declare type gender = 'male' | 'female' | 'diverse';
+declare type genderLabel = 'Männlich' | 'Weiblich' | 'Divers';
 
 /**
  * A user is a student, tutor or administrator.
@@ -38,7 +39,9 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare username: string;
   declare firstName: string;
   declare lastName: string;
+  declare fullName: string;
   declare gender: gender;
+  declare genderLabel: genderLabel;
   declare matriculationNumber: string | null;
   declare email: string;
   declare password: string;
@@ -80,15 +83,6 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare hasTeams: HasManyHasAssociationsMixin<Team, number>;
   declare countTeams: HasManyCountAssociationsMixin;
   declare createTeam: HasManyCreateAssociationMixin<Team, 'ownerId'>;
-
-  /**
-   * Returns the user's full name containing first and last name.
-   *
-   * @returns full name
-   */
-  getFullName(): string {
-    return `${this.firstName} ${this.lastName}`;
-  }
 }
 
 User.init({
@@ -117,9 +111,33 @@ User.init({
       this.setDataValue('lastName', value);
     },
   },
+  fullName: {
+    type: DataTypes.VIRTUAL,
+    get(): string {
+      return `${this.firstName} ${this.lastName}`;
+    },
+    set(value) {
+      throw new Error(`You can't set the 'fullName' value.`);
+    },
+  },
   gender: {
     type: DataTypes.ENUM('male', 'female', 'diverse'),
     allowNull: false,
+  },
+  genderLabel: {
+    type: DataTypes.VIRTUAL,
+    get(): genderLabel {
+      switch (this.gender) {
+        case 'male':
+          return 'Männlich';
+        case 'female':
+          return 'Weiblich';
+      }
+      return 'Divers';
+    },
+    set(value) {
+      throw new Error(`You can't set the 'genderLabel' value.`);
+    },
   },
   matriculationNumber: {
     type: DataTypes.STRING,
@@ -154,6 +172,21 @@ User.init({
     type: DataTypes.BOOLEAN,
     defaultValue: false,
     allowNull: false,
+  },
+  role: {
+    type: DataTypes.VIRTUAL,
+    get(): string {
+      if (this.isAdmin) {
+        return 'Admin';
+      }
+      if (this.isTutor) {
+        return 'Tutor';
+      }
+      return 'Student';
+    },
+    set(value) {
+      throw new Error(`You can't set the 'role' value.`);
+    },
   },
 });
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {getGenderLabel, getRole, default as user} from '../client/user';
+import user from '../client/user';
 </script>
 
 <template>
@@ -13,13 +13,13 @@ import {getGenderLabel, getRole, default as user} from '../client/user';
       <span class="row-title">Nachname:</span>
       <span class="row-value">{{user.lastName}}</span>
       <span class="row-title">Geschlecht:</span>
-      <span class="row-value">{{getGenderLabel(user.gender)}}</span>
+      <span class="row-value">{{user.genderLabel}}</span>
       <span class="row-title">Matrikelnummer:</span>
       <span class="row-value">{{user.matriculationNumber}}</span>
       <span class="row-title">E-Mail:</span>
       <span class="row-value">{{user.email}}</span>
       <span class="row-title">Rolle:</span>
-      <span class="row-value">{{getRole(user.isAdmin, user.isTutor)}}</span>
+      <span class="row-value">{{user.role}}</span>
     </div>
     <ChangeGenderForm />
     <ChangePasswordForm />

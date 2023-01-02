@@ -8,25 +8,6 @@ export const genderOptions = [
   {name: 'Divers', code: 'diverse'},
 ];
 
-export const getGenderLabel = (code: string): string => {
-  for (const option of genderOptions) {
-    if (option.code === code) {
-      return option.name;
-    }
-  }
-  return '';
-};
-
-export const getRole = (isAdmin: boolean, isTutor: boolean) => {
-  if (isAdmin) {
-    return 'Admin';
-  }
-  if (isTutor) {
-    return 'Tutor';
-  }
-  return 'Student';
-};
-
 const getUser = async () => {
   const jwtToken = cookies.get('auth');
   if (!jwtToken) {
