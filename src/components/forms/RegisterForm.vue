@@ -97,7 +97,6 @@ const submit = async () => {
         <InputText
           id="reg_matriculationNumber"
           v-model="matriculationNumber"
-          required
           @blur="validate"
           @keyup="validate"
         />

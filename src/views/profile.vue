@@ -15,7 +15,7 @@ import user from '../client/user';
       <span class="row-title">Geschlecht:</span>
       <span class="row-value">{{user.genderLabel}}</span>
       <span class="row-title">Matrikelnummer:</span>
-      <span class="row-value">{{user.matriculationNumber}}</span>
+      <span class="row-value">{{user.matriculationNumber || '-'}}</span>
       <span class="row-title">E-Mail:</span>
       <span class="row-value">{{user.email}}</span>
       <span class="row-title">Rolle:</span>

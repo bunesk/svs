@@ -39,6 +39,9 @@ export const validateName = (name: string) => {
  * @returns is valid matriculation number
  */
 export const validateMatriculationNumber = (number: string) => {
+  if (!number) {
+    return;
+  }
   if (number.length !== 7) {
     throw Error('Matrikelnummer muss 7 Zeichen lang sein.');
   }
