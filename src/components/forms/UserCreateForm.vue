@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import {Ref, ref} from 'vue';
+import {useRouter} from 'vue-router';
 import sendRequest from '../../client/request';
 import {validate, formIsValid, handlePasswordInput} from './services/validation';
 import cookies from '../../client/cookies';
 import {genderOptions} from '../../client/user';
 
+const router = useRouter();
 const form: Ref<HTMLFormElement | null> = ref(null);
 const isValid = ref(false);
 
@@ -35,7 +37,7 @@ const submit = async () => {
   const response = await sendRequest('user', 'create', params);
   const resData = await response.json();
   if (response.status === 200) {
-    window.location.href = window.location.href.split('create')[0];
+    router.push('/admin/users');
   } else {
     (error.value as HTMLParagraphElement).textContent = resData.message;
   }
