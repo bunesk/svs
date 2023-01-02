@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import {Ref, ref} from 'vue';
 import sendRequest from '../../client/request';
-import {validate, registerFormIsValid} from './services/validation';
+import {validate, formIsValid, handlePasswordInput} from './services/validation';
 import cookies from '../../client/cookies';
+import {genderOptions} from '../../client/user';
 
 const form: Ref<HTMLFormElement | null> = ref(null);
-const formIsValid = ref(false);
+const isValid = ref(false);
 
 const username = ref('');
 const firstName = ref('');
@@ -15,13 +16,9 @@ const matriculationNumber = ref();
 const email = ref('');
 const password = ref('');
 const passwordRepeat = ref('');
+const isAdmin = ref(false);
+const isTutor = ref(false);
 const error: Ref<HTMLParagraphElement | null> = ref(null);
-
-const genderOptions = ref([
-  {name: 'Männlich', code: 'male'},
-  {name: 'Weiblich', code: 'female'},
-  {name: 'Divers', code: 'diverse'},
-]);
 
 const submit = async () => {
   const params = {
@@ -32,21 +29,15 @@ const submit = async () => {
     matriculationNumber: matriculationNumber.value,
     email: email.value,
     password: password.value,
+    isAdmin: isAdmin.value,
+    isTutor: isTutor.value,
   };
-  const response = await sendRequest('user', 'register', params);
+  const response = await sendRequest('user', 'create', params);
   const resData = await response.json();
   if (response.status === 200) {
-    cookies.set('auth', resData.result.jwtToken);
-    window.location.href = window.location.href.split('register')[0];
+    window.location.href = window.location.href.split('create')[0];
   } else {
     (error.value as HTMLParagraphElement).textContent = resData.message;
-  }
-};
-
-const handlePasswordInput = (event: InputEvent) => {
-  const input = event?.target as HTMLInputElement;
-  if (input) {
-    password.value = input.value;
   }
 };
 </script>
@@ -55,7 +46,7 @@ const handlePasswordInput = (event: InputEvent) => {
   <form
     ref="form"
     class="register-form"
-    @input="formIsValid = registerFormIsValid(form) && gender"
+    @input="isValid = formIsValid(form) && gender"
   >
     <div class="p-fluid">
       <div class="field">
@@ -92,7 +83,7 @@ const handlePasswordInput = (event: InputEvent) => {
         <small id="reg_lastName_help"></small>
       </div>
       <div class="field">
-        <label for="reg_lastName">Geschlecht</label>
+        <label for="reg_gender">Geschlecht</label>
         <Dropdown
           id="reg_gender"
           v-model="gender"
@@ -125,18 +116,47 @@ const handlePasswordInput = (event: InputEvent) => {
       </div>
       <PasswordSecure
         :value="password"
-        @input="handlePasswordInput"
+        @input="password = handlePasswordInput($event, password)"
         id="reg_password"
       />
+      <div class="field">
+        <label for="reg_passwordRepeat">Passwort wiederholen</label>
+        <Password
+          inputId="reg_passwordRepeat"
+          :feedback="false"
+          v-model="passwordRepeat"
+          toggleMask
+          required
+          @blur="validate"
+          @keyup="validate"
+        />
+        <small id="reg_passwordRepeat_help"></small>
+      </div>
+      <div class="field-checkbox">
+        <Checkbox
+          class="check"
+          v-model="isAdmin"
+          :binary="true"
+        />
+        <label for="reg_isAdmin">Admin</label>
+      </div>
+      <div class="field-checkbox">
+        <Checkbox
+          class="check"
+          v-model="isTutor"
+          :binary="true"
+        />
+        <label for="reg_isTutor">Tutor</label>
+      </div>
     </div>
     <p
       ref="error"
       class="invalid"
     ></p>
     <Button
-      label="Anlegen"
+      label="Registrieren"
       @click="submit"
-      :disabled="!formIsValid"
+      :disabled="!isValid"
     />
   </form>
 </template>
@@ -149,6 +169,14 @@ const handlePasswordInput = (event: InputEvent) => {
 
   .field {
     padding: 0 0 0.75em 0;
+  }
+  .field-checkbox {
+    & + .field-checkbox {
+      margin-top: 0.5rem;
+    }
+    .check {
+      margin-right: 0.5rem;
+    }
   }
 
   .p-button {

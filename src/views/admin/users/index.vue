@@ -5,10 +5,10 @@
   <div>
     <h1>Benutzer</h1>
     <RouterLink
-      to="/users/create"
+      to="/admin/users/create"
       class="create-button"
     >
-      <Button>Benutzer anlegen</Button>
+      <Button>Benutzer erstellen</Button>
     </RouterLink>
   </div>
 </template>

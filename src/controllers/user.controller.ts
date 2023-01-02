@@ -1,7 +1,14 @@
 import {Request} from 'express-jwt';
 import {Response} from 'express';
 import User from '../models/User.js';
-import {checkRequiredParams, copy, paramsToObject, sendJsonError, sendJsonSuccess} from '../server/json.js';
+import {
+  checkRequiredParams,
+  copy,
+  isAuthenticatedAdmin,
+  paramsToObject,
+  sendJsonError,
+  sendJsonSuccess,
+} from '../server/json.js';
 
 import * as dotenv from 'dotenv';
 import {createJwtToken, encryptPassword} from '../server/auth.js';
@@ -89,6 +96,31 @@ export const login = async (req: Request, res: Response) => {
   }
   const jwtToken = createJwtToken(req.body.username);
   return sendJsonSuccess(res, {jwtToken: jwtToken}, 'Anmeldung erfolgreich.');
+};
+
+export const create = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
+  const requiredParams = ['username', 'firstName', 'lastName', 'gender', 'matriculationNumber', 'email', 'password'];
+  const message = checkRequiredParams(req, requiredParams);
+  if (message) {
+    return sendJsonError(res, message);
+  }
+  try {
+    const params = [...requiredParams, 'isAdmin', 'isTutor'];
+    const createParams = paramsToObject(req, params);
+    const user = await User.create(createParams);
+    const userData = copy(user, ['password']);
+    return sendJsonSuccess(res, userData, 'Benutzer erfolgreich angelegt.');
+  } catch (e: any) {
+    let message = 'Benutzer anlegen fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.';
+    if (e.parent?.code === 'ER_DUP_ENTRY') {
+      message = 'Benutzername bereits vergeben. Bitte wählen Sie einen anderen.';
+    }
+    return sendJsonError(res, message);
+  }
 };
 
 export const update = async (req: Request, res: Response) => {

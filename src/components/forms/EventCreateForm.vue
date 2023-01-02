@@ -127,7 +127,6 @@ const handlePasswordInput = (event: InputEvent) => {
         />
         <label for="reg_visible">Sichtbar</label>
       </div>
-      <p>Verwenden Sie wenn möglich Ihre E-Mail-Adresse der Hochschule. Neben Datenschutzgründen kann auch eine Zustellung an andere Provider nicht garantiert werden.</p>
       <p
         ref="error"
         class="invalid"
