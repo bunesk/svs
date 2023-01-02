@@ -16,6 +16,7 @@ const matriculationNumber = ref();
 const email = ref('');
 const password = ref('');
 const passwordRepeat = ref('');
+const registrationPassword = ref('');
 const error: Ref<HTMLParagraphElement | null> = ref(null);
 
 const submit = async () => {
@@ -27,6 +28,7 @@ const submit = async () => {
     matriculationNumber: matriculationNumber.value,
     email: email.value,
     password: password.value,
+    registrationPassword: registrationPassword.value,
   };
   const response = await sendRequest('user', 'register', params);
   const resData = await response.json();
@@ -128,6 +130,18 @@ const submit = async () => {
           @keyup="validate"
         />
         <small id="reg_passwordRepeat_help"></small>
+      </div>
+      <div class="field">
+        <label for="reg_registerPassword">Registrierungspasswort</label>
+        <Password
+          inputId="reg_registerPassword"
+          :feedback="false"
+          v-model="registrationPassword"
+          toggleMask
+          @blur="validate"
+          @keyup="validate"
+        />
+        <small id="reg_registerPassword_help"></small>
       </div>
     </div>
     <p>Verwenden Sie wenn möglich Ihre E-Mail-Adresse der Hochschule. Neben Datenschutzgründen kann auch eine Zustellung an andere Provider nicht garantiert werden.</p>

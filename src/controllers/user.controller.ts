@@ -15,6 +15,8 @@ import {createJwtToken, encryptPassword} from '../server/auth.js';
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
+const REGISTRATION_PASSWORD_ACTIVE = process.env.REGISTRATION_PASSWORD_ACTIVE;
+const REGISTRATION_PASSWORD = process.env.REGISTRATION_PASSWORD;
 
 export const index = (req: Request, res: Response) => {
   return getAll(req, res);
@@ -67,6 +69,9 @@ export const register = async (req: Request, res: Response) => {
   const message = checkRequiredParams(req, requiredParams);
   if (message) {
     return sendJsonError(res, message);
+  }
+  if (Number(REGISTRATION_PASSWORD_ACTIVE) && REGISTRATION_PASSWORD !== req.body.registrationPassword) {
+    return sendJsonError(res, 'Falsches Registrierungskennwort.');
   }
   try {
     const params = paramsToObject(req, requiredParams);
