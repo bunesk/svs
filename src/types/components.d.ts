@@ -13,6 +13,8 @@ declare module '@vue/runtime-core' {
     ChangeGenderForm: typeof import('./../components/forms/ChangeGenderForm.vue')['default']
     ChangePasswordForm: typeof import('./../components/forms/ChangePasswordForm.vue')['default']
     Checkbox: typeof import('primevue/checkbox')['default']
+    Column: typeof import('primevue/column')['default']
+    DataTable: typeof import('primevue/datatable')['default']
     Divider: typeof import('primevue/divider')['default']
     Dropdown: typeof import('primevue/dropdown')['default']
     EventCreateForm: typeof import('./../components/forms/EventCreateForm.vue')['default']
@@ -30,5 +32,6 @@ declare module '@vue/runtime-core' {
     RouterView: typeof import('vue-router')['RouterView']
     SelectButton: typeof import('primevue/selectbutton')['default']
     UserCreateForm: typeof import('./../components/forms/UserCreateForm.vue')['default']
+    UserList: typeof import('./../components/UserList.vue')['default']
   }
 }

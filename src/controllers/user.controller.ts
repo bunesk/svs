@@ -22,21 +22,11 @@ export const index = (req: Request, res: Response) => {
   return getAll(req, res);
 };
 
-export const getName = async (req: Request, res: Response) => {
-  if (!req.body.id) {
-    return sendJsonError(res, 'Benutzer-ID fehlt');
-  }
-  const user = await User.findByPk(req.body.id);
-  if (!user) {
-    return sendJsonError(res, `Benutzer mit der ID ${req.body.id} nicht gefunden.`);
-  }
-  return res.json({
-    status: true,
-    result: {name: user.getFullName()},
-  });
-};
-
 export const getAll = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
   const users = await User.findAll({paranoid: !req.body.includeInactive});
   return sendJsonSuccess(res, users);
 };

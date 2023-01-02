@@ -10,6 +10,7 @@
     >
       <Button>Benutzer erstellen</Button>
     </RouterLink>
+    <UserList />
   </div>
 </template>
 
@@ -17,7 +18,7 @@
 h1 {
   padding-bottom: 0.5rem;
 }
-.create-button {
-  text-decoration: none;
+.p-button {
+  margin-bottom: 1rem;
 }
 </style>
