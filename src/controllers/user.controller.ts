@@ -135,17 +135,25 @@ export const update = async (req: Request, res: Response) => {
 };
 
 export const remove = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
   if (!req.body.id) {
-    return sendJsonError(res, 'Benutzer-ID fehlt');
+    return sendJsonError(res, 'Benutzer-ID fehlt.');
   }
   const amountDestroyed = await User.destroy({
     where: {id: req.body.id},
     force: !!req.body.force,
   });
   if (!amountDestroyed) {
-    return sendJsonError(res, `Benutzer mit der ID ${req.body.id} ist entweder inexistent oder bereits gelöscht`);
+    return sendJsonSuccess(
+      res,
+      [],
+      `Benutzer mit der ID '${req.body.id}' ist entweder inexistent oder bereits gelöscht.`
+    );
   }
-  return sendJsonSuccess(res, [], 'Benutzer erfolgreich gelöscht');
+  return sendJsonSuccess(res, [], 'Benutzer erfolgreich gelöscht.');
 };
 
 export const restore = async (req: Request, res: Response) => {

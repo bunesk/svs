@@ -20,6 +20,12 @@ body {
   display: flex;
   align-items: center;
 }
+.flex-container {
+  display: flex;
+}
+.flex-resize {
+  flex-grow: 1;
+}
 
 /** validation */
 .valid {
