@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {onBeforeMount, Ref, ref} from 'vue';
 import {useRoute} from 'vue-router';
-import sendRequest from '../../../client/request';
+import sendRequest from '../../../../client/request';
 
 const route = useRoute();
 const event = ref(null);
