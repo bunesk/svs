@@ -54,6 +54,22 @@ export const getData = async (req: Request, res: Response) => {
   return sendJsonSuccess(res, userData);
 };
 
+export const getDataById = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
+  if (!req.body.id) {
+    return sendJsonError(res, 'Benutzer-ID fehlt.');
+  }
+  const user = await User.findOne({where: {id: req.body.id}});
+  if (!user) {
+    return sendJsonError(res, `Benutzer mit der ID '${req.body.id}' nicht gefunden.`, 404);
+  }
+  const userData = copy(user, ['password']);
+  return sendJsonSuccess(res, userData);
+};
+
 export const register = async (req: Request, res: Response) => {
   const requiredParams = ['username', 'firstName', 'lastName', 'gender', 'matriculationNumber', 'email', 'password'];
   const message = checkRequiredParams(req, requiredParams);
@@ -175,6 +191,36 @@ export const changeGender = async (req: Request, res: Response) => {
   return sendJsonSuccess(res, [], 'Geschlecht erfolgreich aktualisiert.');
 };
 
+export const changeGenderById = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
+  if (!req.body.id) {
+    return sendJsonError(res, 'Benutzer-ID fehlt');
+  }
+  if (!req.body.gender) {
+    return sendJsonError(res, 'Kein Geschlecht angegeben.');
+  }
+  await User.update({gender: req.body.gender}, {where: {id: req.body.id}});
+  return sendJsonSuccess(res, [], 'Geschlecht erfolgreich aktualisiert.');
+};
+
+export const changeRole = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
+  if (!req.body.id) {
+    return sendJsonError(res, 'Benutzer-ID fehlt');
+  }
+  if (!req.body.role) {
+    return sendJsonError(res, 'Keine Rolle angegeben.');
+  }
+  await User.update({role: req.body.role}, {where: {id: req.body.id}});
+  return sendJsonSuccess(res, [], 'Rolle erfolgreich aktualisiert.');
+};
+
 export const changePassword = async (req: Request, res: Response) => {
   if (!req.auth || !req.auth.username) {
     return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
@@ -190,5 +236,20 @@ export const changePassword = async (req: Request, res: Response) => {
     return sendJsonError(res, 'Altes Passwort fehlerhaft.');
   }
   await User.update({password: req.body.passwordNew}, {where: {username: req.auth.username}});
+  return sendJsonSuccess(res, [], 'Passwort erfolgreich aktualisiert.');
+};
+
+export const resetPassword = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
+  if (!req.body.id) {
+    return sendJsonError(res, 'Benutzer-ID fehlt');
+  }
+  if (!req.body.passwordNew) {
+    return sendJsonError(res, 'Kein Passwort angegeben.');
+  }
+  await User.update({password: req.body.passwordNew}, {where: {id: req.body.id}});
   return sendJsonSuccess(res, [], 'Passwort erfolgreich aktualisiert.');
 };

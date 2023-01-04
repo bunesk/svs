@@ -2,12 +2,20 @@
 import {Ref, ref} from 'vue';
 import sendRequest from '../../client/request';
 import {genderOptions, default as user} from '../../client/user';
+import {getGenderLabel} from '../../services/gender';
+
+const props = defineProps({
+  user: {type: Object, default: null},
+});
 
 const gender: Ref<{name: string; code: string} | null> = ref(null);
 const status = ref(false);
 const message: Ref<HTMLParagraphElement | null> = ref(null);
 
 const changeGender = async () => {
+  if (props.user) {
+    return changeGenderById();
+  }
   const params = {
     gender: gender.value?.code,
   };
@@ -15,8 +23,25 @@ const changeGender = async () => {
   const resData = await response.json();
   const paragraph = message.value as HTMLParagraphElement;
   status.value = response.status === 200;
+  if (status.value && gender.value) {
+    user.gender = gender.value.code;
+    user.genderLabel = getGenderLabel(gender.value.code as any);
+    gender.value = null;
+  }
+  paragraph.textContent = resData.message;
+};
+
+const changeGenderById = async () => {
+  const params = {
+    id: props.user.id,
+    gender: gender.value?.code,
+  };
+  const response = await sendRequest('user', 'change-gender-by-id', params);
+  const resData = await response.json();
+  const paragraph = message.value as HTMLParagraphElement;
+  status.value = response.status === 200;
   if (status.value) {
-    user.gender = gender.value?.code;
+    props.user.gender = gender.value?.code;
     gender.value = null;
   }
   paragraph.textContent = resData.message;

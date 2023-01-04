@@ -26,6 +26,7 @@ import {
 import Test from './Test.js';
 import Team from './Team.js';
 import {encryptPassword} from '../server/auth.js';
+import {getGenderLabel} from '../services/gender.js';
 
 declare type gender = 'male' | 'female' | 'diverse';
 declare type genderLabel = 'Männlich' | 'Weiblich' | 'Divers';
@@ -127,13 +128,7 @@ User.init({
   genderLabel: {
     type: DataTypes.VIRTUAL,
     get(): genderLabel {
-      switch (this.gender) {
-        case 'male':
-          return 'Männlich';
-        case 'female':
-          return 'Weiblich';
-      }
-      return 'Divers';
+      return getGenderLabel(this.gender);
     },
     set(value) {
       throw new Error(`You can't set the 'genderLabel' value.`);
@@ -185,7 +180,16 @@ User.init({
       return 'Student';
     },
     set(value) {
-      throw new Error(`You can't set the 'role' value.`);
+      if (value === 'Admin') {
+        this.setDataValue('isAdmin', true);
+        this.setDataValue('isTutor', true);
+      } else if (value === 'Tutor') {
+        this.setDataValue('isAdmin', false);
+        this.setDataValue('isTutor', true);
+      } else {
+        this.setDataValue('isAdmin', false);
+        this.setDataValue('isTutor', false);
+      }
     },
   },
 });

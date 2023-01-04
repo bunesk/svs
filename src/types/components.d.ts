@@ -12,6 +12,7 @@ declare module '@vue/runtime-core' {
     Card: typeof import('primevue/card')['default']
     ChangeGenderForm: typeof import('./../components/forms/ChangeGenderForm.vue')['default']
     ChangePasswordForm: typeof import('./../components/forms/ChangePasswordForm.vue')['default']
+    ChangeRoleForm: typeof import('./../components/forms/ChangeRoleForm.vue')['default']
     Checkbox: typeof import('primevue/checkbox')['default']
     Column: typeof import('primevue/column')['default']
     DataTable: typeof import('primevue/datatable')['default']
@@ -28,10 +29,12 @@ declare module '@vue/runtime-core' {
     Password: typeof import('primevue/password')['default']
     PasswordSecure: typeof import('./../components/forms/components/PasswordSecure.vue')['default']
     RegisterForm: typeof import('./../components/forms/RegisterForm.vue')['default']
+    ResetPasswordForm: typeof import('./../components/forms/ResetPasswordForm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SelectButton: typeof import('primevue/selectbutton')['default']
     UserCreateForm: typeof import('./../components/forms/UserCreateForm.vue')['default']
     UserList: typeof import('./../components/UserList.vue')['default']
+    UserTable: typeof import('./../components/UserTable.vue')['default']
   }
 }

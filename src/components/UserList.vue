@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import {onBeforeMount, Ref, ref} from 'vue';
+import {useRouter} from 'vue-router';
 import sendRequest from '../client/request';
 import {FilterMatchMode} from 'primevue/api';
 
+const router = useRouter();
 const status = ref(false);
 const message: Ref<HTMLParagraphElement | null> = ref(null);
 const users: Ref<any> = ref([]);
@@ -18,6 +20,12 @@ const readUsers = async () => {
     loading.value = false;
   } else {
     (message.value as HTMLParagraphElement).textContent = resData.message;
+  }
+};
+
+const viewUser = async () => {
+  if (selectedUser.value) {
+    router.push(`/admin/users/${selectedUser.value.id}`);
   }
 };
 
@@ -80,6 +88,12 @@ onBeforeMount(async () => {
             ></Button>
           </RouterLink>
           <Button
+            label="Anzeigen / Bearbeiten"
+            icon="pi pi-eye"
+            @click="viewUser"
+            :disabled="!selectedUser"
+          ></Button>
+          <Button
             label="Löschen"
             icon="pi pi-trash"
             class="p-button-danger"
@@ -141,7 +155,7 @@ onBeforeMount(async () => {
 </template>
 
 <style lang="scss" scoped>
-.create-button {
+.p-button:not(.p-button-danger) {
   margin-right: 0.5rem;
 }
 </style>

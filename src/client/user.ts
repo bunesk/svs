@@ -8,6 +8,8 @@ export const genderOptions = [
   {name: 'Divers', code: 'diverse'},
 ];
 
+export const roleOptions = ['Student', 'Tutor', 'Admin'];
+
 const getUser = async () => {
   const jwtToken = cookies.get('auth');
   if (!jwtToken) {
