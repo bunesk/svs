@@ -7,6 +7,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AbstractList: typeof import('./../components/lists/AbstractList.vue')['default']
     Address: typeof import('./../components/Address.vue')['default']
     Button: typeof import('primevue/button')['default']
     Card: typeof import('primevue/card')['default']
@@ -19,7 +20,7 @@ declare module '@vue/runtime-core' {
     Divider: typeof import('primevue/divider')['default']
     Dropdown: typeof import('primevue/dropdown')['default']
     EventCreateForm: typeof import('./../components/forms/EventCreateForm.vue')['default']
-    EventList: typeof import('./../components/EventList.vue')['default']
+    EventList: typeof import('./../components/lists/EventList.vue')['default']
     Footer: typeof import('./../components/Footer.vue')['default']
     Header: typeof import('./../components/Header.vue')['default']
     InputNumber: typeof import('primevue/inputnumber')['default']
@@ -34,7 +35,7 @@ declare module '@vue/runtime-core' {
     RouterView: typeof import('vue-router')['RouterView']
     SelectButton: typeof import('primevue/selectbutton')['default']
     UserCreateForm: typeof import('./../components/forms/UserCreateForm.vue')['default']
-    UserList: typeof import('./../components/UserList.vue')['default']
+    UserList: typeof import('./../components/lists/UserList.vue')['default']
     UserTable: typeof import('./../components/UserTable.vue')['default']
   }
 }

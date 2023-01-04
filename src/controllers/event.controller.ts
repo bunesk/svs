@@ -2,23 +2,31 @@ import {Request} from 'express-jwt';
 import {Response} from 'express';
 import Event from '../models/Event.js';
 import User from '../models/User.js';
-import {checkRequiredParams, paramsToObject, sendJsonError, sendJsonSuccess} from '../server/json.js';
+import {
+  checkRequiredParams,
+  isAuthenticatedAdmin,
+  paramsToObject,
+  sendJsonError,
+  sendJsonSuccess,
+} from '../server/json.js';
 
 export const index = (req: Request, res: Response) => {
   return getAll(req, res);
 };
 
 export const getAll = async (req: Request, res: Response) => {
-  if (!req.auth || !req.auth.username) {
-    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
   }
   const users = await Event.findAll({paranoid: !req.body.includeInactive});
   return sendJsonSuccess(res, users);
 };
 
 export const getData = async (req: Request, res: Response) => {
-  if (!req.auth || !req.auth.username) {
-    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
   }
   if (!req.body.id) {
     return sendJsonError(res, 'Veranstaltungs-ID fehlt');
@@ -44,8 +52,9 @@ export const getByUser = async (req: Request, res: Response) => {
 };
 
 export const getByUserId = async (req: Request, res: Response) => {
-  if (!req.auth || !req.auth.username) {
-    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
   }
   if (!req.body.userId) {
     return sendJsonError(res, 'Benutzer-ID fehlt');
@@ -58,7 +67,11 @@ export const getByUserId = async (req: Request, res: Response) => {
   return sendJsonSuccess(res, events);
 };
 
-export const getUsers = async (req: Request, res: Response) => {
+export const getMembers = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
   if (!req.body.id) {
     return sendJsonError(res, 'Veranstaltungs-ID fehlt');
   }
@@ -71,20 +84,20 @@ export const getUsers = async (req: Request, res: Response) => {
 };
 
 export const create = async (req: Request, res: Response) => {
-  if (!req.auth || !req.auth.username) {
-    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
-  }
-  const user = await User.findOne({where: {username: req.auth.username}});
-  if (user && user.isAdmin) {
-    return sendJsonError(res, 'Sie sind nicht berechtigt eine Veranstaltung zu erstellen.', 403);
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
   }
   const requiredParams = ['name', 'password', 'amountTests', 'amountSheets', 'pointsMax', 'pointsPassed'];
   const message = checkRequiredParams(req, requiredParams);
   if (message) {
     return sendJsonError(res, message);
   }
+  if (Number(req.body.pointsMax) < Number(req.body.pointsPassed)) {
+    return sendJsonError(res, 'Maximale Punktzahl kann nicht niedriger als notwendige Punkte zum Bestehen sein.');
+  }
   try {
-    const params = paramsToObject(req, [...requiredParams]);
+    const params = paramsToObject(req, requiredParams);
     params.visible = !!req.params.visible;
     await Event.create(params);
     return sendJsonSuccess(res, [], 'Veranstaltung erfolgreich angelegt.');
@@ -94,12 +107,9 @@ export const create = async (req: Request, res: Response) => {
 };
 
 export const update = async (req: Request, res: Response) => {
-  if (!req.auth || !req.auth.username) {
-    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
-  }
-  const user = await User.findOne({where: {username: req.auth.username}});
-  if (user && user.isAdmin) {
-    return sendJsonError(res, 'Sie sind nicht berechtigt eine Veranstaltung zu erstellen.', 403);
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
   }
   if (!req.body.id) {
     return sendJsonError(res, 'Veranstaltungs-ID fehlt');
@@ -118,12 +128,9 @@ export const update = async (req: Request, res: Response) => {
 };
 
 export const remove = async (req: Request, res: Response) => {
-  if (!req.auth || !req.auth.username) {
-    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
-  }
-  const user = await User.findOne({where: {username: req.auth.username}});
-  if (user && user.isAdmin) {
-    return sendJsonError(res, 'Sie sind nicht berechtigt eine Veranstaltung zu erstellen.', 403);
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
   }
   if (!req.body.id) {
     return sendJsonError(res, 'Veranstaltung-ID fehlt');
@@ -133,18 +140,19 @@ export const remove = async (req: Request, res: Response) => {
     force: !!req.body.force,
   });
   if (!amountDestroyed) {
-    return sendJsonError(res, `Veranstaltung mit der ID ${req.body.id} ist entweder inexistent oder bereits gelöscht`);
+    return sendJsonSuccess(
+      res,
+      [],
+      `Veranstaltung mit der ID ${req.body.id} ist entweder inexistent oder bereits gelöscht`
+    );
   }
   return sendJsonSuccess(res, [], 'Veranstaltung erfolgreich gelöscht');
 };
 
 export const restore = async (req: Request, res: Response) => {
-  if (!req.auth || !req.auth.username) {
-    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
-  }
-  const user = await User.findOne({where: {username: req.auth.username}});
-  if (user && user.isAdmin) {
-    return sendJsonError(res, 'Sie sind nicht berechtigt eine Veranstaltung zu erstellen.', 403);
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
   }
   if (!req.body.id) {
     return sendJsonError(res, 'Veranstaltung-ID fehlt');

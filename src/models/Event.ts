@@ -103,6 +103,18 @@ Event.init({
     allowNull: false,
     defaultValue: false,
   },
+  visibleLabel: {
+    type: DataTypes.VIRTUAL,
+    get(): string {
+      if (this.visible) {
+        return 'Ja';
+      }
+      return 'Nein';
+    },
+    set(value) {
+      throw new Error(`You can't set the 'visibleLabel' value.`);
+    },
+  },
 });
 
 export default Event;
