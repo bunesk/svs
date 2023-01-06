@@ -56,11 +56,14 @@ export const isAuthenticatedAdmin = async (
  * @param message success message
  * @returns json response object
  */
-export const sendJsonSuccess = (res: Response, result: object | object[] = [], message = 'Success') => {
-  return res.status(200).json({
-    message: message,
-    result: result,
-  });
+export const sendJsonSuccess = (res: Response, result: object | object[] = [], message = 'Aktion erfolgreich.') => {
+  return res
+    .status(200)
+    .json({
+      message: message,
+      result: result,
+    })
+    .end();
 };
 
 /**
@@ -69,9 +72,12 @@ export const sendJsonSuccess = (res: Response, result: object | object[] = [], m
  * @param message error message
  * @returns json response object
  */
-export const sendJsonError = (res: Response, message = 'An error occured', statusCode = 400) => {
-  return res.status(statusCode).json({
-    message: message,
-    result: [],
-  });
+export const sendJsonError = (res: Response, message = 'Es ist ein Fehler aufgetreten.', statusCode = 400) => {
+  return res
+    .status(statusCode)
+    .json({
+      message: message,
+      result: [],
+    })
+    .end();
 };
