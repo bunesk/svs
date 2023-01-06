@@ -4,7 +4,7 @@
 <template>
   <div id="event-create">
     <h1>Veranstaltung erstellen</h1>
-    <EventCreateForm />
+    <EventEditForm />
   </div>
 </template>
 

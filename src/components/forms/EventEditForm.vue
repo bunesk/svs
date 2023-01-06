@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import {Ref, ref} from 'vue';
+import {onBeforeMount, Ref, ref} from 'vue';
 import {useRouter} from 'vue-router';
 import sendRequest from '../../client/request';
 import {validate, formIsValid} from './services/validation';
+
+const props = defineProps({
+  id: {type: String, default: '-1'},
+});
 
 const router = useRouter();
 const form: Ref<HTMLFormElement | null> = ref(null);
@@ -18,16 +22,21 @@ const visible = ref(false);
 const error: Ref<HTMLParagraphElement | null> = ref(null);
 
 const submit = async () => {
-  const params = {
+  const params: any = {
     name: name.value,
-    password: password.value,
     amountTests: amountTests.value,
     amountSheets: amountSheets.value,
     pointsMax: pointsMax.value,
     pointsPassed: pointsPassed.value,
     visible: visible.value,
   };
-  const response = await sendRequest('event', 'create', params);
+  const functionName = props.id === '-1' ? 'create' : 'update';
+  if (props.id === '-1') {
+    params.password = password.value;
+  } else {
+    params.id = props.id;
+  }
+  const response = await sendRequest('event', functionName, params);
   const resData = await response.json();
   if (response.status === 200) {
     router.push('/admin/events');
@@ -42,12 +51,34 @@ const handlePasswordInput = (event: InputEvent) => {
     password.value = input.value;
   }
 };
+
+const readData = async () => {
+  const response = await sendRequest('event', 'get-data', {id: props.id});
+  const resData = await response.json();
+  if (response.status === 200) {
+    name.value = resData.result.name;
+    amountTests.value = resData.result.amountTests;
+    amountSheets.value = resData.result.amountSheets;
+    pointsMax.value = resData.result.pointsMax;
+    pointsPassed.value = resData.result.pointsPassed;
+    visible.value = resData.result.visible;
+    isValid.value = true;
+  } else {
+    (error.value as HTMLParagraphElement).textContent = resData.message;
+  }
+};
+
+onBeforeMount(async () => {
+  if (props.id !== '-1') {
+    await readData();
+  }
+});
 </script>
 
 <template>
   <form
     ref="form"
-    class="register-form"
+    class="event-form"
     @input="isValid = formIsValid(form)"
   >
     <div class="p-fluid">
@@ -63,6 +94,7 @@ const handlePasswordInput = (event: InputEvent) => {
         <small id="reg_name_help"></small>
       </div>
       <PasswordSecure
+        v-if="id === '-1'"
         :value="password"
         @input="handlePasswordInput"
         id="reg_password"
@@ -143,7 +175,7 @@ const handlePasswordInput = (event: InputEvent) => {
 </template>
 
 <style lang="scss" scoped>
-.register-form {
+.event-form {
   text-align: left;
   max-width: 500px;
   margin: 0 auto;

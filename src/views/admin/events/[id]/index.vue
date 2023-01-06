@@ -28,6 +28,15 @@ onBeforeMount(async () => {
 <template>
   <div v-if="event">
     <h1>{{event.name}}</h1>
+    <RouterLink
+      :to="`/admin/events/${event.id}/update`"
+      class="create-button"
+    >
+      <Button
+        label="Bearbeiten"
+        icon="pi pi-pencil"
+      ></Button>
+    </RouterLink>
   </div>
   <p
     ref="error"

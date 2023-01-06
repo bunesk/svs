@@ -19,7 +19,7 @@ declare module '@vue/runtime-core' {
     DataTable: typeof import('primevue/datatable')['default']
     Divider: typeof import('primevue/divider')['default']
     Dropdown: typeof import('primevue/dropdown')['default']
-    EventCreateForm: typeof import('./../components/forms/EventCreateForm.vue')['default']
+    EventEditForm: typeof import('./../components/forms/EventEditForm.vue')['default']
     EventList: typeof import('./../components/lists/EventList.vue')['default']
     Footer: typeof import('./../components/Footer.vue')['default']
     Header: typeof import('./../components/Header.vue')['default']

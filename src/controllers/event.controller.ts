@@ -102,6 +102,7 @@ export const create = async (req: Request, res: Response) => {
     await Event.create(params);
     return sendJsonSuccess(res, [], 'Veranstaltung erfolgreich angelegt.');
   } catch (e: any) {
+    const message = 'Veranstaltung anlegen fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.';
     return sendJsonError(res, message);
   }
 };
