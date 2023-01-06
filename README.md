@@ -6,7 +6,7 @@ The SVS is a role-based adminstration tool.
 
 - [Vue 3](https://vuejs.org/) (using [`<script setup>` SFCs](https://vuejs.org/api/sfc-script-setup.html))
 - [Express](https://expressjs.com/)
-- [MySQL](https://www.mysql.com/)
+- [MariaDB](https://mariadb.org/)
 - [LDAP](https://ldap.com/)
 - [Vite](https://vitejs.dev/)
 - [TypeScript](https://www.typescriptlang.org/)

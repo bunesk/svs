@@ -1,5 +1,5 @@
 import {Sequelize} from 'sequelize';
-import mysql from 'mysql2';
+import mariadb from 'mariadb';
 import * as dotenv from 'dotenv';
 import setAssociations from './associations.js';
 dotenv.config();
@@ -43,9 +43,9 @@ class DatabaseConnection {
   constructor() {
     this.connectionEstablished = new Promise((resolve, reject) => {
       this.resolveConnectionEstablished = resolve;
-      this.rejectConnectionEstablished = (reason: any) => {
+      this.rejectConnectionEstablished = async (reason: any) => {
         if (reason?.parent?.code === 'ER_BAD_DB_ERROR') {
-          this.createDatabase(reject);
+          await this.createDatabase(reject);
         } else {
           reject(reason);
         }
@@ -54,7 +54,7 @@ class DatabaseConnection {
     this.api = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
       host: DB_HOST,
       port: DB_PORT,
-      dialect: 'mysql',
+      dialect: 'mariadb',
     });
     this.authenticate();
   }
@@ -68,8 +68,8 @@ class DatabaseConnection {
       .catch((reason) => this.rejectConnectionEstablished(reason));
   }
 
-  private createDatabase(reject: Function) {
-    const connection = mysql.createConnection({
+  private async createDatabase(reject: Function) {
+    const connection = await mariadb.createConnection({
       host: DB_HOST,
       port: DB_PORT,
       user: DB_USER,
