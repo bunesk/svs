@@ -46,6 +46,12 @@ class DatabaseConnection {
       this.rejectConnectionEstablished = async (reason: any) => {
         if (reason?.parent?.code === 'ER_BAD_DB_ERROR') {
           await this.createDatabase(reject);
+          this.api = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+            host: DB_HOST,
+            port: DB_PORT,
+            dialect: 'mariadb',
+          });
+          this.authenticate();
         } else {
           reject(reason);
         }
