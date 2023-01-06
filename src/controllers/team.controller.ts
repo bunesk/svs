@@ -9,7 +9,7 @@ export const index = (req: Request, res: Response) => {
 };
 
 export const getAll = async (req: Request, res: Response) => {
-  const users = await Team.findAll({paranoid: !req.body.includeInactive});
+  const users = await Team.findAll();
   return sendJsonSuccess(res, users);
 };
 
@@ -59,22 +59,11 @@ export const remove = async (req: Request, res: Response) => {
   if (!req.body.id) {
     return sendJsonError(res, 'Test-ID fehlt');
   }
-  const amountDestroyed = await Team.destroy({
-    where: {id: req.body.id},
-    force: !!req.body.force,
-  });
+  const amountDestroyed = await Team.destroy({where: {id: req.body.id}});
   if (!amountDestroyed) {
     return sendJsonError(res, `Team mit der ID ${req.body.id} ist entweder inexistent oder bereits gelöscht`);
   }
   return sendJsonSuccess(res, [], 'Team erfolgreich gelöscht');
-};
-
-export const restore = async (req: Request, res: Response) => {
-  if (!req.body.id) {
-    return sendJsonError(res, 'Team-ID fehlt');
-  }
-  await Team.restore({where: {id: req.body.id}});
-  return sendJsonSuccess(res, [], 'Team wiederhergestellt.');
 };
 
 export const addUser = async (req: Request, res: Response) => {

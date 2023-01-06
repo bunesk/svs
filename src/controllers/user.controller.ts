@@ -27,20 +27,9 @@ export const getAll = async (req: Request, res: Response) => {
   if (!hasPermission.status) {
     return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
   }
-  const users = await User.findAll({paranoid: !req.body.includeInactive});
+  const users = await User.findAll();
   return sendJsonSuccess(res, users);
 };
-
-// export const getData = async (req: Request, res: Response) => {
-//   if (!req.body.id) {
-//     return sendJsonError(res, 'Benutzer-ID fehlt');
-//   }
-//   const user = await User.findOne({paranoid: !req.body.includeInactive});
-//   if (!user) {
-//     return sendJsonError(res, `Benutzer mit der ID ${req.body.id} nicht gefunden.`);
-//   }
-//   return sendJsonSuccess(res, user);
-// };
 
 export const getData = async (req: Request, res: Response) => {
   if (!req.auth || !req.auth.username) {
@@ -158,10 +147,7 @@ export const remove = async (req: Request, res: Response) => {
   if (!req.body.id) {
     return sendJsonError(res, 'Benutzer-ID fehlt.');
   }
-  const amountDestroyed = await User.destroy({
-    where: {id: req.body.id},
-    force: !!req.body.force,
-  });
+  const amountDestroyed = await User.destroy({where: {id: req.body.id}});
   if (!amountDestroyed) {
     return sendJsonSuccess(
       res,
@@ -170,14 +156,6 @@ export const remove = async (req: Request, res: Response) => {
     );
   }
   return sendJsonSuccess(res, [], 'Benutzer erfolgreich gelöscht.');
-};
-
-export const restore = async (req: Request, res: Response) => {
-  if (!req.body.id) {
-    return sendJsonError(res, 'Benutzer-ID fehlt');
-  }
-  await User.restore({where: {id: req.body.id}});
-  return sendJsonSuccess(res, [], 'Benutzer wiederhergestellt.');
 };
 
 export const changeGender = async (req: Request, res: Response) => {

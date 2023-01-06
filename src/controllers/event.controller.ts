@@ -19,7 +19,7 @@ export const getAll = async (req: Request, res: Response) => {
   if (!hasPermission.status) {
     return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
   }
-  const users = await Event.findAll({paranoid: !req.body.includeInactive});
+  const users = await Event.findAll();
   return sendJsonSuccess(res, users);
 };
 
@@ -136,10 +136,7 @@ export const remove = async (req: Request, res: Response) => {
   if (!req.body.id) {
     return sendJsonError(res, 'Veranstaltung-ID fehlt');
   }
-  const amountDestroyed = await Event.destroy({
-    where: {id: req.body.id},
-    force: !!req.body.force,
-  });
+  const amountDestroyed = await Event.destroy({where: {id: req.body.id}});
   if (!amountDestroyed) {
     return sendJsonSuccess(
       res,
@@ -148,18 +145,6 @@ export const remove = async (req: Request, res: Response) => {
     );
   }
   return sendJsonSuccess(res, [], 'Veranstaltung erfolgreich gelöscht');
-};
-
-export const restore = async (req: Request, res: Response) => {
-  const hasPermission = await isAuthenticatedAdmin(req);
-  if (!hasPermission.status) {
-    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
-  }
-  if (!req.body.id) {
-    return sendJsonError(res, 'Veranstaltung-ID fehlt');
-  }
-  await Event.restore({where: {id: req.body.id}});
-  return sendJsonSuccess(res, [], 'Veranstaltung wiederhergestellt.');
 };
 
 export const isMember = async (req: Request, res: Response) => {

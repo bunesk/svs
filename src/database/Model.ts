@@ -8,9 +8,6 @@ import {MakeNullishOptional} from 'sequelize/types/utils.js';
  * It inherits from the Sequelize model and extends it's functionality by adding an
  * automatically generated integer primary key field 'id'.
  *
- * It also activates the paranoid mode where items can be just soft-deleted.
- * @see https://sequelize.org/docs/v6/core-concepts/paranoid/
- *
  * @see https://sequelize.org/api/v6/class/src/model.js~model
  */
 abstract class Model<
@@ -23,7 +20,6 @@ abstract class Model<
   // these attributes are automatically created by Sequelize
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
-  declare deletedAt: Date | null;
 
   static init(attributes: ModelAttributes<any, any>, options?: object): any {
     const newAttributes = {
@@ -37,7 +33,6 @@ abstract class Model<
     };
     const newOptions = {
       sequelize: db.api,
-      paranoid: true,
       ...options,
     };
     // @ts-ignore

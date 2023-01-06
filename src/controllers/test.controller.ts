@@ -59,20 +59,9 @@ export const remove = async (req: Request, res: Response) => {
   if (!req.body.id) {
     return sendJsonError(res, 'Test-ID fehlt');
   }
-  const amountDestroyed = await Test.destroy({
-    where: {id: req.body.id},
-    force: !!req.body.force,
-  });
+  const amountDestroyed = await Test.destroy({where: {id: req.body.id}});
   if (!amountDestroyed) {
     return sendJsonError(res, `Test mit der ID ${req.body.id} ist entweder inexistent oder bereits gelöscht`);
   }
   return sendJsonSuccess(res, [], 'Test erfolgreich gelöscht');
-};
-
-export const restore = async (req: Request, res: Response) => {
-  if (!req.body.id) {
-    return sendJsonError(res, 'Test-ID fehlt');
-  }
-  await Test.restore({where: {id: req.body.id}});
-  return sendJsonSuccess(res, [], 'Test wiederhergestellt.');
 };
