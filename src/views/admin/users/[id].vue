@@ -32,7 +32,10 @@ onBeforeMount(async () => {
     <UserTable :user="user" />
     <ChangeGenderForm :user="user" />
     <ChangeRoleForm :user="user" />
-    <ResetPasswordForm :id="user.id" />
+    <ResetPasswordForm
+      :id="user.id"
+      item="user"
+    />
   </div>
   <p
     ref="error"

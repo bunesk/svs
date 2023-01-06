@@ -147,6 +147,21 @@ export const remove = async (req: Request, res: Response) => {
   return sendJsonSuccess(res, [], 'Veranstaltung erfolgreich gelöscht');
 };
 
+export const resetPassword = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
+  if (!req.body.id) {
+    return sendJsonError(res, 'Veranstaltungs-ID fehlt');
+  }
+  if (!req.body.passwordNew) {
+    return sendJsonError(res, 'Kein Passwort angegeben.');
+  }
+  await Event.update({password: req.body.passwordNew}, {where: {id: req.body.id}});
+  return sendJsonSuccess(res, [], 'Passwort erfolgreich aktualisiert.');
+};
+
 export const isMember = async (req: Request, res: Response) => {
   if (!req.auth || !req.auth.username) {
     return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);

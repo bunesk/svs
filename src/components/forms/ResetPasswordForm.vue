@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import {Ref, ref} from 'vue';
 import sendRequest from '../../client/request';
-import user from '../../client/user';
 import {validate, formIsValid, handlePasswordInput} from './services/validation';
 
 const props = defineProps({
   id: {type: String, required: true},
+  item: {type: String, required: true},
 });
 
 const form: Ref<HTMLFormElement | null> = ref(null);
@@ -20,7 +20,7 @@ const changePassword = async () => {
     id: props.id,
     passwordNew: passwordNew.value,
   };
-  const response = await sendRequest('user', 'reset-password', params);
+  const response = await sendRequest(props.item, 'reset-password', params);
   const resData = await response.json();
   const paragraph = message.value as HTMLParagraphElement;
   status.value = response.status === 200;

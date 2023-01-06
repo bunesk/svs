@@ -38,6 +38,10 @@ onBeforeMount(async () => {
         icon="pi pi-pencil"
       ></Button>
     </RouterLink>
+    <ResetPasswordForm
+      :id="event.id"
+      item="event"
+    />
   </div>
   <p
     ref="error"
