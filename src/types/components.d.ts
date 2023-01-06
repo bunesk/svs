@@ -21,6 +21,7 @@ declare module '@vue/runtime-core' {
     Dropdown: typeof import('primevue/dropdown')['default']
     EventEditForm: typeof import('./../components/forms/EventEditForm.vue')['default']
     EventList: typeof import('./../components/lists/EventList.vue')['default']
+    EventTable: typeof import('./../components/tables/EventTable.vue')['default']
     Footer: typeof import('./../components/Footer.vue')['default']
     Header: typeof import('./../components/Header.vue')['default']
     InputNumber: typeof import('primevue/inputnumber')['default']
@@ -36,6 +37,6 @@ declare module '@vue/runtime-core' {
     SelectButton: typeof import('primevue/selectbutton')['default']
     UserCreateForm: typeof import('./../components/forms/UserCreateForm.vue')['default']
     UserList: typeof import('./../components/lists/UserList.vue')['default']
-    UserTable: typeof import('./../components/UserTable.vue')['default']
+    UserTable: typeof import('./../components/tables/UserTable.vue')['default']
   }
 }

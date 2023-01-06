@@ -28,9 +28,10 @@ onBeforeMount(async () => {
 <template>
   <div v-if="event">
     <h1>{{event.name}}</h1>
+    <EventTable :event="event" />
     <RouterLink
       :to="`/admin/events/${event.id}/update`"
-      class="create-button"
+      class="edit-button"
     >
       <Button
         label="Bearbeiten"
@@ -45,4 +46,7 @@ onBeforeMount(async () => {
 </template>
 
 <style lang="scss" scoped>
+.edit-button .p-button {
+  margin-top: 0.5rem;
+}
 </style>
