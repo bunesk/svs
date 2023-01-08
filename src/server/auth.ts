@@ -7,6 +7,23 @@ dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
+export const userSelectAttributes = [
+  'createdAt',
+  'email',
+  'firstName',
+  'fullName',
+  'gender',
+  'genderLabel',
+  'id',
+  'isAdmin',
+  'isTutor',
+  'lastName',
+  'matriculationNumber',
+  'role',
+  'updatedAt',
+  'username',
+];
+
 export const createJwtToken = (username: string) => {
   return jwt.sign({username: username}, JWT_SECRET);
 };

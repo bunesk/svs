@@ -2,6 +2,7 @@ import {Request} from 'express-jwt';
 import {Response} from 'express';
 import Event from '../models/Event.js';
 import User from '../models/User.js';
+import {userSelectAttributes} from '../server/auth.js';
 import {
   checkRequiredParams,
   isAuthenticatedAdmin,
@@ -33,9 +34,8 @@ export const getData = async (req: Request, res: Response) => {
   }
   const event = await Event.findOne({where: {id: req.body.id}});
   if (!event) {
-    return sendJsonError(res, `Keine Veranstaltung mit der ID ${req.body.userId} gefunden.`, 404);
+    return sendJsonError(res, `Keine Veranstaltung mit der ID ${req.body.id} gefunden.`, 404);
   }
-  // event.hasUser(user);
   return sendJsonSuccess(res, event);
 };
 
@@ -79,7 +79,7 @@ export const getMembers = async (req: Request, res: Response) => {
   if (!event) {
     return sendJsonError(res, `Keine Veranstaltung mit der ID ${req.body.id} gefunden.`, 404);
   }
-  const users = await event.getUsers();
+  const users = await event.getUsers({attributes: userSelectAttributes});
   return sendJsonSuccess(res, users);
 };
 
@@ -158,7 +158,11 @@ export const resetPassword = async (req: Request, res: Response) => {
   if (!req.body.passwordNew) {
     return sendJsonError(res, 'Kein Passwort angegeben.');
   }
-  await Event.update({password: req.body.passwordNew}, {where: {id: req.body.id}});
+  try {
+    await Event.update({password: req.body.passwordNew}, {where: {id: req.body.id}});
+  } catch (e: any) {
+    return sendJsonError(res, 'Bearbeitung fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.');
+  }
   return sendJsonSuccess(res, [], 'Passwort erfolgreich aktualisiert.');
 };
 

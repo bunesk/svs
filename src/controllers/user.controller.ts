@@ -11,10 +11,9 @@ import {
 } from '../server/json.js';
 
 import * as dotenv from 'dotenv';
-import {createJwtToken, encryptPassword} from '../server/auth.js';
+import {createJwtToken, encryptPassword, userSelectAttributes} from '../server/auth.js';
 dotenv.config();
 
-const JWT_SECRET = process.env.JWT_SECRET as string;
 const REGISTRATION_PASSWORD_ACTIVE = process.env.REGISTRATION_PASSWORD_ACTIVE;
 const REGISTRATION_PASSWORD = process.env.REGISTRATION_PASSWORD;
 
@@ -27,7 +26,7 @@ export const getAll = async (req: Request, res: Response) => {
   if (!hasPermission.status) {
     return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
   }
-  const users = await User.findAll();
+  const users = await User.findAll({attributes: userSelectAttributes});
   return sendJsonSuccess(res, users);
 };
 
@@ -35,12 +34,11 @@ export const getData = async (req: Request, res: Response) => {
   if (!req.auth || !req.auth.username) {
     return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
   }
-  const user = await User.findOne({where: {username: req.auth.username}});
+  const user = await User.findOne({where: {username: req.auth.username}, attributes: userSelectAttributes});
   if (!user) {
     return sendJsonError(res, `Benutzer '${req.auth.username}' nicht gefunden.`, 404);
   }
-  const userData = copy(user, ['password']);
-  return sendJsonSuccess(res, userData);
+  return sendJsonSuccess(res, user);
 };
 
 export const getDataById = async (req: Request, res: Response) => {
@@ -51,15 +49,17 @@ export const getDataById = async (req: Request, res: Response) => {
   if (!req.body.id) {
     return sendJsonError(res, 'Benutzer-ID fehlt.');
   }
-  const user = await User.findOne({where: {id: req.body.id}});
+  const user = await User.findOne({where: {id: req.body.id}, attributes: userSelectAttributes});
   if (!user) {
     return sendJsonError(res, `Benutzer mit der ID '${req.body.id}' nicht gefunden.`, 404);
   }
-  const userData = copy(user, ['password']);
-  return sendJsonSuccess(res, userData);
+  return sendJsonSuccess(res, user);
 };
 
 export const register = async (req: Request, res: Response) => {
+  if (req.auth && req.auth.username) {
+    return sendJsonSuccess(res, [], 'Bereits angemeldet.');
+  }
   const requiredParams = ['username', 'firstName', 'lastName', 'gender', 'matriculationNumber', 'email', 'password'];
   const message = checkRequiredParams(req, requiredParams);
   if (message) {
@@ -83,6 +83,9 @@ export const register = async (req: Request, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
+  if (req.auth && req.auth.username) {
+    return sendJsonSuccess(res, [], 'Bereits angemeldet.');
+  }
   const requiredParams = ['username', 'password'];
   const message = checkRequiredParams(req, requiredParams);
   if (message) {
@@ -113,28 +116,12 @@ export const create = async (req: Request, res: Response) => {
     const createParams = paramsToObject(req, params);
     const user = await User.create(createParams);
     const userData = copy(user, ['password']);
-    return sendJsonSuccess(res, userData, 'Benutzer erfolgreich angelegt.');
+    return sendJsonSuccess(res, user, 'Benutzer erfolgreich angelegt.');
   } catch (e: any) {
     let message = 'Benutzer anlegen fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.';
     if (e.parent?.code === 'ER_DUP_ENTRY') {
       message = 'Benutzername bereits vergeben. Bitte wählen Sie einen anderen.';
     }
-    return sendJsonError(res, message);
-  }
-};
-
-export const update = async (req: Request, res: Response) => {
-  if (!req.body.id) {
-    return sendJsonError(res, 'Benutzer-ID fehlt');
-  }
-  try {
-    await User.update(req.body, {
-      where: {id: req.body.id},
-      fields: Object.keys(req.body),
-    });
-    return sendJsonSuccess(res, [], 'Benutzer erfolgreich aktualisiert.');
-  } catch (e: any) {
-    const message = 'Benutzer aktualisieren fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.';
     return sendJsonError(res, message);
   }
 };
@@ -165,7 +152,11 @@ export const changeGender = async (req: Request, res: Response) => {
   if (!req.body.gender) {
     return sendJsonError(res, 'Kein Geschlecht angegeben.');
   }
-  await User.update({gender: req.body.gender}, {where: {username: req.auth.username}});
+  try {
+    await User.update({gender: req.body.gender}, {where: {username: req.auth.username}});
+  } catch (e: any) {
+    return sendJsonError(res, 'Bearbeitung fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.');
+  }
   return sendJsonSuccess(res, [], 'Geschlecht erfolgreich aktualisiert.');
 };
 
@@ -180,7 +171,11 @@ export const changeGenderById = async (req: Request, res: Response) => {
   if (!req.body.gender) {
     return sendJsonError(res, 'Kein Geschlecht angegeben.');
   }
-  await User.update({gender: req.body.gender}, {where: {id: req.body.id}});
+  try {
+    await User.update({gender: req.body.gender}, {where: {id: req.body.id}});
+  } catch (e: any) {
+    return sendJsonError(res, 'Bearbeitung fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.');
+  }
   return sendJsonSuccess(res, [], 'Geschlecht erfolgreich aktualisiert.');
 };
 
@@ -195,7 +190,11 @@ export const changeRole = async (req: Request, res: Response) => {
   if (!req.body.role) {
     return sendJsonError(res, 'Keine Rolle angegeben.');
   }
-  await User.update({role: req.body.role}, {where: {id: req.body.id}});
+  try {
+    await User.update({role: req.body.role}, {where: {id: req.body.id}});
+  } catch (e: any) {
+    return sendJsonError(res, 'Bearbeitung fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.');
+  }
   return sendJsonSuccess(res, [], 'Rolle erfolgreich aktualisiert.');
 };
 
@@ -213,7 +212,11 @@ export const changePassword = async (req: Request, res: Response) => {
   if (user.password !== encryptPassword(req.body.passwordOld)) {
     return sendJsonError(res, 'Altes Passwort fehlerhaft.');
   }
-  await User.update({password: req.body.passwordNew}, {where: {username: req.auth.username}});
+  try {
+    await User.update({password: req.body.passwordNew}, {where: {username: req.auth.username}});
+  } catch (e: any) {
+    return sendJsonError(res, 'Bearbeitung fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.');
+  }
   return sendJsonSuccess(res, [], 'Passwort erfolgreich aktualisiert.');
 };
 
@@ -228,6 +231,10 @@ export const resetPassword = async (req: Request, res: Response) => {
   if (!req.body.passwordNew) {
     return sendJsonError(res, 'Kein Passwort angegeben.');
   }
-  await User.update({password: req.body.passwordNew}, {where: {id: req.body.id}});
+  try {
+    await User.update({password: req.body.passwordNew}, {where: {id: req.body.id}});
+  } catch (e: any) {
+    return sendJsonError(res, 'Bearbeitung fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.');
+  }
   return sendJsonSuccess(res, [], 'Passwort erfolgreich aktualisiert.');
 };
