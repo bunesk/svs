@@ -8,11 +8,12 @@ const props = defineProps({
   name: {type: String, required: true},
   plural: {type: String, required: true},
   removeMessage: {type: String, required: true},
-  hideCreate: {type: Boolean, default: false},
   readFunction: {type: Function, default: null},
   removeFunction: {type: Function, default: null},
   viewItemName: {type: String, default: ''},
   globalFilterFields: {type: Array, default: []},
+  showCreate: {type: Boolean, default: false},
+  showRefresh: {type: Boolean, default: false},
 });
 
 const router = useRouter();
@@ -92,7 +93,7 @@ onBeforeMount(async () => {
       <div class="flex-container">
         <div class="flex-resize">
           <RouterLink
-            v-if="!hideCreate"
+            v-if="showCreate"
             :to="`/admin/${props.name}s/create`"
             class="create-button"
           >
@@ -102,6 +103,12 @@ onBeforeMount(async () => {
               class="p-button-success"
             ></Button>
           </RouterLink>
+          <Button
+            v-if="showRefresh"
+            label="Aktualisieren"
+            icon="pi pi-refresh"
+            @click="readItems"
+          ></Button>
           <Button
             label="Anzeigen / Bearbeiten"
             icon="pi pi-eye"

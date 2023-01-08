@@ -12,6 +12,7 @@ import {tableColumns} from '../../client/user';
     plural="Benutzer"
     removeMessage="Möchten Sie diesen Benutzer wirklich löschen?"
     :globalFilterFields="['username','firstName','lastName', 'genderLabel', 'matriculationNumber', 'email', 'role']"
+    showCreate
   >
     <Column
       v-for="column of Object.keys(tableColumns)"

@@ -27,11 +27,11 @@ const removeFunction = async (userId: string) => {
       name="event"
       plural="Mitglieder"
       removeMessage="Möchten Sie dieses Mitglied wirklich entfernen?"
-      hideCreate
       :readFunction="readFunction"
       :removeFunction="removeFunction"
       viewItemName="user"
       :globalFilterFields="['username','firstName','lastName', 'genderLabel', 'matriculationNumber', 'email', 'role']"
+      showRefresh
     >
       <Column
         v-for="column of Object.keys(tableColumns)"

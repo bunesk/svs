@@ -11,6 +11,7 @@
     plural="Veranstaltungen"
     removeMessage="Möchten Sie diese Veranstaltung wirklich löschen?"
     :globalFilterFields="['name']"
+    showCreate
   >
     <Column
       field="name"
