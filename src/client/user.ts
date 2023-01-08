@@ -2,6 +2,15 @@ import {reactive} from 'vue';
 import cookies from './cookies';
 import sendRequest from './request';
 
+export const tableColumns = {
+  username: 'Benutzername',
+  firstName: 'Vorname',
+  lastName: 'Nachname',
+  genderLabel: 'Geschlecht',
+  email: 'E-Mail',
+  role: 'Rolle',
+};
+
 export const genderOptions = [
   {name: 'Männlich', code: 'male'},
   {name: 'Weiblich', code: 'female'},

@@ -8,6 +8,7 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AbstractList: typeof import('./../components/lists/AbstractList.vue')['default']
+    AddMember: typeof import('./../components/forms/AddMember.vue')['default']
     Address: typeof import('./../components/Address.vue')['default']
     Button: typeof import('primevue/button')['default']
     Card: typeof import('primevue/card')['default']
@@ -28,6 +29,7 @@ declare module '@vue/runtime-core' {
     InputSwitch: typeof import('primevue/inputswitch')['default']
     InputText: typeof import('primevue/inputtext')['default']
     LoginForm: typeof import('./../components/forms/LoginForm.vue')['default']
+    Members: typeof import('./../components/Members.vue')['default']
     Password: typeof import('primevue/password')['default']
     PasswordSecure: typeof import('./../components/forms/components/PasswordSecure.vue')['default']
     RegisterForm: typeof import('./../components/forms/RegisterForm.vue')['default']

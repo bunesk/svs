@@ -79,7 +79,7 @@ export const getMembers = async (req: Request, res: Response) => {
   if (!event) {
     return sendJsonError(res, `Keine Veranstaltung mit der ID ${req.body.id} gefunden.`, 404);
   }
-  const users = event.getUsers();
+  const users = await event.getUsers();
   return sendJsonSuccess(res, users);
 };
 
@@ -179,7 +179,7 @@ export const isMember = async (req: Request, res: Response) => {
   return sendJsonSuccess(res, {isMember: isMember});
 };
 
-export const addUser = async (req: Request, res: Response) => {
+export const addMember = async (req: Request, res: Response) => {
   const requiredParams = ['eventId', 'userId'];
   const message = checkRequiredParams(req, requiredParams);
   if (message) {
@@ -192,12 +192,15 @@ export const addUser = async (req: Request, res: Response) => {
   const event = await Event.findOne({where: {id: req.body.eventId}});
   if (!event) {
     return sendJsonError(res, `Veranstaltung mit der ID ${req.body.eventId} nicht gefunden.`, 404);
+  }
+  if (await event.hasUser(user)) {
+    return sendJsonSuccess(res, [], 'Benutzer ist bereits Mitglied. Es wurde nichts unternommen.');
   }
   await event.addUser(user);
   return sendJsonSuccess(res, [], 'Benutzer erfolgreich zur Veranstaltung hinzugefügt.');
 };
 
-export const removeUser = async (req: Request, res: Response) => {
+export const removeMember = async (req: Request, res: Response) => {
   const requiredParams = ['eventId', 'userId'];
   const message = checkRequiredParams(req, requiredParams);
   if (message) {
@@ -210,6 +213,9 @@ export const removeUser = async (req: Request, res: Response) => {
   const event = await Event.findOne({where: {id: req.body.eventId}});
   if (!event) {
     return sendJsonError(res, `Veranstaltung mit der ID ${req.body.eventId} nicht gefunden.`, 404);
+  }
+  if (!(await event.hasUser(user))) {
+    return sendJsonSuccess(res, [], 'Benutzer ist kein Mitglied. Es wurde nichts unternommen.');
   }
   await event.removeUser(user);
   return sendJsonSuccess(res, [], 'Benutzer erfolgreich von der Veranstaltung entfernt.');

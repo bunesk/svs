@@ -8,6 +8,10 @@ const props = defineProps({
   name: {type: String, required: true},
   plural: {type: String, required: true},
   removeMessage: {type: String, required: true},
+  hideCreate: {type: Boolean, default: false},
+  readFunction: {type: Function, default: null},
+  removeFunction: {type: Function, default: null},
+  viewItemName: {type: String, default: ''},
   globalFilterFields: {type: Array, default: []},
 });
 
@@ -20,7 +24,8 @@ const filters = ref({global: {value: null, matchMode: FilterMatchMode.CONTAINS}}
 const loading = ref(true);
 
 const readItems = async () => {
-  const response = await sendRequest(props.name, 'get-all');
+  const readFunction = props.readFunction ?? (async () => await sendRequest(props.name, 'get-all'));
+  const response = await readFunction();
   const resData = await response.json();
   if (response.status === 200) {
     items.value = resData.result;
@@ -32,7 +37,7 @@ const readItems = async () => {
 
 const viewItem = async () => {
   if (selectedItem.value) {
-    router.push(`/admin/${props.name}s/${selectedItem.value.id}`);
+    router.push(`/admin/${props.viewItemName || props.name}s/${selectedItem.value.id}`);
   }
 };
 
@@ -41,7 +46,9 @@ const removeItem = async () => {
     return;
   }
   if (confirm(props.removeMessage)) {
-    const response = await sendRequest(props.name, 'remove', {id: selectedItem.value.id});
+    const removeFunction =
+      props.removeFunction ?? (async () => await sendRequest(props.name, 'remove', {id: selectedItem.value.id}));
+    const response = await removeFunction(selectedItem.value.id);
     const resData = await response.json();
     if (response.status === 200) {
       items.value = items.value.filter((item: any) => item.id !== selectedItem.value.id);
@@ -85,6 +92,7 @@ onBeforeMount(async () => {
       <div class="flex-container">
         <div class="flex-resize">
           <RouterLink
+            v-if="!hideCreate"
             :to="`/admin/${props.name}s/create`"
             class="create-button"
           >

@@ -20,7 +20,7 @@ defineProps({
     <span class="row-title">Punkte zum Bestehen:</span>
     <span class="row-value">{{event.pointsPassed}}</span>
     <span class="row-title">Sichtbar:</span>
-    <span class="row-value">{{event.visible}}</span>
+    <span class="row-value">{{event.visibleLabel}}</span>
   </div>
 </template>
 

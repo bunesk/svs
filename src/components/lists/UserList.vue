@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {tableColumns} from '../../client/user';
 </script>
 
 <template>
@@ -9,42 +10,14 @@
   <AbstractList
     name="user"
     plural="Benutzer"
-    removeMessage="Möchten Sie diese Veranstaltung wirklich löschen?"
+    removeMessage="Möchten Sie diesen Benutzer wirklich löschen?"
     :globalFilterFields="['username','firstName','lastName', 'genderLabel', 'matriculationNumber', 'email', 'role']"
   >
     <Column
-      field="username"
-      header="Benutzername"
-      :sortable="true"
-    ></Column>
-    <Column
-      field="firstName"
-      header="Vorname"
-      :sortable="true"
-    ></Column>
-    <Column
-      field="lastName"
-      header="Nachname"
-      :sortable="true"
-    ></Column>
-    <Column
-      field="genderLabel"
-      header="Geschlecht"
-      :sortable="true"
-    ></Column>
-    <Column
-      field="matriculationNumber"
-      header="Matrikelnummer"
-      :sortable="true"
-    ></Column>
-    <Column
-      field="email"
-      header="E-Mail"
-      :sortable="true"
-    ></Column>
-    <Column
-      field="role"
-      header="Rolle"
+      v-for="column of Object.keys(tableColumns)"
+      :key="column"
+      :field="column"
+      :header="tableColumns[column]"
       :sortable="true"
     ></Column>
   </AbstractList>
