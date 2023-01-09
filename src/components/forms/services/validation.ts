@@ -9,7 +9,7 @@ import {
 } from '../../../services/validators';
 
 export const validate = (event: Event) => {
-  let input = event.target as HTMLInputElement;
+  const input = event.target as HTMLInputElement;
   if (event instanceof KeyboardEvent && !input.classList.contains('invalid-border')) {
     return;
   }
@@ -20,16 +20,22 @@ export const validate = (event: Event) => {
     try {
       validationFunction(input.value);
       validity = true;
-      help.textContent = '';
+      if (help) {
+        help.textContent = '';
+      }
     } catch (e: any) {
-      help.textContent = e.message;
+      if (help) {
+        help.textContent = e.message;
+      }
     }
   } else {
     validity = input.checkValidity();
-    if (validity) {
-      help.textContent = '';
-    } else {
-      help.textContent = input.validationMessage;
+    if (help) {
+      if (validity) {
+        help.textContent = '';
+      } else {
+        help.textContent = input.validationMessage;
+      }
     }
   }
   if (!validity) {
