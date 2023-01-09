@@ -1,6 +1,7 @@
-import {createRouter, createMemoryHistory, createWebHistory} from 'vue-router';
+import {createRouter, createMemoryHistory, createWebHistory, NavigationGuardWithThis} from 'vue-router';
 // @ts-ignore
 import routes from '~pages';
+import user from './user';
 
 export default (app: any) => {
   // create router instance and pass the `routes` option
