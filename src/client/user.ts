@@ -2,7 +2,7 @@ import {ref} from 'vue';
 import cookies from './cookies';
 import sendRequest from './request';
 
-export const tableColumns = {
+export const tableColumns: any = {
   username: 'Benutzername',
   firstName: 'Vorname',
   lastName: 'Nachname',

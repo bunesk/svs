@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import './assets/css/base.scss';
-import {onMounted} from 'vue';
 import {useRouter} from 'vue-router';
 import user from './client/user';
 
@@ -27,10 +26,8 @@ const getRoute = (to: any) => {
   }
 };
 
-onMounted(() => {
-  router.beforeEach((to: any) => {
-    return getRoute(to);
-  });
+router.beforeEach((to: any) => {
+  return getRoute(to);
 });
 
 const route = getRoute(router.currentRoute.value);

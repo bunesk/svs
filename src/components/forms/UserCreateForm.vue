@@ -42,13 +42,17 @@ const submit = async () => {
     (error.value as HTMLParagraphElement).textContent = resData.message;
   }
 };
+
+const handleInput = () => {
+  isValid.value = (formIsValid(form.value) && gender) as boolean;
+};
 </script>
 
 <template>
   <form
     ref="form"
     class="register-form"
-    @input="isValid = formIsValid(form) && gender"
+    @input="handleInput"
   >
     <div class="p-fluid">
       <div class="field">

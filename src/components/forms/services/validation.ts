@@ -45,7 +45,7 @@ export const validate = (event: Event) => {
   }
 };
 
-export const formIsValid = (form: HTMLFormElement | null) => {
+export const formIsValid = (form: HTMLFormElement | null): boolean => {
   if (!form?.checkValidity()) {
     return false;
   }

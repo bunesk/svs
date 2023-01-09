@@ -22,6 +22,7 @@ const message: Ref<HTMLParagraphElement | null> = ref(null);
 const items: Ref<any> = ref([]);
 const selectedItem: Ref<any> = ref(null);
 const filters = ref({global: {value: null, matchMode: FilterMatchMode.CONTAINS}});
+const filterFields = ref(props.globalFilterFields as string[]);
 const loading = ref(true);
 
 const readItems = async () => {
@@ -86,7 +87,7 @@ onBeforeMount(async () => {
     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
     :rowsPerPageOptions="[10,25,50]"
     currentPageReportTemplate="Zeige {first} bis {last} von {totalRecords} Einträgen"
-    :globalFilterFields="globalFilterFields"
+    :globalFilterFields="filterFields"
     responsiveLayout="scroll"
   >
     <template #header>

@@ -1,15 +1,17 @@
 <script setup lang="ts">
+import {ref} from 'vue';
 import {useRoute} from 'vue-router';
 
 const route = useRoute();
+const id = ref(route.params.id as string);
 </script>
 
 <template>
   <div id="event-edit">
     <h1>Veranstaltung bearbeiten</h1>
     <EventEditForm
-      v-if="route && route.params.id"
-      :id="route.params.id"
+      v-if="route && id"
+      :id="id"
     />
   </div>
 </template>

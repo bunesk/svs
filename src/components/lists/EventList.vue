@@ -2,10 +2,6 @@
 </script>
 
 <template>
-  <p
-    ref="message"
-    :class="{'valid': status, 'invalid': !status}"
-  ></p>
   <AbstractList
     name="event"
     plural="Veranstaltungen"

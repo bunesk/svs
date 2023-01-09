@@ -3,10 +3,6 @@ import {tableColumns} from '../../client/user';
 </script>
 
 <template>
-  <p
-    ref="message"
-    :class="{'valid': status, 'invalid': !status}"
-  ></p>
   <AbstractList
     name="user"
     plural="Benutzer"

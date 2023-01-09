@@ -5,7 +5,7 @@ import {useRoute} from 'vue-router';
 import sendRequest from '../../../client/request';
 
 const route = useRoute();
-const user = ref(null);
+const user: Ref<any> = ref(null);
 const error: Ref<HTMLParagraphElement | null> = ref(null);
 
 const readUser = async () => {
