@@ -29,6 +29,7 @@ declare module '@vue/runtime-core' {
     InputSwitch: typeof import('primevue/inputswitch')['default']
     InputText: typeof import('primevue/inputtext')['default']
     LoginForm: typeof import('./../components/forms/LoginForm.vue')['default']
+    Logout: typeof import('./../components/Logout.vue')['default']
     Members: typeof import('./../components/Members.vue')['default']
     Password: typeof import('primevue/password')['default']
     PasswordSecure: typeof import('./../components/forms/components/PasswordSecure.vue')['default']

@@ -4,7 +4,6 @@
 <template>
   <div>
     <h1>Veranstaltungen</h1>
-    <EventList />
   </div>
 </template>
 

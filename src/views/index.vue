@@ -13,11 +13,12 @@ import user from '../client/user';
       <Button label="Mein Profil" />
     </RouterLink>&nbsp;
     <RouterLink
-      v-if="user && user.isAdmin"
+      v-show="user && user.isAdmin"
       to="/admin"
     >
       <Button label="Admin" />
     </RouterLink>&nbsp;
+    <Logout />
   </div>
 </template>
 
