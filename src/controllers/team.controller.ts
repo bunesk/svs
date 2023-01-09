@@ -2,18 +2,32 @@ import {Request} from 'express-jwt';
 import {Response} from 'express';
 import Team from '../models/Team.js';
 import User from '../models/User.js';
-import {checkRequiredParams, paramsToObject, sendJsonError, sendJsonSuccess} from '../server/json.js';
+import {
+  checkRequiredParams,
+  isAuthenticatedAdmin,
+  paramsToObject,
+  sendJsonError,
+  sendJsonSuccess,
+} from '../server/json.js';
 
 export const index = (req: Request, res: Response) => {
   return getAll(req, res);
 };
 
 export const getAll = async (req: Request, res: Response) => {
-  const users = await Team.findAll();
-  return sendJsonSuccess(res, users);
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
+  const teams = await Team.findAll();
+  return sendJsonSuccess(res, teams);
 };
 
 export const getData = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
   if (!req.body.id) {
     return sendJsonError(res, 'Team-ID fehlt');
   }
@@ -25,6 +39,10 @@ export const getData = async (req: Request, res: Response) => {
 };
 
 export const create = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
   const requiredParams = ['number', 'block'];
   const message = checkRequiredParams(req, requiredParams);
   if (message) {
@@ -40,6 +58,10 @@ export const create = async (req: Request, res: Response) => {
 };
 
 export const update = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
   if (!req.body.id) {
     return sendJsonError(res, 'Team-ID fehlt');
   }
@@ -56,6 +78,10 @@ export const update = async (req: Request, res: Response) => {
 };
 
 export const remove = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
   if (!req.body.id) {
     return sendJsonError(res, 'Test-ID fehlt');
   }
@@ -67,6 +93,10 @@ export const remove = async (req: Request, res: Response) => {
 };
 
 export const addUser = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
   const requiredParams = ['teamId', 'userId'];
   const message = checkRequiredParams(req, requiredParams);
   if (message) {
@@ -85,6 +115,10 @@ export const addUser = async (req: Request, res: Response) => {
 };
 
 export const removeUser = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
   const requiredParams = ['teamId', 'userId'];
   const message = checkRequiredParams(req, requiredParams);
   if (message) {

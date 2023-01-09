@@ -1,29 +1,47 @@
 import {Request} from 'express-jwt';
 import {Response} from 'express';
 import Test from '../models/Test.js';
-import {checkRequiredParams, paramsToObject, sendJsonError, sendJsonSuccess} from '../server/json.js';
+import {
+  checkRequiredParams,
+  isAuthenticatedAdmin,
+  paramsToObject,
+  sendJsonError,
+  sendJsonSuccess,
+} from '../server/json.js';
 
 export const index = (req: Request, res: Response) => {
   return getAll(req, res);
 };
 
 export const getAll = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
   const users = await Test.findAll({paranoid: !req.body.includeInactive});
   return sendJsonSuccess(res, users);
 };
 
 export const getData = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
   if (!req.body.id) {
     return sendJsonError(res, 'Test-ID fehlt');
   }
-  const event = await Test.findOne({where: {id: req.body.id}});
-  if (!event) {
+  const test = await Test.findOne({where: {id: req.body.id}});
+  if (!test) {
     return sendJsonError(res, `Keinen Test mit der ID ${req.body.userId} gefunden.`, 404);
   }
-  return sendJsonSuccess(res, event);
+  return sendJsonSuccess(res, test);
 };
 
 export const create = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
   const requiredParams = ['points', 'testNumber', 'walkingNumber'];
   const message = checkRequiredParams(req, requiredParams);
   if (message) {
@@ -40,6 +58,10 @@ export const create = async (req: Request, res: Response) => {
 };
 
 export const update = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
   if (!req.body.id) {
     return sendJsonError(res, 'Test-ID fehlt');
   }
@@ -56,6 +78,10 @@ export const update = async (req: Request, res: Response) => {
 };
 
 export const remove = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
   if (!req.body.id) {
     return sendJsonError(res, 'Test-ID fehlt');
   }

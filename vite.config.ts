@@ -122,6 +122,7 @@ export default defineConfig(({command, ssrBuild}) => ({
   build: {
     minify: false,
   },
+  // needs to be done because primevue doesn't support ssr with esm
   ssr: {
     noExternal: ['primevue'],
   },
