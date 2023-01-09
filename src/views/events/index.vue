@@ -2,8 +2,9 @@
 </script>
 
 <template>
-  <div>
+  <div class="event-list">
     <h1>Veranstaltungen</h1>
+    <EventNameList />
   </div>
 </template>
 
@@ -11,7 +12,7 @@
 h1 {
   padding-bottom: 0.5rem;
 }
-.create-button {
-  text-decoration: none;
+.event-list {
+  text-align: center;
 }
 </style>
