@@ -1,13 +1,23 @@
 <script setup lang="ts">
+import user from '../client/user';
 </script>
 
 <template>
   <div>
     <h1>Startseite</h1>
-    <RouterLink to="/login">Anmelden</RouterLink>&nbsp;
-    <RouterLink to="/events">Veranstaltungen</RouterLink>&nbsp;
-    <RouterLink to="/profile">Profil</RouterLink>&nbsp;
-    <RouterLink to="/admin">Admin</RouterLink>&nbsp;
+    <p>Willkommen im SVS.</p>
+    <RouterLink to="/events">
+      <Button label="Veranstaltungen" />
+    </RouterLink>&nbsp;
+    <RouterLink to="/profile">
+      <Button label="Mein Profil" />
+    </RouterLink>&nbsp;
+    <RouterLink
+      v-if="user && user.isAdmin"
+      to="/admin"
+    >
+      <Button label="Admin" />
+    </RouterLink>&nbsp;
   </div>
 </template>
 

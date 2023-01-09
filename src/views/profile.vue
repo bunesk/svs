@@ -4,7 +4,7 @@ import user from '../client/user';
 
 <template>
   <div v-if="user">
-    <h1>Profil</h1>
+    <h1>Mein Profil</h1>
     <UserTable :user="user" />
     <ChangeGenderForm />
     <ChangePasswordForm />
