@@ -122,4 +122,7 @@ export default defineConfig(({command, ssrBuild}) => ({
   build: {
     minify: false,
   },
+  ssr: {
+    noExternal: ['primevue'],
+  },
 }));

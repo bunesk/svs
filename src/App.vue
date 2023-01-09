@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import './assets/css/base.scss';
 import {useRouter} from 'vue-router';
-import user from './client/user';
+import user, {userIsSet} from './client/user';
+import {onBeforeMount} from 'vue';
 
 const router = useRouter();
 
-const getRoute = (to: any) => {
+// prevent illegal routes
+const getRoute = async (to: any) => {
+  await userIsSet;
   // if logged in go to home if login or register is called
   if (user.value && (to.path === '/login' || to.path === '/register')) {
     return {path: '/'};
@@ -30,10 +33,12 @@ router.beforeEach((to: any) => {
   return getRoute(to);
 });
 
-const route = getRoute(router.currentRoute.value);
-if (route) {
-  router.replace(route.path);
-}
+onBeforeMount(async () => {
+  const route = await getRoute(router.currentRoute.value);
+  if (route) {
+    router.replace(route.path);
+  }
+});
 </script>
 
 <template>

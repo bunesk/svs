@@ -1,4 +1,4 @@
-import {ref} from 'vue';
+import {Ref, ref} from 'vue';
 import cookies from './cookies';
 import sendRequest from './request';
 
@@ -19,6 +19,11 @@ export const genderOptions = [
 
 export const roleOptions = ['Student', 'Tutor', 'Admin'];
 
+let resolveUserIsSet: Function;
+export const userIsSet = new Promise((resolve) => (resolveUserIsSet = resolve));
+
+const user: Ref<any> = ref(null);
+
 export const getUser = async () => {
   const jwtToken = cookies.get('auth');
   if (!jwtToken) {
@@ -34,6 +39,10 @@ export const getUser = async () => {
   return null;
 };
 
-const user = await getUser();
+const setUser = async () => {
+  user.value = await getUser();
+  resolveUserIsSet();
+};
+setUser();
 
-export default ref(user);
+export default user;

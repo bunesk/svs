@@ -184,6 +184,10 @@ export const isMember = async (req: Request, res: Response) => {
 };
 
 export const addMember = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
   const requiredParams = ['eventId', 'userId'];
   const message = checkRequiredParams(req, requiredParams);
   if (message) {
@@ -205,6 +209,10 @@ export const addMember = async (req: Request, res: Response) => {
 };
 
 export const removeMember = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
   const requiredParams = ['eventId', 'userId'];
   const message = checkRequiredParams(req, requiredParams);
   if (message) {
