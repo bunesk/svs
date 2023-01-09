@@ -12,7 +12,6 @@
     "build": "npm run build:client && npm run build:server",
     "build:client": "vue-tsc --noEmit && vite build --ssrManifest --outDir dist/client",
     "build:server": "vite build --ssr src/server/entry-server.ts --outDir dist/server",
-    "build:static": "vite build --ssrManifest --outDir dist/static && npm run build:server && ts-node-esm src/build/prerender.ts",
     "serve": "NODE_ENV=production ts-node-esm src/server/index.ts",
     "update": "npm-check --skip-unused -u"
   },
