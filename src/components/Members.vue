@@ -13,7 +13,6 @@ const readFunction = async () => {
 };
 
 const removeFunction = async (userId: string) => {
-  console.log('remove function');
   return await sendRequest('event', 'remove-member', {eventId: route.params.id, userId: userId});
 };
 </script>

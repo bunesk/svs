@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {Ref, ref} from 'vue';
 import sendRequest from '../../client/request';
-import user from '../../client/user';
 import {validate, formIsValid, handlePasswordInput} from './services/validation';
 
 const form: Ref<HTMLFormElement | null> = ref(null);

@@ -1,4 +1,4 @@
-import {reactive} from 'vue';
+import {ref} from 'vue';
 import cookies from './cookies';
 import sendRequest from './request';
 
@@ -19,7 +19,7 @@ export const genderOptions = [
 
 export const roleOptions = ['Student', 'Tutor', 'Admin'];
 
-const getUser = async () => {
+export const getUser = async () => {
   const jwtToken = cookies.get('auth');
   if (!jwtToken) {
     return null;
@@ -36,4 +36,4 @@ const getUser = async () => {
 
 const user = await getUser();
 
-export default reactive(user);
+export default ref(user);

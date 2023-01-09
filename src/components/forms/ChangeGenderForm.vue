@@ -24,8 +24,8 @@ const changeGender = async () => {
   const paragraph = message.value as HTMLParagraphElement;
   status.value = response.status === 200;
   if (status.value && gender.value) {
-    user.gender = gender.value.code;
-    user.genderLabel = getGenderLabel(gender.value.code as any);
+    user.value.gender = gender.value.code;
+    user.value.genderLabel = getGenderLabel(gender.value.code as any);
     gender.value = null;
   }
   paragraph.textContent = resData.message;

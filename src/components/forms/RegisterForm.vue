@@ -4,7 +4,7 @@ import {useRouter} from 'vue-router';
 import sendRequest from '../../client/request';
 import {validate, formIsValid, handlePasswordInput} from './services/validation';
 import cookies from '../../client/cookies';
-import {genderOptions} from '../../client/user';
+import {genderOptions, getUser, default as user} from '../../client/user';
 
 const router = useRouter();
 const form: Ref<HTMLFormElement | null> = ref(null);
@@ -36,6 +36,7 @@ const submit = async () => {
   const resData = await response.json();
   if (response.status === 200) {
     cookies.set('auth', resData.result.jwtToken);
+    user.value = await getUser();
     router.replace('/');
   } else {
     (error.value as HTMLParagraphElement).textContent = resData.message;
