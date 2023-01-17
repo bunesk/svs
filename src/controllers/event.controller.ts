@@ -5,24 +5,13 @@ import User from '../models/User.js';
 import {encryptPassword, userSelectAttributes} from '../server/auth.js';
 import {
   checkRequiredParams,
+  eventSelectAttributes,
+  getJoinableData,
   isAuthenticatedAdmin,
   paramsToObject,
   sendJsonError,
   sendJsonSuccess,
 } from '../server/json.js';
-
-const eventSelectAttributes = [
-  'amountSheets',
-  'amountTests',
-  'createdAt',
-  'id',
-  'name',
-  'pointsMax',
-  'pointsPassed',
-  'updatedAt',
-  'visible',
-  'visibleLabel',
-];
 
 export const index = (req: Request, res: Response) => {
   return getAll(req, res);
@@ -46,30 +35,11 @@ export const getAllNames = async (req: Request, res: Response) => {
 };
 
 export const getData = async (req: Request, res: Response) => {
-  if (!req.auth || !req.auth.username) {
-    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
+  const result = await getJoinableData(req, 'Event');
+  if (!result.status) {
+    return sendJsonError(res, result.message, result.statusCode);
   }
-  const user = await User.findOne({where: {username: req.auth.username}});
-  if (!user) {
-    return sendJsonError(res, 'Authentifizierter Benutzer existiert nicht mehr.', 404);
-  }
-  if (!req.body.id) {
-    return sendJsonError(res, 'Veranstaltungs-ID fehlt');
-  }
-  let event: Event | null = null;
-  if (user.isAdmin) {
-    event = await Event.findOne({where: {id: req.body.id}, attributes: eventSelectAttributes});
-  } else {
-    event = await Event.findOne({where: {id: req.body.id, visible: true}, attributes: eventSelectAttributes});
-  }
-  if (!event) {
-    return sendJsonError(res, `Keine Veranstaltung mit der ID ${req.body.id} gefunden.`, 404);
-  }
-  const hasEvent = await user.hasEvent(event);
-  if (!user.isAdmin && !hasEvent) {
-    return sendJsonError(res, 'Du bist nicht berechtigt.', 403);
-  }
-  return sendJsonSuccess(res, event);
+  return sendJsonSuccess(res, result.item);
 };
 
 export const getByUser = async (req: Request, res: Response) => {

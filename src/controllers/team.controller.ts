@@ -4,6 +4,7 @@ import Team from '../models/Team.js';
 import User from '../models/User.js';
 import {
   checkRequiredParams,
+  getJoinableData,
   isAuthenticatedAdmin,
   paramsToObject,
   sendJsonError,
@@ -24,18 +25,11 @@ export const getAll = async (req: Request, res: Response) => {
 };
 
 export const getData = async (req: Request, res: Response) => {
-  const hasPermission = await isAuthenticatedAdmin(req);
-  if (!hasPermission.status) {
-    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  const result = await getJoinableData(req, 'Event');
+  if (!result.status) {
+    return sendJsonError(res, result.message, result.statusCode);
   }
-  if (!req.body.id) {
-    return sendJsonError(res, 'Team-ID fehlt');
-  }
-  const event = await Team.findOne({where: {id: req.body.id}});
-  if (!event) {
-    return sendJsonError(res, `Keinen Team mit der ID ${req.body.userId} gefunden.`, 404);
-  }
-  return sendJsonSuccess(res, event);
+  return sendJsonSuccess(res, result.item);
 };
 
 export const create = async (req: Request, res: Response) => {
