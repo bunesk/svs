@@ -11,7 +11,11 @@ import {
   BelongsToManyRemoveAssociationMixin,
   BelongsToManyRemoveAssociationsMixin,
   BelongsToManySetAssociationsMixin,
+  BelongsToGetAssociationMixin,
+  BelongsToSetAssociationMixin,
+  BelongsToCreateAssociationMixin,
 } from 'sequelize';
+import Event from './Event.js';
 import User from './User.js';
 
 /**
@@ -27,6 +31,10 @@ class Team extends Model {
 
   // Since TS cannot determine model association at compile time
   // we have to declare them here virtually
+  // association with event
+  declare getEvent: BelongsToGetAssociationMixin<Event>;
+  declare setEvent: BelongsToSetAssociationMixin<Event, number>;
+  declare createEvent: BelongsToCreateAssociationMixin<Event>;
   // association with user
   declare getUsers: BelongsToManyGetAssociationsMixin<User>;
   declare addUser: BelongsToManyAddAssociationMixin<User, number>;

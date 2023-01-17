@@ -42,6 +42,7 @@ const setAssociations = async () => {
   oneToMany(User, Test);
   oneToMany(Event, Test);
   oneToMany(Test, Task);
+  oneToMany(Event, Team);
   manyToMany(User, Event);
   manyToMany(User, Team);
 };

@@ -24,6 +24,7 @@ import {
   HasManySetAssociationsMixin,
 } from 'sequelize';
 import User from './User.js';
+import Team from './Team.js';
 import Test from './Test.js';
 import {validatePassword} from '../services/validators.js';
 import {encryptPassword} from '../server/auth.js';
@@ -44,6 +45,17 @@ class Event extends Model {
 
   // Since TS cannot determine model association at compile time
   // we have to declare them here virtually
+  // association with team
+  declare getTeams: HasManyGetAssociationsMixin<Team>;
+  declare addTeam: HasManyAddAssociationMixin<Team, number>;
+  declare addTeams: HasManyAddAssociationsMixin<Team, number>;
+  declare setTeams: HasManySetAssociationsMixin<Team, number>;
+  declare removeTeam: HasManyRemoveAssociationMixin<Team, number>;
+  declare removeTeams: HasManyRemoveAssociationsMixin<Team, number>;
+  declare hasTeam: HasManyHasAssociationMixin<Team, number>;
+  declare hasTeams: HasManyHasAssociationsMixin<Team, number>;
+  declare countTeams: HasManyCountAssociationsMixin;
+  declare createTeam: HasManyCreateAssociationMixin<Team, 'ownerId'>;
   // association with test
   declare getTests: HasManyGetAssociationsMixin<Test>;
   declare addTest: HasManyAddAssociationMixin<Test, number>;
