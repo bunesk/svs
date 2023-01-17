@@ -16,7 +16,6 @@ import {
   BelongsToGetAssociationMixin,
   BelongsToSetAssociationMixin,
 } from 'sequelize';
-import User from './User.js';
 import Event from './Event.js';
 import Task from './Task.js';
 
@@ -27,21 +26,16 @@ class Test extends Model {
   // Since TS cannot determine model attributes at compile time
   // we have to declare them here virtually
   declare points: number;
-  declare testNumber: number;
-  declare walkingNumber: number;
+  declare number: number;
   declare isSheet: CreationOptional<boolean>;
 
   // Since TS cannot determine model association at compile time
   // we have to declare them here virtually
-  // association with user
-  declare getUser: BelongsToGetAssociationMixin<User>;
-  declare setUser: BelongsToSetAssociationMixin<User, number>;
-  declare createUser: BelongsToCreateAssociationMixin<User>;
   // association with event
   declare getEvent: BelongsToGetAssociationMixin<Event>;
   declare setEvent: BelongsToSetAssociationMixin<Event, number>;
   declare createEvent: BelongsToCreateAssociationMixin<Event>;
-  // association with test
+  // association with task
   declare getTasks: HasManyGetAssociationsMixin<Task>;
   declare addTask: HasManyAddAssociationMixin<Task, number>;
   declare addTasks: HasManyAddAssociationsMixin<Task, number>;
@@ -55,15 +49,7 @@ class Test extends Model {
 }
 
 Test.init({
-  points: {
-    type: DataTypes.FLOAT.UNSIGNED,
-    allowNull: false,
-  },
-  testNumber: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: false,
-  },
-  walkingNumber: {
+  number: {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: false,
   },

@@ -4,8 +4,19 @@ import {
   BelongsToCreateAssociationMixin,
   BelongsToGetAssociationMixin,
   BelongsToSetAssociationMixin,
+  BelongsToManyAddAssociationMixin,
+  BelongsToManyAddAssociationsMixin,
+  BelongsToManyCountAssociationsMixin,
+  BelongsToManyCreateAssociationMixin,
+  BelongsToManyGetAssociationsMixin,
+  BelongsToManyHasAssociationMixin,
+  BelongsToManyHasAssociationsMixin,
+  BelongsToManyRemoveAssociationMixin,
+  BelongsToManyRemoveAssociationsMixin,
+  BelongsToManySetAssociationsMixin,
 } from 'sequelize';
 import Test from './Test.js';
+import User from './User.js';
 
 /**
  * A task is part of a test.
@@ -22,6 +33,17 @@ class Task extends Model {
   declare getTest: BelongsToGetAssociationMixin<Test>;
   declare setTest: BelongsToSetAssociationMixin<Test, number>;
   declare createTest: BelongsToCreateAssociationMixin<Test>;
+  // association with user
+  declare getUsers: BelongsToManyGetAssociationsMixin<User>;
+  declare addUser: BelongsToManyAddAssociationMixin<User, number>;
+  declare addUsers: BelongsToManyAddAssociationsMixin<User, number>;
+  declare setUsers: BelongsToManySetAssociationsMixin<User, number>;
+  declare removeUser: BelongsToManyRemoveAssociationMixin<User, number>;
+  declare removeUsers: BelongsToManyRemoveAssociationsMixin<User, number>;
+  declare hasUser: BelongsToManyHasAssociationMixin<User, number>;
+  declare hasUsers: BelongsToManyHasAssociationsMixin<User, number>;
+  declare countUsers: BelongsToManyCountAssociationsMixin;
+  declare createUser: BelongsToManyCreateAssociationMixin<Test>;
 }
 
 Task.init({

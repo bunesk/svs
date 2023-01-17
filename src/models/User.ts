@@ -23,7 +23,7 @@ import {
   validateEmail,
   validatePassword,
 } from '../services/validators.js';
-import Test from './Test.js';
+import Task from './Task.js';
 import Team from './Team.js';
 import {encryptPassword} from '../server/auth.js';
 import {getGenderLabel} from '../services/gender.js';
@@ -51,17 +51,17 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
 
   // Since TS cannot determine model association at compile time
   // we have to declare them here virtually
-  // association with test
-  declare getTests: HasManyGetAssociationsMixin<Test>;
-  declare addTest: HasManyAddAssociationMixin<Test, number>;
-  declare addTests: HasManyAddAssociationsMixin<Test, number>;
-  declare setTests: HasManySetAssociationsMixin<Test, number>;
-  declare removeTest: HasManyRemoveAssociationMixin<Test, number>;
-  declare removeTests: HasManyRemoveAssociationsMixin<Test, number>;
-  declare hasTest: HasManyHasAssociationMixin<Test, number>;
-  declare hasTests: HasManyHasAssociationsMixin<Test, number>;
-  declare countTests: HasManyCountAssociationsMixin;
-  declare createTest: HasManyCreateAssociationMixin<Test, 'ownerId'>;
+  // association with task
+  declare getTasks: HasManyGetAssociationsMixin<Task>;
+  declare addTask: HasManyAddAssociationMixin<Task, number>;
+  declare addTasks: HasManyAddAssociationsMixin<Task, number>;
+  declare setTasks: HasManySetAssociationsMixin<Task, number>;
+  declare removeTask: HasManyRemoveAssociationMixin<Task, number>;
+  declare removeTasks: HasManyRemoveAssociationsMixin<Task, number>;
+  declare hasTask: HasManyHasAssociationMixin<Task, number>;
+  declare hasTasks: HasManyHasAssociationsMixin<Task, number>;
+  declare countTasks: HasManyCountAssociationsMixin;
+  declare createTask: HasManyCreateAssociationMixin<Task, 'ownerId'>;
   // association with event
   declare getEvents: HasManyGetAssociationsMixin<Event>;
   declare addEvent: HasManyAddAssociationMixin<Event, number>;

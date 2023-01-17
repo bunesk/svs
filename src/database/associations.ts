@@ -15,7 +15,11 @@ const oneToMany = (hasMany: ModelStatic<Model>, belongsTo: ModelStatic<Model>) =
   belongsTo.belongsTo(hasMany);
 };
 
-const manyToMany = (hasMany: ModelStatic<Model>, belongsToMany: ModelStatic<Model>, through?: string) => {
+const manyToMany = (
+  hasMany: ModelStatic<Model>,
+  belongsToMany: ModelStatic<Model>,
+  through?: string | ModelStatic<Model>
+) => {
   if (!through) {
     through = hasMany.name + belongsToMany.name;
   }
@@ -38,13 +42,14 @@ const setAssociations = async () => {
   const Test = await importModel('Test');
   const Task = await importModel('Task');
   const Team = await importModel('Team');
+  const UserTask = await importModel('UserTask');
 
-  oneToMany(User, Test);
   oneToMany(Event, Test);
   oneToMany(Test, Task);
   oneToMany(Event, Team);
   manyToMany(User, Event);
   manyToMany(User, Team);
+  manyToMany(User, Task, UserTask);
 };
 
 export default setAssociations;
