@@ -50,12 +50,14 @@ onBeforeMount(async () => {
         id="member"
         v-model="user"
         :options="users"
-        optionLabel="username"
+        optionLabel="fullName"
       />
       <Button
         @click="addMember"
         :disabled="!user"
-      >Hinzufügen</Button>
+        label="Hinzufügen"
+        class="p-button-success"
+      />
     </div>
     <p
       ref="message"

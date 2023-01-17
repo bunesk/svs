@@ -20,7 +20,7 @@ const removeFunction = async (userId: string) => {
 <template>
   <div>
     <h2>Mitglieder</h2>
-    <AddMember />
+    <AddEventMember />
     <h3>Liste</h3>
     <AbstractList
       name="event"

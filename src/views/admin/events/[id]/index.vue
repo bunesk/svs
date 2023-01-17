@@ -39,6 +39,7 @@ onBeforeMount(async () => {
       ></Button>
     </RouterLink>
     <Members />
+    <Teams />
     <ResetPasswordForm
       :id="event.id"
       item="event"

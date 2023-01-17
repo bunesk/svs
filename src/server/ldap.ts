@@ -18,10 +18,8 @@ const timeout = 3000;
  */
 export const login = async (username: string, password: string): Promise<any> => {
   let resolve: Function;
-  let reject: Function;
   const promise = new Promise((res, rej) => {
     resolve = res;
-    reject = rej;
   });
   if (!LDAP_URL || !LDAP_PATH) {
     console.log('No LDAP url or path provided.');

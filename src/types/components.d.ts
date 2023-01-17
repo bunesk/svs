@@ -8,7 +8,7 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AbstractList: typeof import('./../components/lists/AbstractList.vue')['default']
-    AddMember: typeof import('./../components/forms/AddMember.vue')['default']
+    AddEventMember: typeof import('./../components/forms/AddEventMember.vue')['default']
     Address: typeof import('./../components/Address.vue')['default']
     Button: typeof import('primevue/button')['default']
     ChangeGenderForm: typeof import('./../components/forms/ChangeGenderForm.vue')['default']
@@ -35,6 +35,8 @@ declare module '@vue/runtime-core' {
     ResetPasswordForm: typeof import('./../components/forms/ResetPasswordForm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TeamCreateForm: typeof import('./../components/forms/TeamCreateForm.vue')['default']
+    Teams: typeof import('./../components/Teams.vue')['default']
     UserCreateForm: typeof import('./../components/forms/UserCreateForm.vue')['default']
     UserList: typeof import('./../components/lists/UserList.vue')['default']
     UserTable: typeof import('./../components/tables/UserTable.vue')['default']
