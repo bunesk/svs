@@ -191,6 +191,9 @@ User.init({
       }
     },
   },
+  activationCode: {
+    type: DataTypes.STRING,
+  },
 });
 
 export default User;
