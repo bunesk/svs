@@ -96,11 +96,11 @@ export const addUser = async (req: Request, res: Response) => {
   if (message) {
     return sendJsonError(res, message);
   }
-  const user = await User.findOne({where: {id: req.body.userId}});
+  const user = await User.findByPk(req.body.userId);
   if (!user) {
     return sendJsonError(res, `Benutzer mit der ID ${req.body.userId} nicht gefunden.`, 404);
   }
-  const team = await Team.findOne({where: {id: req.body.teamId}});
+  const team = await Team.findByPk(req.body.teamId);
   if (!team) {
     return sendJsonError(res, `Veranstaltung mit der ID ${req.body.teamId} nicht gefunden.`, 404);
   }
@@ -118,11 +118,11 @@ export const removeUser = async (req: Request, res: Response) => {
   if (message) {
     return sendJsonError(res, message);
   }
-  const user = await User.findOne({where: {id: req.body.userId}});
+  const user = await User.findByPk(req.body.userId);
   if (!user) {
     return sendJsonError(res, `Benutzer mit der ID ${req.body.userId} nicht gefunden.`, 404);
   }
-  const team = await Team.findOne({where: {id: req.body.teamId}});
+  const team = await Team.findByPk(req.body.teamId);
   if (!team) {
     return sendJsonError(res, `Veranstaltung mit der ID ${req.body.teamId} nicht gefunden.`, 404);
   }

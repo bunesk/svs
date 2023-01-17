@@ -50,7 +50,7 @@ export const getDataById = async (req: Request, res: Response) => {
   if (!req.body.id) {
     return sendJsonError(res, 'Benutzer-ID fehlt.');
   }
-  const user = await User.findOne({where: {id: req.body.id}, attributes: userSelectAttributes});
+  const user = await User.findByPk(req.body.id, {attributes: userSelectAttributes});
   if (!user) {
     return sendJsonError(res, `Benutzer mit der ID '${req.body.id}' nicht gefunden.`, 404);
   }

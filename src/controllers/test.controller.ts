@@ -30,7 +30,7 @@ export const getData = async (req: Request, res: Response) => {
   if (!req.body.id) {
     return sendJsonError(res, 'Test-ID fehlt');
   }
-  const test = await Test.findOne({where: {id: req.body.id}});
+  const test = await Test.findByPk(req.body.id);
   if (!test) {
     return sendJsonError(res, `Keinen Test mit der ID ${req.body.userId} gefunden.`, 404);
   }

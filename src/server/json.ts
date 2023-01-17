@@ -81,12 +81,12 @@ export const getJoinableData = async (
   let item: Event | Team | null = null;
   if (memberOf === 'Event') {
     if (user.isAdmin) {
-      item = await Event.findOne({where: {id: req.body.id}, attributes: eventSelectAttributes});
+      item = await Event.findByPk(req.body.id, {attributes: eventSelectAttributes});
     } else {
       item = await Event.findOne({where: {id: req.body.id, visible: true}, attributes: eventSelectAttributes});
     }
   } else {
-    item = await Team.findOne({where: {id: req.body.id}});
+    item = await Team.findByPk(req.body.id);
   }
   if (!item) {
     const name = memberOf === 'Event' ? 'Veranstaltung' : 'Team';

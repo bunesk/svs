@@ -62,7 +62,7 @@ export const getByUserId = async (req: Request, res: Response) => {
   if (!req.body.userId) {
     return sendJsonError(res, 'Benutzer-ID fehlt');
   }
-  const user = await User.findOne({where: {id: req.body.userId}});
+  const user = await User.findByPk(req.body.userId);
   if (!user) {
     return sendJsonError(res, `Keinen Benutzer mit der ID ${req.body.userId} gefunden.`, 404);
   }
@@ -78,7 +78,7 @@ export const getMembers = async (req: Request, res: Response) => {
   if (!req.body.id) {
     return sendJsonError(res, 'Veranstaltungs-ID fehlt');
   }
-  const event = await Event.findOne({where: {id: req.body.id}});
+  const event = await Event.findByPk(req.body.id);
   if (!event) {
     return sendJsonError(res, `Keine Veranstaltung mit der ID ${req.body.id} gefunden.`, 404);
   }
@@ -180,7 +180,7 @@ export const isMember = async (req: Request, res: Response) => {
   if (!user) {
     return sendJsonError(res, `Benutzer mit der ID ${req.body.userId} nicht gefunden.`, 404);
   }
-  const event = await Event.findOne({where: {id: req.body.id}});
+  const event = await Event.findByPk(req.body.id);
   if (!event) {
     return sendJsonError(res, `Veranstaltung mit der ID ${req.body.id} nicht gefunden.`, 404);
   }
@@ -224,11 +224,11 @@ export const addMember = async (req: Request, res: Response) => {
   if (message) {
     return sendJsonError(res, message);
   }
-  const user = await User.findOne({where: {id: req.body.userId}});
+  const user = await User.findByPk(req.body.userId);
   if (!user) {
     return sendJsonError(res, `Benutzer mit der ID ${req.body.userId} nicht gefunden.`, 404);
   }
-  const event = await Event.findOne({where: {id: req.body.eventId}});
+  const event = await Event.findByPk(req.body.eventId);
   if (!event) {
     return sendJsonError(res, `Veranstaltung mit der ID ${req.body.eventId} nicht gefunden.`, 404);
   }
@@ -249,11 +249,11 @@ export const removeMember = async (req: Request, res: Response) => {
   if (message) {
     return sendJsonError(res, message);
   }
-  const user = await User.findOne({where: {id: req.body.userId}});
+  const user = await User.findByPk(req.body.userId);
   if (!user) {
     return sendJsonError(res, `Benutzer mit der ID ${req.body.userId} nicht gefunden.`, 404);
   }
-  const event = await Event.findOne({where: {id: req.body.eventId}});
+  const event = await Event.findByPk(req.body.eventId);
   if (!event) {
     return sendJsonError(res, `Veranstaltung mit der ID ${req.body.eventId} nicht gefunden.`, 404);
   }
