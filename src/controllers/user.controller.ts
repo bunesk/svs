@@ -12,6 +12,7 @@ import {
 
 import * as dotenv from 'dotenv';
 import {createJwtToken, encryptPassword, userSelectAttributes} from '../server/auth.js';
+import {login as ldapLogin} from '../server/ldap.js';
 dotenv.config();
 
 const REGISTRATION_PASSWORD_ACTIVE = process.env.REGISTRATION_PASSWORD_ACTIVE;
@@ -91,11 +92,32 @@ export const login = async (req: Request, res: Response) => {
   if (message) {
     return sendJsonError(res, message);
   }
-  const params = paramsToObject(req, requiredParams);
-  params.password = encryptPassword(params.password);
-  const user = await User.findOne({where: params});
-  if (!user) {
-    return sendJsonError(res, 'Benutzername oder Password falsch.');
+  const ldapData = await ldapLogin(req.body.username, req.body.password);
+  if (ldapData) {
+    // if ldap login with user data was successful
+    // check if user is already in db and create it if not
+    const user = await User.findOne({where: {username: req.body.username}});
+    if (!user) {
+      const params = {
+        username: req.body.username,
+        password: req.body.password,
+        ...ldapData,
+      };
+      try {
+        await User.create(params);
+      } catch (e: any) {
+        const message = 'Benutzer im LDAP, anlegen im System aber fehlgeschlagen. Versuchen Sie es später erneut.';
+        return sendJsonError(res, message, 500);
+      }
+    }
+  } else {
+    // check if user exists in db
+    const params = paramsToObject(req, requiredParams);
+    params.password = encryptPassword(params.password);
+    const user = await User.findOne({where: params});
+    if (!user) {
+      return sendJsonError(res, 'Benutzername oder Password falsch.');
+    }
   }
   const jwtToken = createJwtToken(req.body.username);
   return sendJsonSuccess(res, {jwtToken: jwtToken}, 'Anmeldung erfolgreich.');

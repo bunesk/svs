@@ -29,7 +29,7 @@ import {encryptPassword} from '../server/auth.js';
 import {getGenderLabel} from '../services/gender.js';
 
 declare type gender = 'male' | 'female' | 'diverse';
-declare type genderLabel = 'Männlich' | 'Weiblich' | 'Divers';
+declare type genderLabel = 'Männlich' | 'Weiblich' | 'Divers' | 'Keine Angabe';
 
 /**
  * A user is a student, tutor or administrator.
@@ -123,7 +123,6 @@ User.init({
   },
   gender: {
     type: DataTypes.ENUM('male', 'female', 'diverse'),
-    allowNull: false,
   },
   genderLabel: {
     type: DataTypes.VIRTUAL,
