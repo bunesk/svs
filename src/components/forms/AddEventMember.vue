@@ -51,6 +51,7 @@ onBeforeMount(async () => {
         v-model="user"
         :options="users"
         optionLabel="fullName"
+        :editable="true"
       />
       <Button
         @click="addMember"

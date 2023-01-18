@@ -25,7 +25,6 @@ import Task from './Task.js';
 class Test extends Model {
   // Since TS cannot determine model attributes at compile time
   // we have to declare them here virtually
-  declare points: number;
   declare number: number;
   declare isSheet: CreationOptional<boolean>;
 
