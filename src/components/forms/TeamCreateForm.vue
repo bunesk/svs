@@ -4,44 +4,41 @@ import {useRoute} from 'vue-router';
 import sendRequest from '../../client/request';
 
 const route = useRoute();
-const user: Ref<any> = ref(null);
-const users = ref([]);
+const block = ref('');
 const status = ref(false);
 const message: Ref<HTMLParagraphElement | null> = ref(null);
 
-const addMember = async () => {
+const createTeam = async () => {
   const params = {
-    eventId: route.params.id,
-    userId: user.value?.id,
+    EventId: route.params.id,
+    block: block.value,
   };
-  const response = await sendRequest('event', 'add-member', params);
+  const response = await sendRequest('team', 'create', params);
   const resData = await response.json();
   const paragraph = message.value as HTMLParagraphElement;
   status.value = response.status === 200;
-  if (status.value && user.value) {
-    user.value = null;
+  if (status.value && block.value) {
+    block.value = '';
   }
   paragraph.textContent = resData.message;
 };
 </script>
 
 <template>
-  <h3>Mitglied hinzufügen</h3>
+  <h3>Team erstellen</h3>
   <form>
     <div class="field">
-      <label for="member">Benutzer</label>
-      <Dropdown
-        id="member"
-        v-model="user"
-        :options="users"
-        optionLabel="fullName"
+      <label for="team_block">Block</label>
+      <InputText
+        id="team_block"
+        v-model="block"
       />
       <Button
-        @click="addMember"
-        :disabled="!user"
-        label="Hinzufügen"
+        @click="createTeam"
+        :disabled="!block"
+        label="Erstellen"
         class="p-button-success"
-      >Hinzufügen</Button>
+      />
     </div>
     <p
       ref="message"

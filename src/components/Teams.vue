@@ -34,13 +34,7 @@ const removeFunction = async (userId: string) => {
 <template>
   <div>
     <h2>Teams</h2>
-    <RouterLink :to="`/events/${route.params.id}/teams/create`">
-      <Button
-        label="Neues Team erstellen"
-        icon="pi pi-plus"
-        class="p-button-success"
-      ></Button>
-    </RouterLink>
+    <TeamCreateForm />
     <RouterLink
       v-for="team of teams"
       :key="team.id"

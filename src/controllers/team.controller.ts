@@ -38,17 +38,19 @@ export const create = async (req: Request, res: Response) => {
   if (!hasPermission.status) {
     return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
   }
-  const requiredParams = ['number', 'block'];
+  const requiredParams = ['EventId', 'block'];
   const message = checkRequiredParams(req, requiredParams);
   if (message) {
     return sendJsonError(res, message);
   }
+  const max = (await Team.max('number', {where: {block: req.body.block}})) ?? '0';
   try {
     const params = paramsToObject(req, [...requiredParams]);
+    params.number = (max as number) + 1;
     await Team.create(params);
     return sendJsonSuccess(res, [], 'Team erfolgreich angelegt.');
   } catch (e: any) {
-    return sendJsonError(res, message);
+    return sendJsonError(res, 'Team anlegen fehlgeschlagen.');
   }
 };
 
