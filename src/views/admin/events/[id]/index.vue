@@ -41,6 +41,7 @@ onBeforeMount(async () => {
     <EventMembers />
     <Teams />
     <Tests />
+    <Tests isSheet />
     <ResetPasswordForm
       :id="event.id"
       item="event"

@@ -73,8 +73,8 @@ export const create = async (req: Request, res: Response) => {
     EventId: req.body.EventId,
   };
   try {
-    await Test.create(params);
-    return sendJsonSuccess(res, [], 'Test erfolgreich angelegt.');
+    const test = await Test.create(params);
+    return sendJsonSuccess(res, [], `${test.name} erfolgreich angelegt.`);
   } catch (e: any) {
     return sendJsonError(res, 'Test anlegen fehlgeschlagen.');
   }
@@ -108,9 +108,10 @@ export const remove = async (req: Request, res: Response) => {
   if (!req.body.id) {
     return sendJsonError(res, 'Test-ID fehlt');
   }
-  const amountDestroyed = await Test.destroy({where: {id: req.body.id}});
-  if (!amountDestroyed) {
-    return sendJsonError(res, `Test mit der ID ${req.body.id} ist entweder inexistent oder bereits gelöscht`);
+  const test = await Test.findByPk(req.body.id);
+  if (!test) {
+    return sendJsonError(res, `Test mit der ID ${req.body.id} ist entweder inexistent oder bereits gelöscht.`);
   }
-  return sendJsonSuccess(res, [], 'Test erfolgreich gelöscht');
+  await Test.destroy({where: {id: req.body.id}});
+  return sendJsonSuccess(res, [], `${test.name} erfolgreich gelöscht.`);
 };

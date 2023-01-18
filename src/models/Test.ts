@@ -26,6 +26,7 @@ class Test extends Model {
   // Since TS cannot determine model attributes at compile time
   // we have to declare them here virtually
   declare number: number;
+  declare name: string;
   declare isSheet: CreationOptional<boolean>;
 
   // Since TS cannot determine model association at compile time
@@ -51,6 +52,18 @@ Test.init({
   number: {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: false,
+  },
+  name: {
+    type: DataTypes.VIRTUAL,
+    get(): string {
+      if (this.isSheet) {
+        return `Blatt ${this.number}`;
+      }
+      return `Test ${this.number}`;
+    },
+    set(value) {
+      throw new Error(`You can't set the 'name' value.`);
+    },
   },
   isSheet: {
     type: DataTypes.BOOLEAN,

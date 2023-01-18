@@ -3,17 +3,26 @@ import {onBeforeMount, Ref, ref} from 'vue';
 import {useRoute} from 'vue-router';
 import sendRequest from '../client/request';
 
+const props = defineProps({
+  isSheet: {type: Boolean, default: false},
+});
+
 const route = useRoute();
-const teams: Ref<any> = ref(null);
+const tests: Ref<any> = ref(null);
 const status = ref(false);
 const message: Ref<HTMLParagraphElement | null> = ref(null);
+const label = ref(props.isSheet ? 'Blatt' : 'Test');
 
 const read = async () => {
-  const response = await sendRequest('test', 'get-by-event', {eventId: route.params.id});
+  const params = {
+    eventId: route.params.id,
+    isSheet: props.isSheet,
+  };
+  const response = await sendRequest('test', 'get-by-event', params);
   const resData = await response.json();
   status.value = response.status === 200;
   if (status.value) {
-    teams.value = resData.result;
+    tests.value = resData.result;
     (message.value as HTMLParagraphElement).textContent = '';
   } else {
     (message.value as HTMLParagraphElement).textContent = resData.message;
@@ -21,7 +30,11 @@ const read = async () => {
 };
 
 const create = async () => {
-  const response = await sendRequest('test', 'create', {EventId: route.params.id});
+  const params = {
+    EventId: route.params.id,
+    isSheet: props.isSheet,
+  };
+  const response = await sendRequest('test', 'create', params);
   const resData = await response.json();
   const paragraph = message.value as HTMLParagraphElement;
   status.value = response.status === 200;
@@ -33,12 +46,12 @@ const refresh = async () => {
 };
 
 const remove = async (id: string) => {
-  if (confirm('Möchten Sie den Test wirklich löschen?')) {
+  if (confirm(`${label.value} wirklich löschen?`)) {
     const response = await sendRequest('test', 'remove', {id: id});
     const resData = await response.json();
     status.value = response.status === 200;
     if (status.value) {
-      teams.value = teams.value.filter((team: any) => team.id !== id);
+      tests.value = tests.value.filter((team: any) => team.id !== id);
     }
     (message.value as HTMLParagraphElement).textContent = resData.message;
   }
@@ -51,23 +64,23 @@ onBeforeMount(async () => {
 
 <template>
   <div>
-    <h2>Tests</h2>
+    <h2>{{ isSheet ? 'Blätter' : 'Tests' }}</h2>
     <Button
       @click="create"
       icon="pi pi-plus"
-      label="Test erstellen"
+      :label="`${label} erstellen`"
       class="p-button-success"
     />
-    <div class="team-list-title">
+    <div class="test-list-title">
       <h3>Liste</h3>
       <Button
         icon="pi pi-refresh"
-        title="Testliste aktualisieren"
+        title="Liste aktualisieren"
         @click="refresh"
       />
     </div>
     <div
-      class="tests"
+      class="test"
       v-for="test of tests"
       :key="test.id"
     >
@@ -80,7 +93,7 @@ onBeforeMount(async () => {
       <Button
         icon="pi pi-trash"
         class="p-button-danger"
-        title="Test löschen"
+        title="Löschen"
         @click="remove(test.id)"
       />
     </div>
