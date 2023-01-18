@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {Ref, ref} from 'vue';
-import sendRequest from '../../client/request';
-import {genderOptions, default as user} from '../../client/user';
-import {getGenderLabel} from '../../services/gender';
+import sendRequest from '../../../client/request';
+import {genderOptions, default as user} from '../../../client/user';
+import {getGenderLabel} from '../../../services/gender';
 
 const props = defineProps({
   user: {type: Object, default: null},

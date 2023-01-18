@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {Ref, ref} from 'vue';
 import {useRouter} from 'vue-router';
-import sendRequest from '../../client/request';
-import {validate, formIsValid, handlePasswordInput} from './services/validation';
-import cookies from '../../client/cookies';
-import {genderOptions, getUser, default as user} from '../../client/user';
+import sendRequest from '../../../client/request';
+import {validate, formIsValid, handlePasswordInput} from '../services/validation';
+import cookies from '../../../client/cookies';
+import {genderOptions} from '../../../client/user';
 
 const router = useRouter();
 const form: Ref<HTMLFormElement | null> = ref(null);
@@ -18,7 +18,8 @@ const matriculationNumber = ref();
 const email = ref('');
 const password = ref('');
 const passwordRepeat = ref('');
-const registrationPassword = ref('');
+const isAdmin = ref(false);
+const isTutor = ref(false);
 const error: Ref<HTMLParagraphElement | null> = ref(null);
 
 const submit = async () => {
@@ -30,14 +31,13 @@ const submit = async () => {
     matriculationNumber: matriculationNumber.value,
     email: email.value,
     password: password.value,
-    registrationPassword: registrationPassword.value,
+    isAdmin: isAdmin.value,
+    isTutor: isTutor.value,
   };
-  const response = await sendRequest('user', 'register', params);
+  const response = await sendRequest('user', 'create', params);
   const resData = await response.json();
   if (response.status === 200) {
-    cookies.set('auth', resData.result.jwtToken);
-    user.value = await getUser();
-    router.replace('/');
+    router.push('/admin/users');
   } else {
     (error.value as HTMLParagraphElement).textContent = resData.message;
   }
@@ -137,20 +137,23 @@ const handleInput = () => {
         />
         <small id="reg_passwordRepeat_help"></small>
       </div>
-      <div class="field">
-        <label for="reg_registerPassword">Registrierungspasswort</label>
-        <Password
-          inputId="reg_registerPassword"
-          :feedback="false"
-          v-model="registrationPassword"
-          toggleMask
-          @blur="validate"
-          @keyup="validate"
+      <div class="field-checkbox">
+        <Checkbox
+          class="check"
+          v-model="isAdmin"
+          :binary="true"
         />
-        <small id="reg_registerPassword_help"></small>
+        <label for="reg_isAdmin">Admin</label>
+      </div>
+      <div class="field-checkbox">
+        <Checkbox
+          class="check"
+          v-model="isTutor"
+          :binary="true"
+        />
+        <label for="reg_isTutor">Tutor</label>
       </div>
     </div>
-    <p>Verwenden Sie wenn möglich Ihre E-Mail-Adresse der Hochschule. Neben Datenschutzgründen kann auch eine Zustellung an andere Provider nicht garantiert werden.</p>
     <p
       ref="error"
       class="invalid"
@@ -171,6 +174,14 @@ const handleInput = () => {
 
   .field {
     padding: 0 0 0.75em 0;
+  }
+  .field-checkbox {
+    & + .field-checkbox {
+      margin-top: 0.5rem;
+    }
+    .check {
+      margin-right: 0.5rem;
+    }
   }
 
   .p-button {

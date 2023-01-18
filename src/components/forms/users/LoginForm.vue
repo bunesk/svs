@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {ref, Ref} from 'vue';
 import {useRouter} from 'vue-router';
-import sendRequest from '../../client/request';
-import {validate} from './services/validation';
-import cookies from '../../client/cookies';
-import {getUser, default as user} from '../../client/user';
+import sendRequest from '../../../client/request';
+import {validate} from '../services/validation';
+import cookies from '../../../client/cookies';
+import {getUser, default as user} from '../../../client/user';
 
 const router = useRouter();
 const form: Ref<HTMLFormElement | null> = ref(null);

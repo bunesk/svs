@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {Ref, ref} from 'vue';
-import sendRequest from '../../client/request';
-import {validate, formIsValid, handlePasswordInput} from './services/validation';
+import sendRequest from '../../../client/request';
+import {validate, formIsValid, handlePasswordInput} from '../services/validation';
 
 const form: Ref<HTMLFormElement | null> = ref(null);
 const isValid = ref(false);

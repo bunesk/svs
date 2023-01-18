@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {Ref, ref} from 'vue';
-import sendRequest from '../../client/request';
-import {roleOptions} from '../../client/user';
+import sendRequest from '../../../client/request';
+import {roleOptions} from '../../../client/user';
 
 const props = defineProps({
   user: {type: Object, required: true},
