@@ -8,11 +8,11 @@ const members = ref(null);
 const error: Ref<HTMLParagraphElement | null> = ref(null);
 
 const readFunction = async () => {
-  return await sendRequest('team', 'get-members', {id: route.params.id});
+  return await sendRequest('team', 'get-members', {id: route.params.teamId});
 };
 
 const removeFunction = async (userId: string) => {
-  return await sendRequest('team', 'remove-member', {teamId: route.params.id, userId: userId});
+  return await sendRequest('team', 'remove-member', {teamId: route.params.teamId, userId: userId});
 };
 </script>
 

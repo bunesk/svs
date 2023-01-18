@@ -1,6 +1,7 @@
 import {Request} from 'express-jwt';
 import {Response} from 'express';
 import Test from '../models/Test.js';
+import Event from '../models/Event.js';
 import {
   checkRequiredParams,
   isAuthenticatedAdmin,
@@ -20,6 +21,22 @@ export const getAll = async (req: Request, res: Response) => {
   }
   const users = await Test.findAll({paranoid: !req.body.includeInactive});
   return sendJsonSuccess(res, users);
+};
+
+export const getByEvent = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
+  if (!req.body.eventId) {
+    return sendJsonError(res, 'Veranstaltungs-ID fehlt');
+  }
+  const event = await Event.findByPk(req.body.eventId);
+  if (!event) {
+    return sendJsonError(res, `Veranstaltung mit der ID ${req.body.eventId} nicht gefunden.`, 404);
+  }
+  const teams = await event.getTests({where: {isSheet: !!req.body.isSheet}});
+  return sendJsonSuccess(res, teams);
 };
 
 export const getData = async (req: Request, res: Response) => {
@@ -42,18 +59,24 @@ export const create = async (req: Request, res: Response) => {
   if (!hasPermission.status) {
     return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
   }
-  const requiredParams = ['points', 'testNumber', 'walkingNumber'];
-  const message = checkRequiredParams(req, requiredParams);
-  if (message) {
-    return sendJsonError(res, message);
+  if (!req.body.EventId) {
+    return sendJsonError(res, 'Keine Veranstaltungs-ID angegeben.');
   }
+  const event = await Event.findByPk(req.body.EventId);
+  if (!event) {
+    return sendJsonError(res, `Keine Veranstaltung mit der ID ${req.body.EventId} angegeben.`);
+  }
+  const max = (await Test.max('number', {where: {EventId: req.body.EventId, isSheet: !!req.body.isSheet}})) ?? '0';
+  const params = {
+    number: (max as number) + 1,
+    isSheet: !!req.body.isSheet,
+    EventId: req.body.EventId,
+  };
   try {
-    const params = paramsToObject(req, [...requiredParams]);
-    params.isSheet = !!req.params.isSheet;
     await Test.create(params);
     return sendJsonSuccess(res, [], 'Test erfolgreich angelegt.');
   } catch (e: any) {
-    return sendJsonError(res, message);
+    return sendJsonError(res, 'Test anlegen fehlgeschlagen.');
   }
 };
 

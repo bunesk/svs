@@ -42,6 +42,8 @@ declare module '@vue/runtime-core' {
     TeamEditForm: typeof import('./../components/forms/TeamEditForm.vue')['default']
     TeamMembers: typeof import('./../components/TeamMembers.vue')['default']
     Teams: typeof import('./../components/Teams.vue')['default']
+    TestList: typeof import('./../components/lists/TestList.vue')['default']
+    Tests: typeof import('./../components/Tests.vue')['default']
     UserCreateForm: typeof import('./../components/forms/users/UserCreateForm.vue')['default']
     UserList: typeof import('./../components/lists/UserList.vue')['default']
     UserTable: typeof import('./../components/tables/UserTable.vue')['default']
