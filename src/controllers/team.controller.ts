@@ -26,7 +26,7 @@ export const getAll = async (req: Request, res: Response) => {
 };
 
 export const getData = async (req: Request, res: Response) => {
-  const result = await getJoinableData(req, 'Event');
+  const result = await getJoinableData(req, 'Team');
   if (!result.status) {
     return sendJsonError(res, result.message, result.statusCode);
   }
@@ -75,13 +75,27 @@ export const update = async (req: Request, res: Response) => {
   if (!hasPermission.status) {
     return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
   }
-  if (!req.body.id) {
-    return sendJsonError(res, 'Team-ID fehlt');
+  const requiredParams = ['id', 'block', 'number'];
+  const message = checkRequiredParams(req, requiredParams);
+  if (message) {
+    return sendJsonError(res, message);
   }
+  const team = await Team.findByPk(req.body.id);
+  if (!team) {
+    return sendJsonError(res, `Team mit der ID ${req.body.id} nicht gefunden`);
+  }
+  if (team.block == req.body.block && team.number == req.body.number) {
+    return sendJsonSuccess(res, [], 'Speichern erfolgreich, es gab aber keine Veränderungen.');
+  }
+  const anotherTeam = await Team.findOne({where: {block: req.body.block, number: req.body.number}});
+  if (anotherTeam) {
+    return sendJsonError(res, 'Es existiert bereits ein Team mit dieser Block-Nummer-Kombination.');
+  }
+  const params = paramsToObject(req, requiredParams);
   try {
-    await Team.update(req.body, {
+    await Team.update(params, {
       where: {id: req.body.id},
-      fields: Object.keys(req.body),
+      fields: requiredParams,
     });
     return sendJsonSuccess(res, [], 'Test erfolgreich aktualisiert.');
   } catch (e: any) {

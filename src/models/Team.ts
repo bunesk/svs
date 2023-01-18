@@ -26,6 +26,7 @@ class Team extends Model {
   // we have to declare them here virtually
   declare number: number;
   declare block: string;
+  declare name: string;
   declare commentAdmin: string | null;
   declare commentTeam: string | null;
 
@@ -56,6 +57,15 @@ Team.init({
   block: {
     type: DataTypes.STRING,
     allowNull: false,
+  },
+  name: {
+    type: DataTypes.VIRTUAL,
+    get(): string {
+      return `Team ${this.block}-${this.number}`;
+    },
+    set(value) {
+      throw new Error(`You can't set the 'name' value.`);
+    },
   },
   commentAdmin: {
     type: DataTypes.STRING,

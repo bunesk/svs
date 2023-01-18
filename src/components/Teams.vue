@@ -24,9 +24,6 @@ const refresh = async () => {
   await read();
 };
 
-const getTeamLabel = (team: any) => {
-  return `Team ${team.block}-${team.number}`;
-};
 const remove = async (id: string) => {
   const response = await sendRequest('team', 'remove', {id: id});
   const resData = await response.json();
@@ -60,10 +57,10 @@ onBeforeMount(async () => {
       :key="team.id"
     >
       <RouterLink
-        :to="`/events/${route.params.id}/teams/${team.id}`"
+        :to="`/admin/events/${route.params.id}/teams/${team.id}`"
         class="team-link"
       >
-        <Button :label="getTeamLabel(team)" />
+        <Button :label="team.name" />
       </RouterLink>
       <Button
         icon="pi pi-trash"

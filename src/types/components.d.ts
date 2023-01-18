@@ -36,6 +36,7 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TeamCreateForm: typeof import('./../components/forms/TeamCreateForm.vue')['default']
+    TeamEditForm: typeof import('./../components/forms/TeamEditForm.vue')['default']
     Teams: typeof import('./../components/Teams.vue')['default']
     UserCreateForm: typeof import('./../components/forms/users/UserCreateForm.vue')['default']
     UserList: typeof import('./../components/lists/UserList.vue')['default']
