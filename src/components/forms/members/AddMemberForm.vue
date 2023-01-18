@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import {onBeforeMount, Ref, ref} from 'vue';
 import {useRoute} from 'vue-router';
-import sendRequest from '../../client/request';
+import sendRequest from '../../../client/request';
+
+const props = defineProps({
+  readFunction: {type: Function, required: true},
+  addMemberFunction: {type: Function, required: true},
+});
 
 const route = useRoute();
 const user: Ref<any> = ref(null);
@@ -10,7 +15,7 @@ const status = ref(false);
 const message: Ref<HTMLParagraphElement | null> = ref(null);
 
 const readUsers = async () => {
-  const response = await sendRequest('user', 'get-all');
+  const response = await props.readFunction();
   const resData = await response.json();
   const paragraph = message.value as HTMLParagraphElement;
   status.value = response.status === 200;
@@ -22,11 +27,7 @@ const readUsers = async () => {
 };
 
 const addMember = async () => {
-  const params = {
-    eventId: route.params.id,
-    userId: user.value?.id,
-  };
-  const response = await sendRequest('event', 'add-member', params);
+  const response = await props.addMemberFunction(user.value.id);
   const resData = await response.json();
   const paragraph = message.value as HTMLParagraphElement;
   status.value = response.status === 200;

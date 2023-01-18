@@ -18,7 +18,7 @@ const number = ref(props.team.number);
 
 const editTeam = async () => {
   const params = {
-    id: route.params.id,
+    id: route.params.teamId,
     block: block.value,
     number: number.value,
   };

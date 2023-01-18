@@ -38,7 +38,7 @@ onBeforeMount(async () => {
         icon="pi pi-pencil"
       ></Button>
     </RouterLink>
-    <Members />
+    <EventMembers />
     <Teams />
     <ResetPasswordForm
       :id="event.id"

@@ -9,10 +9,10 @@ const team: Ref<any> = ref(null);
 const error: Ref<HTMLParagraphElement | null> = ref(null);
 
 const read = async () => {
-  if (!route.params.id || isNaN(Number(route.params.id))) {
+  if (!route.params.teamId || isNaN(Number(route.params.teamId))) {
     (error.value as HTMLParagraphElement).textContent = 'Benutzer-ID fehlt oder ist fehlerhaft.';
   }
-  const response = await sendRequest('team', 'get-data', {id: route.params.id});
+  const response = await sendRequest('team', 'get-data', {id: route.params.teamId});
   const resData = await response.json();
   if (response.status === 200) {
     team.value = resData.result;
@@ -29,6 +29,7 @@ onBeforeMount(async () => {
 <template>
   <div v-if="team">
     <h1>{{ team.name }}</h1>
+    <TeamMembers />
     <TeamEditForm :team="team" />
   </div>
   <p

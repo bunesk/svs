@@ -119,7 +119,7 @@ export const remove = async (req: Request, res: Response) => {
   return sendJsonSuccess(res, [], 'Team erfolgreich gelöscht');
 };
 
-export const addUser = async (req: Request, res: Response) => {
+export const addMember = async (req: Request, res: Response) => {
   const hasPermission = await isAuthenticatedAdmin(req);
   if (!hasPermission.status) {
     return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
@@ -137,11 +137,19 @@ export const addUser = async (req: Request, res: Response) => {
   if (!team) {
     return sendJsonError(res, `Veranstaltung mit der ID ${req.body.teamId} nicht gefunden.`, 404);
   }
+  if (await team.hasUser(user)) {
+    return sendJsonSuccess(res, [], 'Benutzer ist bereits Mitglied. Es wurde nichts unternommen.');
+  }
+  const event = await team.getEvent();
+  const teams = await user.getTeams({where: {EventId: event.id}});
+  if (teams.length) {
+    return sendJsonError(res, 'Benutzer hat in dieser Veranstaltung bereits ein Team.');
+  }
   await team.addUser(user);
   return sendJsonSuccess(res, [], 'Benutzer erfolgreich zur Veranstaltung hinzugefügt.');
 };
 
-export const removeUser = async (req: Request, res: Response) => {
+export const removeMember = async (req: Request, res: Response) => {
   const hasPermission = await isAuthenticatedAdmin(req);
   if (!hasPermission.status) {
     return sendJsonError(res, hasPermission.message, hasPermission.statusCode);

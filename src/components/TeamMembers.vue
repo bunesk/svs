@@ -8,18 +8,19 @@ const route = useRoute();
 const members = ref(null);
 const error: Ref<HTMLParagraphElement | null> = ref(null);
 
-defineProps({
-  createForm: {type: String, required: true},
-  readFunction: {type: Function, required: true},
-  removeFunction: {type: Function, required: true},
-});
+const readFunction = async () => {
+  return await sendRequest('event', 'get-members', {id: route.params.id});
+};
+
+const removeFunction = async (userId: string) => {
+  return await sendRequest('event', 'remove-member', {eventId: route.params.id, userId: userId});
+};
 </script>
 
 <template>
-  <div>
-    <h2>Mitglieder</h2>
-    <component :is="createForm" />
-    <h3>Liste</h3>
+  <h2>Mitglieder</h2>
+  <TeamAddMemberForm />
+  <!-- <h3>Liste</h3>
     <AbstractList
       name="event"
       plural="Mitglieder"
@@ -42,7 +43,7 @@ defineProps({
   <p
     ref="error"
     class="invalid"
-  ></p>
+  ></p> -->
 </template>
 
 <style lang="scss" scoped>
