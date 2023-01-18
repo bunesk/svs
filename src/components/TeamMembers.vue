@@ -1,49 +1,27 @@
 <script setup lang="ts">
-import {onBeforeMount, Ref, ref} from 'vue';
+import {Ref, ref} from 'vue';
 import {useRoute} from 'vue-router';
 import sendRequest from '../client/request';
-import {tableColumns} from '../client/user';
 
 const route = useRoute();
 const members = ref(null);
 const error: Ref<HTMLParagraphElement | null> = ref(null);
 
 const readFunction = async () => {
-  return await sendRequest('event', 'get-members', {id: route.params.id});
+  return await sendRequest('team', 'get-members', {id: route.params.id});
 };
 
 const removeFunction = async (userId: string) => {
-  return await sendRequest('event', 'remove-member', {eventId: route.params.id, userId: userId});
+  return await sendRequest('team', 'remove-member', {teamId: route.params.id, userId: userId});
 };
 </script>
 
 <template>
-  <h2>Mitglieder</h2>
-  <TeamAddMemberForm />
-  <!-- <h3>Liste</h3>
-    <AbstractList
-      name="event"
-      plural="Mitglieder"
-      removeMessage="Möchten Sie dieses Mitglied wirklich entfernen?"
-      :readFunction="readFunction"
-      :removeFunction="removeFunction"
-      viewItemName="user"
-      :globalFilterFields="['username','firstName','lastName', 'genderLabel', 'matriculationNumber', 'email', 'role']"
-      showRefresh
-    >
-      <Column
-        v-for="column of Object.keys(tableColumns)"
-        :key="column"
-        :field="column"
-        :header="tableColumns[column]"
-        :sortable="true"
-      ></Column>
-    </AbstractList>
-  </div>
-  <p
-    ref="error"
-    class="invalid"
-  ></p> -->
+  <Members
+    name="team"
+    :readFunction="readFunction"
+    :removeFunction="removeFunction"
+  />
 </template>
 
 <style lang="scss" scoped>

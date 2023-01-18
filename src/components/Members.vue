@@ -9,7 +9,7 @@ const members = ref(null);
 const error: Ref<HTMLParagraphElement | null> = ref(null);
 
 defineProps({
-  createForm: {type: String, required: true},
+  name: {type: String, required: true},
   readFunction: {type: Function, required: true},
   removeFunction: {type: Function, required: true},
 });
@@ -18,7 +18,8 @@ defineProps({
 <template>
   <div>
     <h2>Mitglieder</h2>
-    <component :is="createForm" />
+    <EventAddMemberForm v-if="name === 'event'" />
+    <TeamAddMemberForm v-if="name === 'team'" />
     <h3>Liste</h3>
     <AbstractList
       name="event"

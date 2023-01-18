@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import {onBeforeMount, Ref, ref} from 'vue';
+import {Ref, ref} from 'vue';
 import {useRoute} from 'vue-router';
 import sendRequest from '../client/request';
-import {tableColumns} from '../client/user';
 
 const route = useRoute();
 const members = ref(null);
@@ -19,7 +18,7 @@ const removeFunction = async (userId: string) => {
 
 <template>
   <Members
-    createForm="EventAddMemberForm"
+    name="event"
     :readFunction="readFunction"
     :removeFunction="removeFunction"
   />

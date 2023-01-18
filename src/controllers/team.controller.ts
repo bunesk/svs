@@ -11,6 +11,7 @@ import {
   sendJsonError,
   sendJsonSuccess,
 } from '../server/json.js';
+import {userSelectAttributes} from '../server/auth.js';
 
 export const index = (req: Request, res: Response) => {
   return getAll(req, res);
@@ -47,6 +48,15 @@ export const getByEvent = async (req: Request, res: Response) => {
   }
   const teams = await event.getTeams({order: ['block']});
   return sendJsonSuccess(res, teams);
+};
+
+export const getMembers = async (req: Request, res: Response) => {
+  const result = await getJoinableData(req, 'Team');
+  if (!result.status) {
+    return sendJsonError(res, result.message, result.statusCode);
+  }
+  const members = await (result.item as Team).getUsers({attributes: userSelectAttributes});
+  return sendJsonSuccess(res, members);
 };
 
 export const create = async (req: Request, res: Response) => {
@@ -165,7 +175,10 @@ export const removeMember = async (req: Request, res: Response) => {
   }
   const team = await Team.findByPk(req.body.teamId);
   if (!team) {
-    return sendJsonError(res, `Veranstaltung mit der ID ${req.body.teamId} nicht gefunden.`, 404);
+    return sendJsonError(res, `Team mit der ID ${req.body.teamId} nicht gefunden.`, 404);
+  }
+  if (!(await team.hasUser(user))) {
+    return sendJsonSuccess(res, [], 'Benutzer ist kein Mitglied. Es wurde nichts unternommen.');
   }
   await team.removeUser(user);
   return sendJsonSuccess(res, [], 'Benutzer erfolgreich aus dem Team entfernt.');
