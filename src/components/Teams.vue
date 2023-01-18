@@ -25,13 +25,15 @@ const refresh = async () => {
 };
 
 const remove = async (id: string) => {
-  const response = await sendRequest('team', 'remove', {id: id});
-  const resData = await response.json();
-  status.value = response.status === 200;
-  if (status.value) {
-    teams.value = teams.value.filter((team: any) => team.id !== id);
+  if (confirm('Möchten Sie das Team löschen?')) {
+    const response = await sendRequest('team', 'remove', {id: id});
+    const resData = await response.json();
+    status.value = response.status === 200;
+    if (status.value) {
+      teams.value = teams.value.filter((team: any) => team.id !== id);
+    }
+    (message.value as HTMLParagraphElement).textContent = resData.message;
   }
-  (message.value as HTMLParagraphElement).textContent = resData.message;
 };
 
 onBeforeMount(async () => {
