@@ -33,6 +33,22 @@ export const getData = async (req: Request, res: Response) => {
   return sendJsonSuccess(res, result.item);
 };
 
+export const getByEvent = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
+  if (!req.body.eventId) {
+    return sendJsonError(res, 'Veranstaltungs-ID fehlt');
+  }
+  const event = await Event.findByPk(req.body.eventId);
+  if (!event) {
+    return sendJsonError(res, `Veranstaltung mit der ID ${req.body.eventId} nicht gefunden.`, 404);
+  }
+  const teams = await event.getTeams({order: ['block']});
+  return sendJsonSuccess(res, teams);
+};
+
 export const create = async (req: Request, res: Response) => {
   const hasPermission = await isAuthenticatedAdmin(req);
   if (!hasPermission.status) {
@@ -84,25 +100,9 @@ export const remove = async (req: Request, res: Response) => {
   }
   const amountDestroyed = await Team.destroy({where: {id: req.body.id}});
   if (!amountDestroyed) {
-    return sendJsonError(res, `Team mit der ID ${req.body.id} ist entweder inexistent oder bereits gelöscht`);
+    return sendJsonError(res, `Team mit der ID ${req.body.id} ist entweder inexistent oder bereits gelöscht.`);
   }
   return sendJsonSuccess(res, [], 'Team erfolgreich gelöscht');
-};
-
-export const getByEvent = async (req: Request, res: Response) => {
-  const hasPermission = await isAuthenticatedAdmin(req);
-  if (!hasPermission.status) {
-    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
-  }
-  if (!req.body.eventId) {
-    return sendJsonError(res, 'Veranstaltungs-ID fehlt');
-  }
-  const event = await Event.findByPk(req.body.eventId);
-  if (!event) {
-    return sendJsonError(res, `Veranstaltung mit der ID ${req.body.eventId} nicht gefunden.`, 404);
-  }
-  const teams = await event.getTeams();
-  return sendJsonSuccess(res, teams);
 };
 
 export const addUser = async (req: Request, res: Response) => {
