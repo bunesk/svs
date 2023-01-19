@@ -138,7 +138,7 @@ export const create = async (req: Request, res: Response) => {
     const createParams = paramsToObject(req, params);
     const user = await User.create(createParams);
     const userData = copy(user, ['password']);
-    return sendJsonSuccess(res, user, 'Benutzer erfolgreich angelegt.');
+    return sendJsonSuccess(res, userData, 'Benutzer erfolgreich angelegt.');
   } catch (e: any) {
     let message = 'Benutzer anlegen fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.';
     if (e.parent?.code === 'ER_DUP_ENTRY') {

@@ -8,6 +8,8 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AbstractList: typeof import('./../components/lists/AbstractList.vue')['default']
+    Accordion: typeof import('primevue/accordion')['default']
+    AccordionTab: typeof import('primevue/accordiontab')['default']
     AddMemberForm: typeof import('./../components/forms/members/AddMemberForm.vue')['default']
     Address: typeof import('./../components/Address.vue')['default']
     Button: typeof import('primevue/button')['default']

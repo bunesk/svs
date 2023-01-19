@@ -27,7 +27,7 @@ const getRoute = async (to: any) => {
   if (!(user.value && user.value.isAdmin) && to.path.startsWith('/admin')) {
     return {path: '/'};
   }
-  // if not admin redirect all rate pages to home
+  // if not admin or tutor redirect all rate pages to home
   if (!(user.value && (user.value.isTutor || user.value.isAdmin)) && to.path.startsWith('/rate')) {
     return {path: '/'};
   }
