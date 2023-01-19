@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {onBeforeMount, Ref, ref} from 'vue';
 import {useRoute} from 'vue-router';
-import sendRequest from '../../client/request';
+import sendRequest from '../../../client/request';
 
 const route = useRoute();
 const isMember: Ref<boolean | null> = ref(null);
@@ -14,7 +14,7 @@ const checkIfMember = async () => {
   if (!route.params.id || isNaN(Number(route.params.id))) {
     (error.value as HTMLParagraphElement).textContent = 'Veranstaltungs-ID fehlt oder ist fehlerhaft.';
   }
-  const response = await sendRequest('event', 'is-member', {id: route.params.id});
+  const response = await sendRequest('event', 'is-member', {id: route.params.id, includeAdmin: true});
   const resData = await response.json();
   if (response.status === 200) {
     isMember.value = resData.result.isMember;

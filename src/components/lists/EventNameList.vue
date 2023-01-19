@@ -2,6 +2,10 @@
 import {onBeforeMount, Ref, ref} from 'vue';
 import sendRequest from '../../client/request';
 
+defineProps({
+  urlPrefix: {type: String, default: ''},
+});
+
 const events: Ref<any> = ref([]);
 const error: Ref<HTMLParagraphElement | null> = ref(null);
 
@@ -25,7 +29,7 @@ onBeforeMount(async () => {
     <RouterLink
       v-for="event of events"
       :key="event.id"
-      :to="`/events/${event.id}`"
+      :to="`${urlPrefix}/events/${event.id}`"
     >
       <Button :label="event.name" />
     </RouterLink>
@@ -34,6 +38,9 @@ onBeforeMount(async () => {
       class="invalid"
     >
     </p>
+  </div>
+  <div v-if="!events.length">
+    Keine Veranstaltungen gefunden.
   </div>
 </template>
 

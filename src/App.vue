@@ -13,7 +13,7 @@ const getRoute = async (to: any) => {
   if (user.value && (to.path === '/login' || to.path === '/register')) {
     return {path: '/'};
   }
-  // if not logged in redirect all except register to login
+  // if not logged in redirect all except register, imprint & privacy to login
   if (
     !user.value &&
     to.path !== '/login' &&
@@ -25,6 +25,14 @@ const getRoute = async (to: any) => {
   }
   // if not admin redirect all admin pages to home
   if (!(user.value && user.value.isAdmin) && to.path.startsWith('/admin')) {
+    return {path: '/'};
+  }
+  // if not admin redirect all rate pages to home
+  if (!(user.value && (user.value.isTutor || user.value.isAdmin)) && to.path.startsWith('/rate')) {
+    return {path: '/'};
+  }
+  // if admin or tutor redirect student event list & event view to home
+  if (user.value && (user.value.isTutor || user.value.isAdmin) && to.path.startsWith('/events')) {
     return {path: '/'};
   }
 };

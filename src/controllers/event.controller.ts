@@ -180,6 +180,9 @@ export const isMember = async (req: Request, res: Response) => {
   if (!user) {
     return sendJsonError(res, `Benutzer mit der ID ${req.body.userId} nicht gefunden.`, 404);
   }
+  if (user.isAdmin && req.body.includeAdmin) {
+    return sendJsonSuccess(res, {isMember: true});
+  }
   const event = await Event.findByPk(req.body.id);
   if (!event) {
     return sendJsonError(res, `Veranstaltung mit der ID ${req.body.id} nicht gefunden.`, 404);
