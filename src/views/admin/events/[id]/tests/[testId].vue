@@ -5,17 +5,17 @@ import {useRoute} from 'vue-router';
 import sendRequest from '../../../../../client/request';
 
 const route = useRoute();
-const team: Ref<any> = ref(null);
+const test: Ref<any> = ref(null);
 const error: Ref<HTMLParagraphElement | null> = ref(null);
 
 const read = async () => {
-  if (!route.params.teamId || isNaN(Number(route.params.teamId))) {
-    (error.value as HTMLParagraphElement).textContent = 'Team-ID fehlt oder ist fehlerhaft.';
+  if (!route.params.testId || isNaN(Number(route.params.testId))) {
+    (error.value as HTMLParagraphElement).textContent = 'Test-ID fehlt oder ist fehlerhaft.';
   }
-  const response = await sendRequest('team', 'get-data', {id: route.params.teamId});
+  const response = await sendRequest('test', 'get-data', {id: route.params.testId});
   const resData = await response.json();
   if (response.status === 200) {
-    team.value = resData.result;
+    test.value = resData.result;
   } else {
     (error.value as HTMLParagraphElement).textContent = resData.message;
   }
@@ -27,10 +27,9 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div v-if="team">
-    <h1>{{ team.name }}</h1>
-    <TeamMembers />
-    <TeamEditForm :team="team" />
+  <div v-if="test">
+    <h1>{{ test.name }}</h1>
+    <Tasks />
   </div>
   <p
     ref="error"

@@ -37,6 +37,8 @@ declare module '@vue/runtime-core' {
     ResetPasswordForm: typeof import('./../components/forms/ResetPasswordForm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TaskCreateForm: typeof import('./../components/forms/TaskCreateForm.vue')['default']
+    Tasks: typeof import('./../components/Tasks.vue')['default']
     TeamAddMemberForm: typeof import('./../components/forms/members/TeamAddMemberForm.vue')['default']
     TeamCreateForm: typeof import('./../components/forms/TeamCreateForm.vue')['default']
     TeamEditForm: typeof import('./../components/forms/TeamEditForm.vue')['default']
