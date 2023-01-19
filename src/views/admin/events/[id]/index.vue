@@ -26,31 +26,33 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div v-if="event">
-    <h1>{{event.name}}</h1>
-    <EventTable :event="event" />
-    <RouterLink
-      :to="`/admin/events/${event.id}/update`"
-      class="edit-button"
-    >
-      <Button
-        label="Bearbeiten"
-        icon="pi pi-pencil"
-      ></Button>
-    </RouterLink>
-    <EventMembers />
-    <Teams />
-    <Tests />
-    <Tests isSheet />
-    <ResetPasswordForm
-      :id="event.id"
-      item="event"
-    />
+  <div class="event-overview">
+    <div v-if="event">
+      <h1>{{event.name}}</h1>
+      <EventTable :event="event" />
+      <RouterLink
+        :to="`/admin/events/${event.id}/update`"
+        class="edit-button"
+      >
+        <Button
+          label="Bearbeiten"
+          icon="pi pi-pencil"
+        ></Button>
+      </RouterLink>
+      <EventMembers />
+      <Teams />
+      <Tests />
+      <Tests isSheet />
+      <ResetPasswordForm
+        :id="event.id"
+        item="event"
+      />
+    </div>
+    <p
+      ref="error"
+      class="invalid"
+    ></p>
   </div>
-  <p
-    ref="error"
-    class="invalid"
-  ></p>
 </template>
 
 <style lang="scss" scoped>

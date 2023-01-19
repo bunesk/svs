@@ -27,20 +27,22 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div v-if="user">
-    <h1>Profil von {{user.fullName}}</h1>
-    <UserTable :user="user" />
-    <ChangeGenderForm :user="user" />
-    <ChangeRoleForm :user="user" />
-    <ResetPasswordForm
-      :id="user.id"
-      item="user"
-    />
+  <div class="user-overview">
+    <div v-if="user">
+      <h1>Profil von {{user.fullName}}</h1>
+      <UserTable :user="user" />
+      <ChangeGenderForm :user="user" />
+      <ChangeRoleForm :user="user" />
+      <ResetPasswordForm
+        :id="user.id"
+        item="user"
+      />
+    </div>
+    <p
+      ref="error"
+      class="invalid"
+    ></p>
   </div>
-  <p
-    ref="error"
-    class="invalid"
-  ></p>
 </template>
 
 <style lang="scss" scoped>

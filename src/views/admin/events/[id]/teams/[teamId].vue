@@ -27,15 +27,17 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div v-if="team">
-    <h1>{{ team.name }}</h1>
-    <TeamMembers />
-    <TeamEditForm :team="team" />
+  <div class="team-overview">
+    <div v-if="team">
+      <h1>{{ team.name }}</h1>
+      <TeamMembers />
+      <TeamEditForm :team="team" />
+    </div>
+    <p
+      ref="error"
+      class="invalid"
+    ></p>
   </div>
-  <p
-    ref="error"
-    class="invalid"
-  ></p>
 </template>
 
 <style lang="scss" scoped>

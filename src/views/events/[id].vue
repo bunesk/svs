@@ -55,40 +55,42 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div v-if="isMember && event">
-    <h1>{{event.name}}</h1>
-    <div class="table">
-      <span class="row-title">Anzahl Tests:</span>
-      <span class="row-value">{{event.amountTests}}</span>
-      <span class="row-title">Anzahl Blätter:</span>
-      <span class="row-value">{{event.amountSheets}}</span>
-      <span class="row-title">Maximale Punkte:</span>
-      <span class="row-value">{{event.pointsMax}}</span>
-      <span class="row-title">Punkte zum Bestehen:</span>
-      <span class="row-value">{{event.pointsPassed}}</span>
+  <div class="event-view">
+    <div v-if="isMember && event">
+      <h1>{{event.name}}</h1>
+      <div class="table">
+        <span class="row-title">Anzahl Tests:</span>
+        <span class="row-value">{{event.amountTests}}</span>
+        <span class="row-title">Anzahl Blätter:</span>
+        <span class="row-value">{{event.amountSheets}}</span>
+        <span class="row-title">Maximale Punkte:</span>
+        <span class="row-value">{{event.pointsMax}}</span>
+        <span class="row-title">Punkte zum Bestehen:</span>
+        <span class="row-value">{{event.pointsPassed}}</span>
+      </div>
     </div>
-  </div>
-  <div v-if="isMember === false">
-    <h1>Veranstaltung beitreten</h1><br>
-    <Password
-      v-model="password"
-      placeholder="Passwort"
-      :feedback="false"
-      toggleMask
-      required
-      @blur="validate"
-      @keyup="validate"
-    />&nbsp;
-    <Button
-      @click="join"
-      label="Beitreten"
-      :disabled="!password"
+    <div v-if="isMember === false">
+      <h1>Veranstaltung beitreten</h1><br>
+      <Password
+        v-model="password"
+        placeholder="Passwort"
+        :feedback="false"
+        toggleMask
+        required
+        @blur="validate"
+        @keyup="validate"
+      />&nbsp;
+      <Button
+        @click="join"
+        label="Beitreten"
+        :disabled="!password"
+      />
+    </div>
+    <p
+      ref="error"
+      status="invalid"
     />
   </div>
-  <p
-    ref="error"
-    status="invalid"
-  />
 </template>
 
 <style lang="scss" scoped>

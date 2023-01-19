@@ -4,7 +4,7 @@ import sendRequest from '../../client/request';
 import {validate, formIsValid, handlePasswordInput} from './services/validation';
 
 const props = defineProps({
-  id: {type: String, required: true},
+  id: {type: Number, required: true},
   item: {type: String, required: true},
 });
 
