@@ -33,6 +33,7 @@ class Team extends Model {
   // Since TS cannot determine model association at compile time
   // we have to declare them here virtually
   // association with event
+  declare EventId: number;
   declare getEvent: BelongsToGetAssociationMixin<Event>;
   declare setEvent: BelongsToSetAssociationMixin<Event, number>;
   declare createEvent: BelongsToCreateAssociationMixin<Event>;

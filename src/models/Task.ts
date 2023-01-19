@@ -31,6 +31,7 @@ class Task extends Model {
   // Since TS cannot determine model association at compile time
   // we have to declare them here virtually
   // association with test
+  declare TestId: number;
   declare getTest: BelongsToGetAssociationMixin<Test>;
   declare setTest: BelongsToSetAssociationMixin<Test, number>;
   declare createTest: BelongsToCreateAssociationMixin<Test>;

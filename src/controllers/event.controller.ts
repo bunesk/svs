@@ -260,6 +260,12 @@ export const removeMember = async (req: Request, res: Response) => {
   if (!(await event.hasUser(user))) {
     return sendJsonSuccess(res, [], 'Benutzer ist kein Mitglied. Es wurde nichts unternommen.');
   }
+  let teamMessage = '';
+  const teams = await user.getTeams({where: {EventId: event.id}});
+  for (const team of teams) {
+    team.removeUser(user);
+    teamMessage = teamMessage.length ? '' : 'und dem Team';
+  }
   await event.removeUser(user);
-  return sendJsonSuccess(res, [], 'Benutzer erfolgreich von der Veranstaltung entfernt.');
+  return sendJsonSuccess(res, [], `Benutzer erfolgreich von der Veranstaltung ${teamMessage} entfernt.`);
 };
