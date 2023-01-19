@@ -12,6 +12,7 @@ const tests: Ref<any> = ref(null);
 const status = ref(false);
 const message: Ref<HTMLParagraphElement | null> = ref(null);
 const label = ref(props.isSheet ? 'Blatt' : 'Test');
+const labelPlural = ref(props.isSheet ? 'Blätter' : 'Tests');
 
 const read = async () => {
   const params = {
@@ -64,7 +65,7 @@ onBeforeMount(async () => {
 
 <template>
   <div>
-    <h2>{{ isSheet ? 'Blätter' : 'Tests' }}</h2>
+    <h2>{{ labelPlural }}</h2>
     <Button
       @click="create"
       icon="pi pi-plus"
@@ -96,6 +97,9 @@ onBeforeMount(async () => {
         title="Löschen"
         @click="remove(test.id)"
       />
+    </div>
+    <div v-if="!tests || !tests.length">
+      Keine {{ labelPlural }} gefunden.
     </div>
     <p
       ref="message"

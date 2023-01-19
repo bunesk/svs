@@ -71,6 +71,9 @@ onBeforeMount(async () => {
         @click="remove(team.id)"
       />
     </div>
+    <div v-if="!teams || !teams.length">
+      Keine Teams gefunden.
+    </div>
     <p
       ref="message"
       :class="{'valid': status, 'invalid': !status}"

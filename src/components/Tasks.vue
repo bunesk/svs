@@ -70,6 +70,9 @@ onBeforeMount(async () => {
         @click="remove(task.id)"
       />
     </div>
+    <div v-if="!tasks || !tasks.length">
+      Keine Aufgaben gefunden.
+    </div>
     <p
       ref="message"
       :class="{'valid': status, 'invalid': !status}"
