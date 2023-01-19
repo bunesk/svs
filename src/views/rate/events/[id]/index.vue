@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {onBeforeMount, Ref, ref} from 'vue';
 import {useRoute} from 'vue-router';
-import sendRequest from '../../../client/request';
+import sendRequest from '../../../../client/request';
 
 const route = useRoute();
 const isMember: Ref<boolean | null> = ref(null);
@@ -60,6 +60,8 @@ onBeforeMount(async () => {
   <div class="event-view">
     <div v-if="isMember && event">
       <EventTableBasic :event="event" />
+      <Tests />
+      <Tests isSheet />
     </div>
     <div v-if="isMember === false">
       <JoinEventForm :readFunction="readEvent" />

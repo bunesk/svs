@@ -3,6 +3,7 @@ import {Response} from 'express';
 import User from '../models/User.js';
 import Event from '../models/Event.js';
 import Team from '../models/Team.js';
+import Test from '../models/Test.js';
 
 export const eventSelectAttributes = [
   'amountSheets',
@@ -62,6 +63,43 @@ export const isAuthenticatedAdmin = async (
     return {status: false, message: 'Du bist nicht berechtigt.', statusCode: 403};
   }
   return {status: true};
+};
+
+export const getEventOrTestData = async (
+  req: Request
+): Promise<{status: boolean; message?: string; statusCode?: number; item?: Event | Test}> => {
+  if (!req.auth || !req.auth.username) {
+    return {status: false, message: 'Authentifizierung fehlgeschlagen.', statusCode: 401};
+  }
+  const user = await User.findOne({where: {username: req.auth.username}});
+  if (!user) {
+    return {status: false, message: 'Authentifizierter Benutzer existiert nicht mehr.', statusCode: 404};
+  }
+  let result: Event | Test | undefined = undefined;
+  let eventId = req.body.eventId;
+  if (!eventId) {
+    if (req.body.id) {
+      const test = await Test.findByPk(req.body.id);
+      if (!test) {
+        return {status: false, message: `Test mit der ID ${req.body.id} nicht gefunden.`, statusCode: 404};
+      }
+      eventId = test.EventId;
+      result = test;
+    } else {
+      return {status: false, message: 'ID fehlt.', statusCode: 400};
+    }
+  }
+  const event = await Event.findByPk(eventId);
+  if (!event) {
+    return {status: false, message: `Veranstaltung mit der ID ${eventId} nicht gefunden.`, statusCode: 400};
+  }
+  if (!result) {
+    result = event;
+  }
+  if (user.isAdmin || (await user.hasEvent(event))) {
+    return {status: true, item: result};
+  }
+  return {status: false, message: 'Du bist nicht berechtigt.', statusCode: 403};
 };
 
 export const getJoinableData = async (

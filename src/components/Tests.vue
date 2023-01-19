@@ -5,6 +5,7 @@ import sendRequest from '../client/request';
 
 const props = defineProps({
   isSheet: {type: Boolean, default: false},
+  admin: {type: Boolean, default: false},
 });
 
 const route = useRoute();
@@ -67,12 +68,16 @@ onBeforeMount(async () => {
   <div>
     <h2>{{ labelPlural }}</h2>
     <Button
+      v-if="admin"
       @click="create"
       icon="pi pi-plus"
       :label="`${label} erstellen`"
       class="p-button-success"
     />
-    <div class="test-list-title">
+    <div
+      v-if="admin"
+      class="test-list-title"
+    >
       <h3>Liste</h3>
       <Button
         icon="pi pi-refresh"
@@ -86,12 +91,13 @@ onBeforeMount(async () => {
       :key="test.id"
     >
       <RouterLink
-        :to="`/admin/events/${route.params.id}/tests/${test.id}`"
+        :to="`/${admin ? 'admin' : 'rate'}/events/${route.params.id}/tests/${test.id}`"
         class="test-link"
       >
         <Button :label="test.name" />
       </RouterLink>
       <Button
+        v-if="admin"
         icon="pi pi-trash"
         class="p-button-danger"
         title="Löschen"

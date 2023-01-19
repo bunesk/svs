@@ -5,6 +5,7 @@ import Task from '../models/Task.js';
 import Event from '../models/Event.js';
 import {
   checkRequiredParams,
+  getEventOrTestData,
   isAuthenticatedAdmin,
   paramsToObject,
   sendJsonError,
@@ -25,33 +26,21 @@ export const getAll = async (req: Request, res: Response) => {
 };
 
 export const getByEvent = async (req: Request, res: Response) => {
-  const hasPermission = await isAuthenticatedAdmin(req);
-  if (!hasPermission.status) {
-    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  const result = await getEventOrTestData(req);
+  if (!result.status) {
+    return sendJsonError(res, result.message, result.statusCode);
   }
-  if (!req.body.eventId) {
-    return sendJsonError(res, 'Veranstaltungs-ID fehlt');
-  }
-  const event = await Event.findByPk(req.body.eventId);
-  if (!event) {
-    return sendJsonError(res, `Veranstaltung mit der ID ${req.body.eventId} nicht gefunden.`, 404);
-  }
+  const event = result.item as Event;
   const teams = await event.getTests({where: {isSheet: !!req.body.isSheet}});
   return sendJsonSuccess(res, teams);
 };
 
 export const getData = async (req: Request, res: Response) => {
-  const hasPermission = await isAuthenticatedAdmin(req);
-  if (!hasPermission.status) {
-    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  const result = await getEventOrTestData(req);
+  if (!result.status) {
+    return sendJsonError(res, result.message, result.statusCode);
   }
-  if (!req.body.id) {
-    return sendJsonError(res, 'Test-ID fehlt');
-  }
-  const test = await Test.findByPk(req.body.id);
-  if (!test) {
-    return sendJsonError(res, `Keinen Test mit der ID ${req.body.userId} gefunden.`, 404);
-  }
+  const test = result.item as Test;
   return sendJsonSuccess(res, test);
 };
 
@@ -118,17 +107,11 @@ export const remove = async (req: Request, res: Response) => {
 };
 
 export const getTasks = async (req: Request, res: Response) => {
-  const hasPermission = await isAuthenticatedAdmin(req);
-  if (!hasPermission.status) {
-    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  const result = await getEventOrTestData(req);
+  if (!result.status) {
+    return sendJsonError(res, result.message, result.statusCode);
   }
-  if (!req.body.id) {
-    return sendJsonError(res, 'Test-ID fehlt');
-  }
-  const test = await Test.findByPk(req.body.id);
-  if (!test) {
-    return sendJsonError(res, `Test mit der ID ${req.body.id} nicht gefunden.`, 404);
-  }
+  const test = result.item as Test;
   const tasks = await test.getTasks();
   return sendJsonSuccess(res, tasks);
 };

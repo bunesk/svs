@@ -30,6 +30,9 @@ onBeforeMount(async () => {
   <div class="test-overview">
     <div v-if="test">
       <h1>{{ test.name }}</h1>
+      <RouterLink :to="`/rate/events/${route.params.id}/tests/${route.params.testId}`">
+        <Button label="Bewerten" />
+      </RouterLink>
       <Tasks />
     </div>
     <p
@@ -40,4 +43,7 @@ onBeforeMount(async () => {
 </template>
 
 <style lang="scss" scoped>
+.p-button {
+  margin-top: 0.5rem;
+}
 </style>
