@@ -13,24 +13,14 @@ const form: Ref<HTMLFormElement | null> = ref(null);
 const isValid = ref(false);
 const message: Ref<HTMLParagraphElement | null> = ref(null);
 
-const getUsers = async () => {
-  const response = await sendRequest('event', 'get-members', {id: route.params.id});
+const getTests = async () => {
+  const response = await sendRequest('test', 'get-test-ratings', {id: route.params.testId});
   const resData = await response.json();
   status.value = response.status === 200;
   if (status.value) {
-    users.value = resData.result.filter((user: any) => !user.isTutor && !user.isAdmin);
-    (message.value as HTMLParagraphElement).textContent = '';
-  } else {
-    (message.value as HTMLParagraphElement).textContent = resData.message;
-  }
-};
-
-const getTasks = async () => {
-  const response = await sendRequest('test', 'get-tasks', {id: route.params.testId});
-  const resData = await response.json();
-  status.value = response.status === 200;
-  if (status.value) {
-    tasks.value = resData.result;
+    users.value = resData.result.users;
+    tasks.value = resData.result.tasks;
+    console.log(resData.result);
     (message.value as HTMLParagraphElement).textContent = '';
   } else {
     (message.value as HTMLParagraphElement).textContent = resData.message;
@@ -56,8 +46,7 @@ const submit = async () => {
 };
 
 onBeforeMount(async () => {
-  await getUsers();
-  await getTasks();
+  await getTests();
 });
 </script>
 
@@ -86,6 +75,7 @@ onBeforeMount(async () => {
                 :id="`rate_${user.id}_${task.id}`"
                 type="number"
                 min="0"
+                :value="user.tasks[task.id]"
                 :max="task.pointsMax"
                 step="0.5"
                 required

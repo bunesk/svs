@@ -5,7 +5,8 @@ import Task from '../models/Task.js';
 import Test from '../models/Test.js';
 import User from '../models/User.js';
 import UserTask from '../models/UserTask.js';
-import {getEventOrTestData, isAuthenticatedAdmin, sendJsonError, sendJsonSuccess} from '../server/json.js';
+import {copy, getEventOrTestData, isAuthenticatedAdmin, sendJsonError, sendJsonSuccess} from '../server/json.js';
+import {userSelectAttributes} from '../server/auth.js';
 
 export const index = (req: Request, res: Response) => {
   return getAll(req, res);
@@ -156,6 +157,45 @@ export const removeTask = async (req: Request, res: Response) => {
   return sendJsonSuccess(res, [], `${task.name} erfolgreich gelöscht.`);
 };
 
+export const getTestRatings = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req, true);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
+  if (!req.body.id) {
+    return sendJsonError(res, 'Test-ID fehlt');
+  }
+  const test = await Test.findOne({where: {id: req.body.id, isSheet: false}});
+  if (!test) {
+    return sendJsonError(res, `Test mit der ID ${req.body.id} nicht gefunden.`);
+  }
+  const tasks = await test.getTasks();
+  const event = await test.getEvent();
+  const users = await event.getUsers({attributes: userSelectAttributes});
+  let result: any = {
+    users: [],
+    tasks: tasks,
+  };
+  for (const user of users) {
+    if (user.isAdmin || user.isTutor) {
+      continue;
+    }
+    const userData: any = copy(user);
+    const points: any = {};
+    for (const task of tasks) {
+      const userTask = await UserTask.findOne({where: {UserId: user.id, TaskId: task.id}});
+      if (userTask) {
+        points[task.id] = userTask.points;
+      } else {
+        points[task.id] = 0;
+      }
+    }
+    userData.tasks = points;
+    result.users.push(userData);
+  }
+  return sendJsonSuccess(res, result);
+};
+
 export const rateTest = async (req: Request, res: Response) => {
   const hasPermission = await isAuthenticatedAdmin(req, true);
   if (!hasPermission.status) {
@@ -172,7 +212,13 @@ export const rateTest = async (req: Request, res: Response) => {
         return sendJsonError(res, `Aufgabe mit der ID ${taskId} nicht gefunden.`);
       }
       try {
-        await UserTask.create({UserId: userId, TaskId: taskId, points: taskPoints});
+        const [userTask, built] = await UserTask.findOrBuild({where: {UserId: userId, TaskId: taskId}});
+        userTask.points = taskPoints as number;
+        if (built) {
+          await UserTask.create({points: taskPoints, UserId: userId, TaskId: taskId});
+        } else {
+          await UserTask.update({points: taskPoints}, {where: {UserId: userId, TaskId: taskId}});
+        }
       } catch (e: any) {
         return sendJsonError(
           res,
