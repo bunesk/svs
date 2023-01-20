@@ -114,22 +114,23 @@ export const getJoinableData = async (
   if (!user) {
     return {status: false, message: 'Authentifizierter Benutzer existiert nicht mehr.', statusCode: 404};
   }
-  if (!req.body.id) {
-    return {status: false, message: 'Veranstaltungs-ID fehlt', statusCode: 400};
+  const id = req.body.id ?? req.body.eventId;
+  if (!id) {
+    return {status: false, message: 'ID fehlt', statusCode: 400};
   }
   let item: Event | Team | null = null;
   if (memberOf === 'Event') {
     if (user.isAdmin) {
-      item = await Event.findByPk(req.body.id, {attributes: eventSelectAttributes});
+      item = await Event.findByPk(id, {attributes: eventSelectAttributes});
     } else {
-      item = await Event.findOne({where: {id: req.body.id, visible: true}, attributes: eventSelectAttributes});
+      item = await Event.findOne({where: {id: id, visible: true}, attributes: eventSelectAttributes});
     }
   } else {
-    item = await Team.findByPk(req.body.id);
+    item = await Team.findByPk(id);
   }
   if (!item) {
     const name = memberOf === 'Event' ? 'Veranstaltung' : 'Team';
-    return {status: false, message: `${name} mit der ID ${req.body.id} nicht gefunden.`, statusCode: 400};
+    return {status: false, message: `${name} mit der ID ${id} nicht gefunden.`, statusCode: 400};
   }
   // @ts-ignore
   const hasItem = await user[`has${memberOf}`](item);

@@ -35,18 +35,11 @@ export const getData = async (req: Request, res: Response) => {
 };
 
 export const getByEvent = async (req: Request, res: Response) => {
-  const hasPermission = await isAuthenticatedAdmin(req);
-  if (!hasPermission.status) {
-    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  const result = await getJoinableData(req, 'Event');
+  if (!result.status) {
+    return sendJsonError(res, result.message, result.statusCode);
   }
-  if (!req.body.eventId) {
-    return sendJsonError(res, 'Veranstaltungs-ID fehlt');
-  }
-  const event = await Event.findByPk(req.body.eventId);
-  if (!event) {
-    return sendJsonError(res, `Veranstaltung mit der ID ${req.body.eventId} nicht gefunden.`, 404);
-  }
-  const teams = await event.getTeams({order: ['block']});
+  const teams = await (result.item as Event).getTeams({order: ['block']});
   return sendJsonSuccess(res, teams);
 };
 
@@ -58,6 +51,15 @@ export const getMembers = async (req: Request, res: Response) => {
   const members = await (result.item as Team).getUsers({attributes: userSelectAttributes});
   return sendJsonSuccess(res, members);
 };
+
+// export const getTeams = async (req: Request, res: Response) => {
+//   const result = await getJoinableData(req, 'Event');
+//   if (!result.status) {
+//     return sendJsonError(res, result.message, result.statusCode);
+//   }
+//   const teams = await (result.item as Event).getTeams({order: ['block']});
+//   return sendJsonSuccess(res, teams);
+// };
 
 export const create = async (req: Request, res: Response) => {
   const hasPermission = await isAuthenticatedAdmin(req);

@@ -15,6 +15,14 @@ const message: Ref<HTMLParagraphElement | null> = ref(null);
 const label = ref(props.isSheet ? 'Blatt' : 'Test');
 const labelPlural = ref(props.isSheet ? 'Blätter' : 'Tests');
 
+const getTestLink = (testId: string): string => {
+  if (props.admin) {
+    return `/admin/events/${route.params.id}/tests/${testId}`;
+  }
+  const type = props.isSheet ? 'sheets' : 'tests';
+  return `/rate/events/${route.params.id}/${type}/${testId}`;
+};
+
 const read = async () => {
   const params = {
     eventId: route.params.id,
@@ -91,7 +99,7 @@ onBeforeMount(async () => {
       :key="test.id"
     >
       <RouterLink
-        :to="`/${admin ? 'admin' : 'rate'}/events/${route.params.id}/tests/${test.id}`"
+        :to="getTestLink(test.id)"
         class="test-link"
       >
         <Button :label="test.name" />
