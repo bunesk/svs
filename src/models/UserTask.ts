@@ -11,3 +11,5 @@ UserTask.init({
     allowNull: false,
   },
 });
+
+export default UserTask;

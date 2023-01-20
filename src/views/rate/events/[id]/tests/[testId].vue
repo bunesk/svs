@@ -1,37 +1,24 @@
 <script setup lang="ts">
 import {onBeforeMount, Ref, ref} from 'vue';
-import {useRoute} from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
 import sendRequest from '../../../../../client/request';
 import {validate, formIsValid} from '../../../../../components/forms/services/validation';
 
-const props = defineProps({
-  isSheet: {type: Boolean, default: false},
-});
 const route = useRoute();
+const router = useRouter();
 const users: Ref<any> = ref(null);
 const tasks: Ref<any> = ref(null);
-const isSheet = ref(false);
 const status = ref(false);
+const form: Ref<HTMLFormElement | null> = ref(null);
+const isValid = ref(false);
 const message: Ref<HTMLParagraphElement | null> = ref(null);
-
-const getTestData = async () => {
-  const response = await sendRequest('test', 'get-data', {id: route.params.testId});
-  const resData = await response.json();
-  status.value = response.status === 200;
-  if (status.value) {
-    isSheet.value = resData.result.isSheet;
-    (message.value as HTMLParagraphElement).textContent = '';
-  } else {
-    (message.value as HTMLParagraphElement).textContent = resData.message;
-  }
-};
 
 const getUsers = async () => {
   const response = await sendRequest('event', 'get-members', {id: route.params.id});
   const resData = await response.json();
   status.value = response.status === 200;
   if (status.value) {
-    users.value = resData.result;
+    users.value = resData.result.filter((user: any) => !user.isTutor && !user.isAdmin);
     (message.value as HTMLParagraphElement).textContent = '';
   } else {
     (message.value as HTMLParagraphElement).textContent = resData.message;
@@ -50,8 +37,25 @@ const getTasks = async () => {
   }
 };
 
+const submit = async () => {
+  let params: any = {};
+  for (const user of users.value) {
+    params[user.id] = {};
+    for (const task of tasks.value) {
+      const input = document.getElementById(`rate_${user.id}_${task.id}`) as HTMLInputElement;
+      params[user.id][task.id] = input.value || '0';
+    }
+  }
+  const response = await sendRequest('test', 'rate-test', params);
+  const resData = await response.json();
+  status.value = response.status === 200;
+  (message.value as HTMLParagraphElement).textContent = resData.message;
+  if (status.value) {
+    router.back();
+  }
+};
+
 onBeforeMount(async () => {
-  await getTestData();
   await getUsers();
   await getTasks();
 });
@@ -59,7 +63,7 @@ onBeforeMount(async () => {
 
 <template>
   <div>
-    <h1>{{ isSheet ? 'Blatt' : 'Test'}} bewerten</h1>
+    <h1>Test bewerten</h1>
     <form
       ref="form"
       class="event-form"
@@ -68,7 +72,6 @@ onBeforeMount(async () => {
       <div class="p-fluid">
         <Accordion v-if="users && tasks">
           <AccordionTab
-            class="user"
             :header="user.fullName"
             v-for="user of users"
             :key="user.id"
@@ -96,6 +99,20 @@ onBeforeMount(async () => {
             </div>
           </AccordionTab>
         </Accordion>
+        <Button
+          class="p-button-success submit-button"
+          label="Bewertung speichern"
+          :disabled="!tasks || !users || !isValid"
+          @click="submit"
+        />
+        <Button
+          class="p-button-danger submit-button"
+          label="Abbrechen"
+          @click="router.back()"
+        />
+        <div v-if="!users || !users.length">
+          Keine Teilnehmer gefunden.
+        </div>
       </div>
     </form>
     <p
@@ -106,6 +123,9 @@ onBeforeMount(async () => {
 </template>
 
 <style lang="scss" scoped>
+h1 {
+  padding-bottom: 0.5rem;
+}
 .field {
   display: flex;
   align-items: center;
@@ -120,5 +140,11 @@ onBeforeMount(async () => {
   span {
     margin-left: 0.5rem;
   }
+}
+.p-button-success {
+  margin-top: 1rem;
+}
+.p-button-danger {
+  margin-top: 0.5rem;
 }
 </style>

@@ -50,7 +50,8 @@ export const paramsToObject = (req: Request, params: string[]) => {
 };
 
 export const isAuthenticatedAdmin = async (
-  req: Request
+  req: Request,
+  allowTutor = false
 ): Promise<{status: boolean; message?: string; statusCode?: number}> => {
   if (!req.auth || !req.auth.username) {
     return {status: false, message: 'Authentifizierung fehlgeschlagen.', statusCode: 401};
@@ -59,10 +60,10 @@ export const isAuthenticatedAdmin = async (
   if (!user) {
     return {status: false, message: 'Authentifizierter Benutzer existiert nicht mehr.', statusCode: 404};
   }
-  if (!user.isAdmin) {
-    return {status: false, message: 'Du bist nicht berechtigt.', statusCode: 403};
+  if (user.isAdmin || (allowTutor && user.isTutor)) {
+    return {status: true};
   }
-  return {status: true};
+  return {status: false, message: 'Du bist nicht berechtigt.', statusCode: 403};
 };
 
 export const getEventOrTestData = async (

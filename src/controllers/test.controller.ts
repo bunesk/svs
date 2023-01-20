@@ -1,16 +1,11 @@
 import {Request} from 'express-jwt';
 import {Response} from 'express';
-import Test from '../models/Test.js';
-import Task from '../models/Task.js';
 import Event from '../models/Event.js';
-import {
-  checkRequiredParams,
-  getEventOrTestData,
-  isAuthenticatedAdmin,
-  paramsToObject,
-  sendJsonError,
-  sendJsonSuccess,
-} from '../server/json.js';
+import Task from '../models/Task.js';
+import Test from '../models/Test.js';
+import User from '../models/User.js';
+import UserTask from '../models/UserTask.js';
+import {getEventOrTestData, isAuthenticatedAdmin, sendJsonError, sendJsonSuccess} from '../server/json.js';
 
 export const index = (req: Request, res: Response) => {
   return getAll(req, res);
@@ -159,4 +154,32 @@ export const removeTask = async (req: Request, res: Response) => {
   }
   await Task.destroy({where: {id: req.body.taskId}});
   return sendJsonSuccess(res, [], `${task.name} erfolgreich gelöscht.`);
+};
+
+export const rateTest = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req, true);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
+  for (const [userId, tasks] of Object.entries(req.body)) {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return sendJsonError(res, `Benutzer mit der ID ${userId} nicht gefunden.`);
+    }
+    for (const [taskId, taskPoints] of Object.entries(tasks as any)) {
+      const task = await Task.findByPk(taskId);
+      if (!task) {
+        return sendJsonError(res, `Aufgabe mit der ID ${taskId} nicht gefunden.`);
+      }
+      try {
+        await UserTask.create({UserId: userId, TaskId: taskId, points: taskPoints});
+      } catch (e: any) {
+        return sendJsonError(
+          res,
+          `Punkte eintragen für Benutzer ${user.fullName} für Task mit der ID ${taskId} fehlgeschlagen.`
+        );
+      }
+    }
+  }
+  return sendJsonSuccess(res, [], 'Punkte erfolgreich eingetragen.');
 };
