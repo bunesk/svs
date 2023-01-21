@@ -276,6 +276,33 @@ export const removeMember = async (req: Request, res: Response) => {
   return sendJsonSuccess(res, [], `Benutzer erfolgreich von der Veranstaltung ${teamMessage} entfernt.`);
 };
 
+export const getOwnTeam = async (req: Request, res: Response) => {
+  if (!req.auth || !req.auth.username) {
+    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
+  }
+  const user = await User.findOne({where: {username: req.auth.username}});
+  if (!user) {
+    return {status: false, message: 'Authentifizierter Benutzer existiert nicht mehr.', statusCode: 404};
+  }
+  if (!req.body.id) {
+    return sendJsonError(res, 'Veranstaltungs-ID fehlt');
+  }
+  const event = await Event.findByPk(req.body.id);
+  if (!event) {
+    return sendJsonError(res, `Veranstaltung mit der ID ${req.body.id} nicht gefunden.`);
+  }
+  if (!(await user.hasEvent(event))) {
+    return sendJsonError(res, 'Du bist kein Mitglied der Veranstaltung.', 403);
+  }
+  const teams = await user.getTeams({where: {EventId: event.id}});
+  if (!teams.length) {
+    return sendJsonSuccess(res, [], 'Du bist in keinem Team.');
+  }
+  const teamData = copy(teams[0]);
+  teamData.users = await teams[0].getUsers({attributes: userSelectAttributes});
+  return sendJsonSuccess(res, teamData);
+};
+
 export const getOwnTests = async (req: Request, res: Response) => {
   if (!req.auth || !req.auth.username) {
     return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);

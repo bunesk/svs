@@ -6,6 +6,7 @@ import sendRequest from '../../client/request';
 const route = useRoute();
 const isMember: Ref<boolean | null> = ref(null);
 const event: Ref<any> = ref(null);
+const team: Ref<any> = ref(null);
 const tests: Ref<any> = ref(null);
 const sheets: Ref<any> = ref(null);
 const error: Ref<HTMLParagraphElement | null> = ref(null);
@@ -38,6 +39,19 @@ const readEvent = async (setIsMember = false) => {
   }
 };
 
+const readTeam = async (setIsMember = false) => {
+  if (setIsMember) {
+    isMember.value = true;
+  }
+  const response = await sendRequest('event', 'get-own-team', {id: route.params.id});
+  const resData = await response.json();
+  if (response.status === 200) {
+    team.value = resData.result;
+  } else {
+    (error.value as HTMLParagraphElement).textContent = resData.message;
+  }
+};
+
 const readTests = async (setIsMember = false) => {
   if (setIsMember) {
     isMember.value = true;
@@ -47,7 +61,6 @@ const readTests = async (setIsMember = false) => {
   if (response.status === 200) {
     tests.value = resData.result.tests;
     sheets.value = resData.result.sheets;
-    console.log(resData.result);
   } else {
     (error.value as HTMLParagraphElement).textContent = resData.message;
   }
@@ -69,6 +82,7 @@ onBeforeMount(async () => {
   await checkIfMember();
   if (isMember.value) {
     await readEvent();
+    await readTeam();
     await readTests();
   }
 });
@@ -77,7 +91,19 @@ onBeforeMount(async () => {
 <template>
   <div class="event-view">
     <div v-if="isMember && event">
-      <EventTableBasic :event="event" />
+      <EventTableBasic :event="event" />&nbsp;
+      <div v-if="team && team.id">
+        Du bist Mitglied in <span class="bold">{{team.name}}</span> bestehend aus:
+        <ul>
+          <li
+            v-for="user of team.users"
+            :key="user.id"
+          >
+            {{user.fullName}}
+          </li>
+        </ul>
+      </div>
+      <h2>Tests und Blätter</h2>
       <EventTests :tests="tests" />
       <EventTests :tests="sheets" />
     </div>
@@ -92,4 +118,10 @@ onBeforeMount(async () => {
 </template>
 
 <style lang="scss" scoped>
+ul {
+  margin: 0.25rem 0;
+  li {
+    margin-left: -1rem;
+  }
+}
 </style>
