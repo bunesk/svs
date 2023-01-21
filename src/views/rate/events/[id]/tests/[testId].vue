@@ -8,6 +8,7 @@ const route = useRoute();
 const router = useRouter();
 const users: Ref<any> = ref(null);
 const tasks: Ref<any> = ref(null);
+const pointsMax = ref(0);
 const status = ref(false);
 const form: Ref<HTMLFormElement | null> = ref(null);
 const isValid = ref(false);
@@ -20,6 +21,7 @@ const getTests = async () => {
   if (status.value) {
     users.value = resData.result.users;
     tasks.value = resData.result.tasks;
+    pointsMax.value = resData.result.pointsMax;
     (message.value as HTMLParagraphElement).textContent = '';
   } else {
     (message.value as HTMLParagraphElement).textContent = resData.message;
@@ -60,7 +62,7 @@ onBeforeMount(async () => {
       <div class="p-fluid">
         <Accordion v-if="users && tasks">
           <AccordionTab
-            :header="user.fullName"
+            :header="`${user.fullName} (${user.points}/${pointsMax})`"
             v-for="user of users"
             :key="user.id"
           >

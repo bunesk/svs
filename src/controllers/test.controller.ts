@@ -171,11 +171,13 @@ export const getTestRatings = async (req: Request, res: Response) => {
     return sendJsonError(res, `Test mit der ID ${req.body.id} nicht gefunden.`);
   }
   const tasks = await test.getTasks();
+  const pointsMax = await Task.sum('pointsMax', {where: {TestId: test.id}});
   const event = await test.getEvent();
   const users = await event.getUsers({attributes: userSelectAttributes});
   const result: any = {
     users: [],
     tasks: tasks,
+    pointsMax: pointsMax ?? 0,
   };
   for (const user of users) {
     if (user.isAdmin || user.isTutor) {
@@ -191,7 +193,9 @@ export const getTestRatings = async (req: Request, res: Response) => {
         points[task.id] = 0;
       }
     }
+    const pointsSum = await UserTask.sum('points', {where: {UserId: user.id, TaskId: Object.keys(points)}});
     userData.tasks = points;
+    userData.points = pointsSum ?? 0;
     result.users.push(userData);
   }
   return sendJsonSuccess(res, result);
@@ -210,11 +214,13 @@ export const getSheetRatings = async (req: Request, res: Response) => {
     return sendJsonError(res, `Test mit der ID ${req.body.id} nicht gefunden.`);
   }
   const tasks = await test.getTasks();
+  const pointsMax = await Task.sum('pointsMax', {where: {TestId: test.id}});
   const event = await test.getEvent();
   const teams = await event.getTeams();
   const result: any = {
     teams: [],
     tasks: tasks,
+    pointsMax: pointsMax ?? 0,
   };
   for (const team of teams) {
     const teamData: any = copy(team);
@@ -234,7 +240,9 @@ export const getSheetRatings = async (req: Request, res: Response) => {
           points[task.id] = 0;
         }
       }
+      const pointsSum = await UserTask.sum('points', {where: {UserId: user.id, TaskId: Object.keys(points)}});
       userData.tasks = points;
+      userData.points = pointsSum ?? 0;
       teamData.users.push(userData);
     }
     result.teams.push(teamData);

@@ -9,6 +9,7 @@ const route = useRoute();
 const router = useRouter();
 const teams: Ref<any> = ref(null);
 const tasks: Ref<any> = ref(null);
+const pointsMax = ref(0);
 const status = ref(false);
 const form: Ref<HTMLFormElement | null> = ref(null);
 const isValid = ref(false);
@@ -21,7 +22,7 @@ const getTests = async () => {
   if (status.value) {
     teams.value = resData.result.teams;
     tasks.value = resData.result.tasks;
-    console.log(resData.result);
+    pointsMax.value = resData.result.pointsMax;
     (message.value as HTMLParagraphElement).textContent = '';
   } else {
     (message.value as HTMLParagraphElement).textContent = resData.message;
@@ -75,7 +76,7 @@ onBeforeMount(async () => {
           >
             <Accordion>
               <AccordionTab
-                :header="user.fullName"
+                :header="`${user.fullName} (${user.points}/${pointsMax})`"
                 v-for="user of team.users"
                 :key="user.id"
               >
