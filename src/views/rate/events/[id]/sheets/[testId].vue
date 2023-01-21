@@ -44,7 +44,7 @@ const submit = async () => {
     params[team.id].commentTeam = commentTeam.value;
     params[team.id].commentAdmin = commentAdmin.value;
   }
-  const response = await sendRequest('test', 'rate-test', params);
+  const response = await sendRequest('test', 'rate-sheet', params);
   const resData = await response.json();
   status.value = response.status === 200;
   (message.value as HTMLParagraphElement).textContent = resData.message;

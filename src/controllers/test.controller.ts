@@ -286,7 +286,17 @@ export const rateSheet = async (req: Request, res: Response) => {
     if (!team) {
       return sendJsonError(res, `Benutzer mit der ID ${teamId} nicht gefunden.`);
     }
+    let commentTeam = '';
+    let commentAdmin = '';
     for (const [userId, tasks] of Object.entries(users as any)) {
+      if (userId === 'commentTeam') {
+        commentTeam = tasks as string;
+        continue;
+      }
+      if (userId === 'commentAdmin') {
+        commentAdmin = tasks as string;
+        continue;
+      }
       const user = await User.findByPk(userId);
       if (!user) {
         return sendJsonError(res, `Benutzer mit der ID ${userId} nicht gefunden.`);
@@ -313,7 +323,7 @@ export const rateSheet = async (req: Request, res: Response) => {
       }
     }
     try {
-      await Team.update({commentTeam: team.commentTeam, commentAdmin: team.commentAdmin}, {where: {id: teamId}});
+      await Team.update({commentTeam: commentTeam, commentAdmin: commentAdmin}, {where: {id: teamId}});
     } catch (e: any) {
       return sendJsonError(res, `Teamkommentar für ${team.name} speichern fehlgeschlagen`);
     }
