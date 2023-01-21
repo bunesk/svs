@@ -107,6 +107,7 @@ onBeforeMount(async () => {
             {{user.fullName}}
           </li>
         </ul>
+        <p v-if="team.commentTeam && team.commentTeam.length">Teamkommentar aus Bewertung: {{ team.commentTeam }}</p>
       </div>
       <h2>Tests und Blätter ({{ points }}/{{pointsMax}})</h2>
       <EventTests :tests="tests" />
