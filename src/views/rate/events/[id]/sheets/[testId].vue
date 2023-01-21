@@ -3,10 +3,10 @@ import {onBeforeMount, Ref, ref} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import sendRequest from '../../../../../client/request';
 import {validate, formIsValid} from '../../../../../components/forms/services/validation';
+import authUser from '../../../../../client/user';
 
 const route = useRoute();
 const router = useRouter();
-const users: Ref<any> = ref(null);
 const teams: Ref<any> = ref(null);
 const tasks: Ref<any> = ref(null);
 const status = ref(false);
@@ -14,36 +14,14 @@ const form: Ref<HTMLFormElement | null> = ref(null);
 const isValid = ref(false);
 const message: Ref<HTMLParagraphElement | null> = ref(null);
 
-const getTeams = async () => {
-  const response = await sendRequest('team', 'get-by-event', {eventId: route.params.id});
+const getTests = async () => {
+  const response = await sendRequest('test', 'get-sheet-ratings', {id: route.params.testId});
   const resData = await response.json();
   status.value = response.status === 200;
   if (status.value) {
-    teams.value = resData.result;
-    (message.value as HTMLParagraphElement).textContent = '';
-  } else {
-    (message.value as HTMLParagraphElement).textContent = resData.message;
-  }
-};
-
-const getUsers = async () => {
-  const response = await sendRequest('team', 'get-members', {id: route.params.id});
-  const resData = await response.json();
-  status.value = response.status === 200;
-  if (status.value) {
-    users.value = resData.result;
-    (message.value as HTMLParagraphElement).textContent = '';
-  } else {
-    (message.value as HTMLParagraphElement).textContent = resData.message;
-  }
-};
-
-const getTasks = async () => {
-  const response = await sendRequest('test', 'get-tasks', {id: route.params.testId});
-  const resData = await response.json();
-  status.value = response.status === 200;
-  if (status.value) {
-    tasks.value = resData.result;
+    teams.value = resData.result.teams;
+    tasks.value = resData.result.tasks;
+    console.log(resData.result);
     (message.value as HTMLParagraphElement).textContent = '';
   } else {
     (message.value as HTMLParagraphElement).textContent = resData.message;
@@ -52,12 +30,19 @@ const getTasks = async () => {
 
 const submit = async () => {
   let params: any = {};
-  for (const user of users.value) {
-    params[user.id] = {};
-    for (const task of tasks.value) {
-      const input = document.getElementById(`rate_${user.id}_${task.id}`) as HTMLInputElement;
-      params[user.id][task.id] = input.value || '0';
+  for (const team of teams.value) {
+    params[team.id] = {};
+    for (const user of team.users) {
+      params[team.id][user.id] = {};
+      for (const task of tasks.value) {
+        const input = document.getElementById(`rate_${team.id}_${user.id}_${task.id}`) as HTMLInputElement;
+        params[team.id][user.id][task.id] = input.value || '0';
+      }
     }
+    const commentTeam = document.getElementById(`rate_${team.id}_commentTeam`) as HTMLInputElement;
+    const commentAdmin = document.getElementById(`rate_${team.id}_commentAdmin`) as HTMLInputElement;
+    params[team.id].commentTeam = commentTeam.value;
+    params[team.id].commentAdmin = commentAdmin.value;
   }
   const response = await sendRequest('test', 'rate-test', params);
   const resData = await response.json();
@@ -69,8 +54,7 @@ const submit = async () => {
 };
 
 onBeforeMount(async () => {
-  await getUsers();
-  await getTasks();
+  await getTests();
 });
 </script>
 
@@ -83,39 +67,74 @@ onBeforeMount(async () => {
       @input="isValid = formIsValid(form)"
     >
       <div class="p-fluid">
-        <Accordion v-if="users && tasks">
+        <Accordion>
           <AccordionTab
-            :header="user.fullName"
-            v-for="user of users"
-            :key="user.id"
+            :header="team.name"
+            v-for="team of teams"
+            :key="team.id"
           >
-            <div
-              class="field"
-              v-for="task of tasks"
-              :key="task.id"
-            >
-              <label :for="`rate_${user.id}_${task.id}`">{{ task.name }}</label>
-              <InputText
-                :id="`rate_${user.id}_${task.id}`"
-                type="number"
-                min="0"
-                :max="task.pointsMax"
-                step="0.5"
-                required
-                @blur="validate"
-                @keyup="validate"
-              />
-              <span>von {{ task.pointsMax }}P</span>
-            </div>
-            <div v-if="!tasks || !tasks.length">
+            <Accordion>
+              <AccordionTab
+                :header="user.fullName"
+                v-for="user of team.users"
+                :key="user.id"
+              >
+                <div
+                  class="field"
+                  v-for="task of tasks"
+                  :key="task.id"
+                >
+                  <label :for="`rate_${team.id}_${user.id}_${task.id}`">{{ task.name }}</label>
+                  <InputText
+                    :id="`rate_${team.id}_${user.id}_${task.id}`"
+                    type="number"
+                    min="0"
+                    :value="user.tasks[task.id]"
+                    :max="task.pointsMax"
+                    step="0.5"
+                    required
+                    @blur="validate"
+                    @keyup="validate"
+                  />
+                  <span>von {{ task.pointsMax }}P</span>
+                </div>
+                <div v-if="!tasks || !tasks.length">
+                  Keine Aufgaben gefunden.
+                </div>
+              </AccordionTab>
+            </Accordion>
+            <div v-if="!team.users || !team.users">
               Keine Aufgaben gefunden.
+            </div>
+            <div class="field">
+              <label
+                class="comment"
+                :for="`rate_${team.id}_commentTeam`"
+              >Teamkommentar</label>
+              <InputText
+                :id="`rate_${team.id}_commentTeam`"
+                :value="team.commentTeam"
+              />
+            </div>
+            <div
+              v-if="authUser.isAdmin"
+              class="field"
+            >
+              <label
+                class="comment"
+                :for="`rate_${team.id}_commentAdmin`"
+              >Adminkommentar</label>
+              <InputText
+                :id="`rate_${team.id}_commentAdmin`"
+                :value="team.commentAdmin"
+              />
             </div>
           </AccordionTab>
         </Accordion>
         <Button
           class="p-button-success submit-button"
           label="Bewertung speichern"
-          :disabled="!tasks || !users || !isValid"
+          :disabled="!tasks || !teams || !isValid"
           @click="submit"
         />
         <Button
@@ -123,7 +142,7 @@ onBeforeMount(async () => {
           label="Abbrechen"
           @click="router.back()"
         />
-        <div v-if="!users || !users.length">
+        <div v-if="!teams || !teams.length">
           Keine Teilnehmer gefunden.
         </div>
       </div>
@@ -146,6 +165,9 @@ h1 {
 
   label {
     width: 6rem;
+    &.comment {
+      width: 8.5rem;
+    }
   }
   input {
     max-width: 20rem;

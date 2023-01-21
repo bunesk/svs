@@ -7,6 +7,7 @@ import User from '../models/User.js';
 import UserTask from '../models/UserTask.js';
 import {copy, getEventOrTestData, isAuthenticatedAdmin, sendJsonError, sendJsonSuccess} from '../server/json.js';
 import {userSelectAttributes} from '../server/auth.js';
+import Team from '../models/Team.js';
 
 export const index = (req: Request, res: Response) => {
   return getAll(req, res);
@@ -172,7 +173,7 @@ export const getTestRatings = async (req: Request, res: Response) => {
   const tasks = await test.getTasks();
   const event = await test.getEvent();
   const users = await event.getUsers({attributes: userSelectAttributes});
-  let result: any = {
+  const result: any = {
     users: [],
     tasks: tasks,
   };
@@ -192,6 +193,51 @@ export const getTestRatings = async (req: Request, res: Response) => {
     }
     userData.tasks = points;
     result.users.push(userData);
+  }
+  return sendJsonSuccess(res, result);
+};
+
+export const getSheetRatings = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req, true);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
+  if (!req.body.id) {
+    return sendJsonError(res, 'Test-ID fehlt');
+  }
+  const test = await Test.findOne({where: {id: req.body.id, isSheet: true}});
+  if (!test) {
+    return sendJsonError(res, `Test mit der ID ${req.body.id} nicht gefunden.`);
+  }
+  const tasks = await test.getTasks();
+  const event = await test.getEvent();
+  const teams = await event.getTeams();
+  const result: any = {
+    teams: [],
+    tasks: tasks,
+  };
+  for (const team of teams) {
+    const teamData: any = copy(team);
+    const users = await team.getUsers({attributes: userSelectAttributes});
+    teamData.users = [];
+    for (const user of users) {
+      if (user.isAdmin || user.isTutor) {
+        continue;
+      }
+      const userData: any = copy(user);
+      const points: any = {};
+      for (const task of tasks) {
+        const userTask = await UserTask.findOne({where: {UserId: user.id, TaskId: task.id}});
+        if (userTask) {
+          points[task.id] = userTask.points;
+        } else {
+          points[task.id] = 0;
+        }
+      }
+      userData.tasks = points;
+      teamData.users.push(userData);
+    }
+    result.teams.push(teamData);
   }
   return sendJsonSuccess(res, result);
 };
@@ -225,6 +271,51 @@ export const rateTest = async (req: Request, res: Response) => {
           `Punkte eintragen für Benutzer ${user.fullName} für Task mit der ID ${taskId} fehlgeschlagen.`
         );
       }
+    }
+  }
+  return sendJsonSuccess(res, [], 'Punkte erfolgreich eingetragen.');
+};
+
+export const rateSheet = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req, true);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
+  for (const [teamId, users] of Object.entries(req.body)) {
+    const team = await Team.findByPk(teamId);
+    if (!team) {
+      return sendJsonError(res, `Benutzer mit der ID ${teamId} nicht gefunden.`);
+    }
+    for (const [userId, tasks] of Object.entries(users as any)) {
+      const user = await User.findByPk(userId);
+      if (!user) {
+        return sendJsonError(res, `Benutzer mit der ID ${userId} nicht gefunden.`);
+      }
+      for (const [taskId, taskPoints] of Object.entries(tasks as any)) {
+        const task = await Task.findByPk(taskId);
+        if (!task) {
+          return sendJsonError(res, `Aufgabe mit der ID ${taskId} nicht gefunden.`);
+        }
+        try {
+          const [userTask, built] = await UserTask.findOrBuild({where: {UserId: userId, TaskId: taskId}});
+          userTask.points = taskPoints as number;
+          if (built) {
+            await UserTask.create({points: taskPoints, UserId: userId, TaskId: taskId});
+          } else {
+            await UserTask.update({points: taskPoints}, {where: {UserId: userId, TaskId: taskId}});
+          }
+        } catch (e: any) {
+          return sendJsonError(
+            res,
+            `Punkte eintragen für Benutzer ${user.fullName} für Task mit der ID ${taskId} fehlgeschlagen.`
+          );
+        }
+      }
+    }
+    try {
+      await Team.update({commentTeam: team.commentTeam, commentAdmin: team.commentAdmin}, {where: {id: teamId}});
+    } catch (e: any) {
+      return sendJsonError(res, `Teamkommentar für ${team.name} speichern fehlgeschlagen`);
     }
   }
   return sendJsonSuccess(res, [], 'Punkte erfolgreich eingetragen.');

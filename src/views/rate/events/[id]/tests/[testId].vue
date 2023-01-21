@@ -20,7 +20,6 @@ const getTests = async () => {
   if (status.value) {
     users.value = resData.result.users;
     tasks.value = resData.result.tasks;
-    console.log(resData.result);
     (message.value as HTMLParagraphElement).textContent = '';
   } else {
     (message.value as HTMLParagraphElement).textContent = resData.message;
