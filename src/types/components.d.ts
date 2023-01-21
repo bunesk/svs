@@ -28,6 +28,7 @@ declare module '@vue/runtime-core' {
     EventNameList: typeof import('./../components/lists/EventNameList.vue')['default']
     EventTable: typeof import('./../components/tables/EventTable.vue')['default']
     EventTableBasic: typeof import('./../components/tables/EventTableBasic.vue')['default']
+    EventTests: typeof import('./../components/EventTests.vue')['default']
     Footer: typeof import('./../components/Footer.vue')['default']
     Header: typeof import('./../components/Header.vue')['default']
     InputText: typeof import('primevue/inputtext')['default']

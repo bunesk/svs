@@ -6,6 +6,8 @@ import sendRequest from '../../client/request';
 const route = useRoute();
 const isMember: Ref<boolean | null> = ref(null);
 const event: Ref<any> = ref(null);
+const tests: Ref<any> = ref(null);
+const sheets: Ref<any> = ref(null);
 const error: Ref<HTMLParagraphElement | null> = ref(null);
 
 const password = ref('');
@@ -36,6 +38,21 @@ const readEvent = async (setIsMember = false) => {
   }
 };
 
+const readTests = async (setIsMember = false) => {
+  if (setIsMember) {
+    isMember.value = true;
+  }
+  const response = await sendRequest('event', 'get-own-tests', {id: route.params.id});
+  const resData = await response.json();
+  if (response.status === 200) {
+    tests.value = resData.result.tests;
+    sheets.value = resData.result.sheets;
+    console.log(resData.result);
+  } else {
+    (error.value as HTMLParagraphElement).textContent = resData.message;
+  }
+};
+
 const join = async () => {
   const response = await sendRequest('event', 'join', {id: route.params.id, password: password.value});
   const resData = await response.json();
@@ -52,6 +69,7 @@ onBeforeMount(async () => {
   await checkIfMember();
   if (isMember.value) {
     await readEvent();
+    await readTests();
   }
 });
 </script>
@@ -60,6 +78,8 @@ onBeforeMount(async () => {
   <div class="event-view">
     <div v-if="isMember && event">
       <EventTableBasic :event="event" />
+      <EventTests :tests="tests" />
+      <EventTests :tests="sheets" />
     </div>
     <div v-if="isMember === false">
       <JoinEventForm :readFunction="readEvent" />

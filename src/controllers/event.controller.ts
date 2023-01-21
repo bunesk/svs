@@ -294,8 +294,8 @@ export const getOwnTests = async (req: Request, res: Response) => {
   if (!(await user.hasEvent(event))) {
     return sendJsonError(res, 'Du bist kein Mitglied der Veranstaltung.', 403);
   }
-  const tests = await event.getTests({include: 'Tasks', where: {isSheet: false}});
-  const sheets = await event.getTests({include: 'Tasks', where: {isSheet: true}});
+  const tests = await event.getTests({include: 'Tasks', where: {isSheet: false}, order: ['number']});
+  const sheets = await event.getTests({include: 'Tasks', where: {isSheet: true}, order: ['number']});
   const result = {
     tests: await iterateTests(tests, user),
     sheets: await iterateTests(sheets, user),
