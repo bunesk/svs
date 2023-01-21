@@ -28,6 +28,13 @@ onBeforeMount(async () => {
 
 <template>
   <div class="test-overview">
+    <RouterLink :to="`/admin/events/${route.params.id}`">
+      <Button
+        class="navigation-button"
+        icon="pi pi-angle-left"
+        label="Zurück zur Veranstaltung"
+      ></Button>
+    </RouterLink>
     <div v-if="test">
       <h1>{{ test.name }}</h1>
       <RouterLink :to="`/rate/events/${route.params.id}/${test.isSheet ? 'sheets' : 'tests'}/${route.params.testId}`">

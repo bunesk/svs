@@ -1,10 +1,11 @@
 
 <script setup lang="ts">
 import {onBeforeMount, Ref, ref} from 'vue';
-import {useRoute} from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
 import sendRequest from '../../../client/request';
 
 const route = useRoute();
+const router = useRouter();
 const user: Ref<any> = ref(null);
 const error: Ref<HTMLParagraphElement | null> = ref(null);
 
@@ -28,6 +29,12 @@ onBeforeMount(async () => {
 
 <template>
   <div class="user-overview">
+    <Button
+      class="navigation-button"
+      icon="pi pi-angle-left"
+      label="Zurück zur Übersicht"
+      @click="router.back()"
+    ></Button>
     <div v-if="user">
       <h1>Profil von {{user.fullName}}</h1>
       <UserTable :user="user" />

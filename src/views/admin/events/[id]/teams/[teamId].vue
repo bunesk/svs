@@ -28,6 +28,13 @@ onBeforeMount(async () => {
 
 <template>
   <div class="team-overview">
+    <RouterLink :to="`/admin/events/${route.params.id}`">
+      <Button
+        class="navigation-button"
+        icon="pi pi-angle-left"
+        label="Zurück zur Veranstaltung"
+      ></Button>
+    </RouterLink>
     <div v-if="team">
       <h1>{{ team.name }}</h1>
       <TeamMembers />

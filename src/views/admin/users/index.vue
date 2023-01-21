@@ -3,6 +3,13 @@
 
 <template>
   <div>
+    <RouterLink :to="`/admin`">
+      <Button
+        class="navigation-button"
+        icon="pi pi-angle-left"
+        label="Zurück zu Admin"
+      ></Button>
+    </RouterLink>
     <h1>Benutzer</h1>
     <UserList />
   </div>

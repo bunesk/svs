@@ -170,6 +170,11 @@ onBeforeMount(async () => {
         @blur="submit"
         :disabled="!isValid"
       />
+      <Button
+        class="p-button-danger submit-button"
+        label="Abbrechen"
+        @click="router.back()"
+      />
     </div>
   </form>
 </template>
@@ -191,6 +196,10 @@ onBeforeMount(async () => {
 
   .p-button {
     width: 100%;
+    &.p-button-danger {
+      max-width: 500px;
+      margin-top: 0.5rem;
+    }
   }
 }
 </style>

@@ -58,6 +58,13 @@ onBeforeMount(async () => {
 
 <template>
   <div class="event-view">
+    <RouterLink :to="`/rate`">
+      <Button
+        class="navigation-button"
+        icon="pi pi-angle-left"
+        label="Zurück zur Veranstaltungsübersicht"
+      ></Button>
+    </RouterLink>
     <div v-if="isMember && event">
       <EventTableBasic :event="event" />
       <Tests />

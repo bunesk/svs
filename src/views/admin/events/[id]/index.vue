@@ -27,6 +27,13 @@ onBeforeMount(async () => {
 
 <template>
   <div class="event-overview">
+    <RouterLink :to="`/admin/events`">
+      <Button
+        class="navigation-button"
+        icon="pi pi-angle-left"
+        label="Zurück zur Veranstaltungsübersicht"
+      ></Button>
+    </RouterLink>
     <div v-if="event">
       <h1>{{event.name}}</h1>
       <EventTable :event="event" />

@@ -3,7 +3,10 @@
 
 <template>
   <header>
-    <RouterLink to="/">
+    <RouterLink
+      title="Zur Startseite"
+      to="/"
+    >
       <img src="/logo.jpg">
       <span class="title">SVS</span>
     </RouterLink>
