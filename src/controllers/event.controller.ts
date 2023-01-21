@@ -1,10 +1,13 @@
 import {Request} from 'express-jwt';
 import {Response} from 'express';
 import Event from '../models/Event.js';
+import Test from '../models/Test.js';
 import User from '../models/User.js';
+import UserTask from '../models/UserTask.js';
 import {encryptPassword, userSelectAttributes} from '../server/auth.js';
 import {
   checkRequiredParams,
+  copy,
   eventSelectAttributes,
   getJoinableData,
   isAuthenticatedAdmin,
@@ -271,4 +274,52 @@ export const removeMember = async (req: Request, res: Response) => {
   }
   await event.removeUser(user);
   return sendJsonSuccess(res, [], `Benutzer erfolgreich von der Veranstaltung ${teamMessage} entfernt.`);
+};
+
+export const getOwnTests = async (req: Request, res: Response) => {
+  if (!req.auth || !req.auth.username) {
+    return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
+  }
+  const user = await User.findOne({where: {username: req.auth.username}});
+  if (!user) {
+    return {status: false, message: 'Authentifizierter Benutzer existiert nicht mehr.', statusCode: 404};
+  }
+  if (!req.body.id) {
+    return sendJsonError(res, 'Veranstaltungs-ID fehlt');
+  }
+  const event = await Event.findByPk(req.body.id);
+  if (!event) {
+    return sendJsonError(res, `Veranstaltung mit der ID ${req.body.id} nicht gefunden.`);
+  }
+  if (!(await user.hasEvent(event))) {
+    return sendJsonError(res, 'Du bist kein Mitglied der Veranstaltung.', 403);
+  }
+  const tests = await event.getTests({include: 'Tasks', where: {isSheet: false}});
+  const sheets = await event.getTests({include: 'Tasks', where: {isSheet: true}});
+  const result = {
+    tests: await iterateTests(tests, user),
+    sheets: await iterateTests(sheets, user),
+  };
+  return sendJsonSuccess(res, result);
+};
+
+const iterateTests = async (tests: Test[], user: User) => {
+  const testsData = [];
+  for (const test of tests) {
+    const testData = copy(test);
+    const tasksData = [];
+    for (const task of testData.Tasks) {
+      const taskData = copy(task);
+      const userTask = await UserTask.findOne({where: {UserId: user.id, TaskId: task.id}});
+      if (userTask) {
+        taskData.points = userTask.points;
+      } else {
+        taskData.points = 0;
+      }
+      tasksData.push(taskData);
+    }
+    testData.Tasks = tasksData;
+    testsData.push(testData);
+  }
+  return testsData;
 };
