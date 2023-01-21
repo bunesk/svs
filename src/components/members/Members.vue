@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {onBeforeMount, Ref, ref} from 'vue';
 import {useRoute} from 'vue-router';
-import sendRequest from '../client/request';
-import {tableColumns} from '../client/user';
+import sendRequest from '../../client/request';
+import {tableColumns} from '../../client/user';
 
 const route = useRoute();
 const members = ref(null);

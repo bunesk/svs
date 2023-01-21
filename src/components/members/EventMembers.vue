@@ -1,24 +1,24 @@
 <script setup lang="ts">
 import {Ref, ref} from 'vue';
 import {useRoute} from 'vue-router';
-import sendRequest from '../client/request';
+import sendRequest from '../../client/request';
 
 const route = useRoute();
 const members = ref(null);
 const error: Ref<HTMLParagraphElement | null> = ref(null);
 
 const readFunction = async () => {
-  return await sendRequest('team', 'get-members', {id: route.params.teamId});
+  return await sendRequest('event', 'get-members', {id: route.params.id});
 };
 
 const removeFunction = async (userId: string) => {
-  return await sendRequest('team', 'remove-member', {teamId: route.params.teamId, userId: userId});
+  return await sendRequest('event', 'remove-member', {eventId: route.params.id, userId: userId});
 };
 </script>
 
 <template>
   <Members
-    name="team"
+    name="event"
     :readFunction="readFunction"
     :removeFunction="removeFunction"
   />
