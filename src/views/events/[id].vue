@@ -9,6 +9,8 @@ const event: Ref<any> = ref(null);
 const team: Ref<any> = ref(null);
 const tests: Ref<any> = ref(null);
 const sheets: Ref<any> = ref(null);
+const points = ref(0);
+const pointsMax = ref(0);
 const error: Ref<HTMLParagraphElement | null> = ref(null);
 
 const password = ref('');
@@ -61,6 +63,8 @@ const readTests = async (setIsMember = false) => {
   if (response.status === 200) {
     tests.value = resData.result.tests;
     sheets.value = resData.result.sheets;
+    points.value = resData.result.points;
+    pointsMax.value = resData.result.pointsMax;
   } else {
     (error.value as HTMLParagraphElement).textContent = resData.message;
   }
@@ -103,7 +107,7 @@ onBeforeMount(async () => {
           </li>
         </ul>
       </div>
-      <h2>Tests und Blätter</h2>
+      <h2>Tests und Blätter ({{ points }}/{{pointsMax}})</h2>
       <EventTests :tests="tests" />
       <EventTests :tests="sheets" />
     </div>

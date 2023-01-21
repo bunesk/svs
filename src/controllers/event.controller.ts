@@ -1,6 +1,7 @@
 import {Request} from 'express-jwt';
 import {Response} from 'express';
 import Event from '../models/Event.js';
+import Task from '../models/Task.js';
 import Test from '../models/Test.js';
 import User from '../models/User.js';
 import UserTask from '../models/UserTask.js';
@@ -323,19 +324,29 @@ export const getOwnTests = async (req: Request, res: Response) => {
   }
   const tests = await event.getTests({include: 'Tasks', where: {isSheet: false}, order: ['number']});
   const sheets = await event.getTests({include: 'Tasks', where: {isSheet: true}, order: ['number']});
+  const [resultTests, pointsTests] = await iterateTests(tests, user);
+  const [resultSheets, pointsSheets] = await iterateTests(sheets, user);
   const result = {
-    tests: await iterateTests(tests, user),
-    sheets: await iterateTests(sheets, user),
+    tests: resultTests,
+    sheets: resultSheets,
+    points: pointsTests.points + pointsSheets.points,
+    pointsMax: pointsTests.pointsMax + pointsSheets.pointsMax,
   };
   return sendJsonSuccess(res, result);
 };
 
 const iterateTests = async (tests: Test[], user: User) => {
   const testsData = [];
+  const pointsAll: any = {
+    points: 0,
+    pointsMax: 0,
+  };
   for (const test of tests) {
     const testData = copy(test);
     const tasksData = [];
+    const taskIds = [];
     for (const task of testData.Tasks) {
+      taskIds.push(task.id);
       const taskData = copy(task);
       const userTask = await UserTask.findOne({where: {UserId: user.id, TaskId: task.id}});
       if (userTask) {
@@ -346,7 +357,11 @@ const iterateTests = async (tests: Test[], user: User) => {
       tasksData.push(taskData);
     }
     testData.Tasks = tasksData;
+    testData.pointsMax = (await Task.sum('pointsMax', {where: {TestId: test.id}})) ?? 0;
+    testData.points = (await UserTask.sum('points', {where: {UserId: user.id, TaskId: taskIds}})) ?? 0;
+    pointsAll.points += testData.points;
+    pointsAll.pointsMax += testData.pointsMax;
     testsData.push(testData);
   }
-  return testsData;
+  return [testsData, pointsAll];
 };
