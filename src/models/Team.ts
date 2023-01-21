@@ -27,8 +27,8 @@ class Team extends Model {
   declare number: number;
   declare block: string;
   declare name: string;
-  declare commentAdmin: string | null;
-  declare commentTeam: string | null;
+  declare commentAdmin: string;
+  declare commentTeam: string;
 
   // Since TS cannot determine model association at compile time
   // we have to declare them here virtually
@@ -70,9 +70,13 @@ Team.init({
   },
   commentAdmin: {
     type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: '',
   },
   commentTeam: {
     type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: '',
   },
 });
 
