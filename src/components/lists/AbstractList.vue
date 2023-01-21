@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {onBeforeMount, Ref, ref} from 'vue';
-import {useRouter} from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
 import sendRequest from '../../client/request';
 import {FilterMatchMode} from 'primevue/api';
 
@@ -14,8 +14,10 @@ const props = defineProps({
   globalFilterFields: {type: Array, default: []},
   showCreate: {type: Boolean, default: false},
   showRefresh: {type: Boolean, default: false},
+  showViewPoints: {type: Boolean, default: false},
 });
 
+const route = useRoute();
 const router = useRouter();
 const status = ref(false);
 const message: Ref<HTMLParagraphElement | null> = ref(null);
@@ -40,6 +42,12 @@ const readItems = async () => {
 const viewItem = async () => {
   if (selectedItem.value) {
     router.push(`/admin/${props.viewItemName || props.name}s/${selectedItem.value.id}`);
+  }
+};
+
+const viewPoints = async () => {
+  if (selectedItem.value) {
+    router.push(`/admin/events/${route.params.id}/users/${selectedItem.value.id}`);
   }
 };
 
@@ -114,6 +122,13 @@ onBeforeMount(async () => {
             label="Anzeigen / Bearbeiten"
             icon="pi pi-eye"
             @click="viewItem"
+            :disabled="!selectedItem"
+          ></Button>
+          <Button
+            v-if="showViewPoints"
+            label="Punkte anzeigen"
+            icon="pi pi-eye"
+            @click="viewPoints"
             :disabled="!selectedItem"
           ></Button>
           <Button

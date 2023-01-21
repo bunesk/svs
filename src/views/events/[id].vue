@@ -41,10 +41,7 @@ const readEvent = async (setIsMember = false) => {
   }
 };
 
-const readTeam = async (setIsMember = false) => {
-  if (setIsMember) {
-    isMember.value = true;
-  }
+const readTeam = async () => {
   const response = await sendRequest('event', 'get-own-team', {id: route.params.id});
   const resData = await response.json();
   if (response.status === 200) {
@@ -54,10 +51,7 @@ const readTeam = async (setIsMember = false) => {
   }
 };
 
-const readTests = async (setIsMember = false) => {
-  if (setIsMember) {
-    isMember.value = true;
-  }
+const readTests = async () => {
   const response = await sendRequest('event', 'get-own-tests', {id: route.params.id});
   const resData = await response.json();
   if (response.status === 200) {

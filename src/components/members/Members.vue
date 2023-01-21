@@ -30,6 +30,7 @@ defineProps({
       viewItemName="user"
       :globalFilterFields="['username','firstName','lastName', 'genderLabel', 'matriculationNumber', 'email', 'role']"
       showRefresh
+      showViewPoints
     >
       <Column
         v-for="column of Object.keys(tableColumns)"

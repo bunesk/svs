@@ -304,6 +304,38 @@ export const getOwnTeam = async (req: Request, res: Response) => {
   return sendJsonSuccess(res, teamData);
 };
 
+export const getTestsByUser = async (req: Request, res: Response) => {
+  const hasPermission = await isAuthenticatedAdmin(req);
+  if (!hasPermission.status) {
+    return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
+  }
+  if (!req.body.userId) {
+    return sendJsonError(res, 'Benutzer-ID fehlt');
+  }
+  const user = await User.findByPk(req.body.userId);
+  if (!user) {
+    return sendJsonError(res, `Benutzer mit der ID ${req.body.userId} nicht gefunden.`);
+  }
+  if (!req.body.id) {
+    return sendJsonError(res, 'Veranstaltungs-ID fehlt');
+  }
+  const event = await Event.findByPk(req.body.id);
+  if (!event) {
+    return sendJsonError(res, `Veranstaltung mit der ID ${req.body.id} nicht gefunden.`);
+  }
+  const tests = await event.getTests({include: 'Tasks', where: {isSheet: false}, order: ['number']});
+  const sheets = await event.getTests({include: 'Tasks', where: {isSheet: true}, order: ['number']});
+  const [resultTests, pointsTests] = await iterateTests(tests, user);
+  const [resultSheets, pointsSheets] = await iterateTests(sheets, user);
+  const result = {
+    tests: resultTests,
+    sheets: resultSheets,
+    points: pointsTests.points + pointsSheets.points,
+    pointsMax: pointsTests.pointsMax + pointsSheets.pointsMax,
+  };
+  return sendJsonSuccess(res, result);
+};
+
 export const getOwnTests = async (req: Request, res: Response) => {
   if (!req.auth || !req.auth.username) {
     return sendJsonError(res, 'Authentifizierung fehlgeschlagen.', 401);
