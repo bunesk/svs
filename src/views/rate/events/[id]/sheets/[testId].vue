@@ -130,6 +130,12 @@ onBeforeMount(async () => {
                 :value="team.commentAdmin"
               />
             </div>
+            <div
+              v-else-if="team.commentAdmin"
+              class="field"
+            >
+              Adminkommentar: {{ team.commentAdmin }}
+            </div>
           </AccordionTab>
         </Accordion>
         <Button
