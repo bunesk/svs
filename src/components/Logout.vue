@@ -15,6 +15,7 @@ const logout = () => {
 <template>
   <Button
     @click="logout"
+    icon="pi pi-sign-out"
     label="Abmelden"
   />
 </template>

@@ -11,10 +11,16 @@ import user from '../client/user';
         v-show="!user.isAdmin && !user.isTutor"
         to="/events"
       >
-        <Button label="Veranstaltungen" />
+        <Button
+          icon="pi pi-list"
+          label="Veranstaltungen"
+        />
       </RouterLink>
       <RouterLink to="/profile">
-        <Button label="Mein Profil" />
+        <Button
+          icon="pi pi-user"
+          label="Mein Profil"
+        />
       </RouterLink>
       <RouterLink
         v-show="user.isAdmin"

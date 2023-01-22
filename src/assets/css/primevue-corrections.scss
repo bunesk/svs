@@ -12,6 +12,7 @@
   text-decoration: none;
 }
 /** vertical center angle icon in buttons */
-:deep(.pi.pi-angle-left.p-button-icon.p-button-icon-left) {
+:deep(.pi.pi-angle-left.p-button-icon.p-button-icon-left),
+:deep(.pi.pi-list.p-button-icon.p-button-icon-left) {
   margin-top: 0.1rem;
 }
