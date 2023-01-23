@@ -15,6 +15,10 @@ import {
   BelongsToCreateAssociationMixin,
   BelongsToGetAssociationMixin,
   BelongsToSetAssociationMixin,
+  ForeignKey,
+  InferAttributes,
+  InferCreationAttributes,
+  NonAttribute,
 } from 'sequelize';
 import Event from './Event.js';
 import Task from './Task.js';
@@ -22,22 +26,22 @@ import Task from './Task.js';
 /**
  * A test has multiple tasks that need to be done by students.
  */
-class Test extends Model {
+class Test extends Model<InferAttributes<Test>, InferCreationAttributes<Test>> {
   // Since TS cannot determine model attributes at compile time
   // we have to declare them here virtually
   declare number: number;
-  declare readonly name: CreationOptional<string>;
+  declare readonly name: NonAttribute<string>;
   declare isSheet: CreationOptional<boolean>;
 
   // Since TS cannot determine model association at compile time
   // we have to declare them here virtually
   // association with event
-  declare EventId: number;
+  declare EventId: ForeignKey<Event['id']>;
   declare getEvent: BelongsToGetAssociationMixin<Event>;
   declare setEvent: BelongsToSetAssociationMixin<Event, number>;
   declare createEvent: BelongsToCreateAssociationMixin<Event>;
   // association with task
-  declare Tasks: CreationOptional<Task[]>;
+  declare Tasks?: NonAttribute<Task[]>;
   declare getTasks: HasManyGetAssociationsMixin<Task>;
   declare addTask: HasManyAddAssociationMixin<Task, number>;
   declare addTasks: HasManyAddAssociationsMixin<Task, number>;
@@ -47,7 +51,7 @@ class Test extends Model {
   declare hasTask: HasManyHasAssociationMixin<Task, number>;
   declare hasTasks: HasManyHasAssociationsMixin<Task, number>;
   declare countTasks: HasManyCountAssociationsMixin;
-  declare createTask: HasManyCreateAssociationMixin<Task, 'ownerId'>;
+  declare createTask: HasManyCreateAssociationMixin<Task, 'TaskId'>;
 }
 
 Test.init({

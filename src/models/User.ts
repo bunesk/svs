@@ -15,6 +15,7 @@ import {
   HasManySetAssociationsMixin,
   InferAttributes,
   InferCreationAttributes,
+  NonAttribute,
 } from 'sequelize';
 import {
   validateUsername,
@@ -40,20 +41,20 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare username: string;
   declare firstName: string;
   declare lastName: string;
-  declare readonly fullName: CreationOptional<string>;
+  declare readonly fullName: NonAttribute<string>;
   declare gender: gender;
-  declare readonly genderLabel: CreationOptional<genderLabel>;
+  declare readonly genderLabel: NonAttribute<genderLabel>;
   declare matriculationNumber: string | null;
   declare email: string;
   declare password: string;
   declare isAdmin: CreationOptional<boolean>;
   declare isTutor: CreationOptional<boolean>;
-  declare role: CreationOptional<string>;
+  declare role: NonAttribute<string>;
 
   // Since TS cannot determine model association at compile time
   // we have to declare them here virtually
   // association with task
-  declare Tasks: CreationOptional<Task[]>;
+  declare Tasks?: NonAttribute<Task[]>;
   declare getTasks: HasManyGetAssociationsMixin<Task>;
   declare addTask: HasManyAddAssociationMixin<Task, number>;
   declare addTasks: HasManyAddAssociationsMixin<Task, number>;
@@ -63,9 +64,9 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare hasTask: HasManyHasAssociationMixin<Task, number>;
   declare hasTasks: HasManyHasAssociationsMixin<Task, number>;
   declare countTasks: HasManyCountAssociationsMixin;
-  declare createTask: HasManyCreateAssociationMixin<Task, 'ownerId'>;
+  declare createTask: HasManyCreateAssociationMixin<Task, 'TaskId'>;
   // association with event
-  declare Events: CreationOptional<Event[]>;
+  declare Events?: NonAttribute<Event[]>;
   declare getEvents: HasManyGetAssociationsMixin<Event>;
   declare addEvent: HasManyAddAssociationMixin<Event, number>;
   declare addEvents: HasManyAddAssociationsMixin<Event, number>;
@@ -75,9 +76,9 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare hasEvent: HasManyHasAssociationMixin<Event, number>;
   declare hasEvents: HasManyHasAssociationsMixin<Event, number>;
   declare countEvents: HasManyCountAssociationsMixin;
-  declare createEvent: HasManyCreateAssociationMixin<Event, 'ownerId'>;
+  declare createEvent: HasManyCreateAssociationMixin<Event, 'EventId'>;
   // association with team
-  declare Teams: CreationOptional<Team[]>;
+  declare Teams?: NonAttribute<Team[]>;
   declare getTeams: HasManyGetAssociationsMixin<Team>;
   declare addTeam: HasManyAddAssociationMixin<Team, number>;
   declare addTeams: HasManyAddAssociationsMixin<Team, number>;
@@ -87,7 +88,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare hasTeam: HasManyHasAssociationMixin<Team, number>;
   declare hasTeams: HasManyHasAssociationsMixin<Team, number>;
   declare countTeams: HasManyCountAssociationsMixin;
-  declare createTeam: HasManyCreateAssociationMixin<Team, 'ownerId'>;
+  declare createTeam: HasManyCreateAssociationMixin<Team, 'TeamId'>;
 }
 
 User.init({

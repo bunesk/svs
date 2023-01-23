@@ -15,6 +15,10 @@ import {
   BelongsToSetAssociationMixin,
   BelongsToCreateAssociationMixin,
   CreationOptional,
+  InferAttributes,
+  InferCreationAttributes,
+  NonAttribute,
+  ForeignKey,
 } from 'sequelize';
 import Event from './Event.js';
 import User from './User.js';
@@ -22,24 +26,24 @@ import User from './User.js';
 /**
  * A team is a group of students doing sheet tests together.
  */
-class Team extends Model {
+class Team extends Model<InferAttributes<Team>, InferCreationAttributes<Team>> {
   // Since TS cannot determine model attributes at compile time
   // we have to declare them here virtually
   declare number: number;
   declare block: string;
-  declare name: string;
-  declare commentAdmin: string;
-  declare commentTeam: string;
+  declare readonly name: NonAttribute<string>;
+  declare commentAdmin: CreationOptional<string>;
+  declare commentTeam: CreationOptional<string>;
 
   // Since TS cannot determine model association at compile time
   // we have to declare them here virtually
   // association with event
-  declare EventId: number;
+  declare EventId: ForeignKey<Event['id']>;
   declare getEvent: BelongsToGetAssociationMixin<Event>;
   declare setEvent: BelongsToSetAssociationMixin<Event, number>;
   declare createEvent: BelongsToCreateAssociationMixin<Event>;
   // association with user
-  declare Users: CreationOptional<User[]>;
+  declare Users?: NonAttribute<User[]>;
   declare getUsers: BelongsToManyGetAssociationsMixin<User>;
   declare addUser: BelongsToManyAddAssociationMixin<User, number>;
   declare addUsers: BelongsToManyAddAssociationsMixin<User, number>;

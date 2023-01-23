@@ -22,6 +22,9 @@ import {
   HasManyRemoveAssociationMixin,
   HasManyRemoveAssociationsMixin,
   HasManySetAssociationsMixin,
+  InferAttributes,
+  InferCreationAttributes,
+  NonAttribute,
 } from 'sequelize';
 import User from './User.js';
 import Team from './Team.js';
@@ -32,7 +35,7 @@ import {encryptPassword} from '../server/auth.js';
 /**
  * An event is a lecture students can attend.
  */
-class Event extends Model {
+class Event extends Model<InferAttributes<Event>, InferCreationAttributes<Event>> {
   // Since TS cannot determine model attributes at compile time
   // we have to declare them here virtually
   declare name: string;
@@ -42,12 +45,12 @@ class Event extends Model {
   declare pointsMax: number;
   declare pointsPassed: number;
   declare visible: CreationOptional<boolean>;
-  declare readonly visibleLabel: CreationOptional<boolean>;
+  declare readonly visibleLabel: NonAttribute<boolean>;
 
   // Since TS cannot determine model association at compile time
   // we have to declare them here virtually
   // association with team
-  declare Teams: CreationOptional<Team[]>;
+  declare Teams?: NonAttribute<Team[]>;
   declare getTeams: HasManyGetAssociationsMixin<Team>;
   declare addTeam: HasManyAddAssociationMixin<Team, number>;
   declare addTeams: HasManyAddAssociationsMixin<Team, number>;
@@ -57,9 +60,9 @@ class Event extends Model {
   declare hasTeam: HasManyHasAssociationMixin<Team, number>;
   declare hasTeams: HasManyHasAssociationsMixin<Team, number>;
   declare countTeams: HasManyCountAssociationsMixin;
-  declare createTeam: HasManyCreateAssociationMixin<Team, 'ownerId'>;
+  declare createTeam: HasManyCreateAssociationMixin<Team, 'TeamId'>;
   // association with test
-  declare Tests: CreationOptional<Test[]>;
+  declare Tests?: NonAttribute<Test[]>;
   declare getTests: HasManyGetAssociationsMixin<Test>;
   declare addTest: HasManyAddAssociationMixin<Test, number>;
   declare addTests: HasManyAddAssociationsMixin<Test, number>;
@@ -69,9 +72,9 @@ class Event extends Model {
   declare hasTest: HasManyHasAssociationMixin<Test, number>;
   declare hasTests: HasManyHasAssociationsMixin<Test, number>;
   declare countTests: HasManyCountAssociationsMixin;
-  declare createTest: HasManyCreateAssociationMixin<Test, 'ownerId'>;
+  declare createTest: HasManyCreateAssociationMixin<Test, 'TestId'>;
   // association with user
-  declare Users: CreationOptional<User[]>;
+  declare Users?: NonAttribute<User[]>;
   declare getUsers: BelongsToManyGetAssociationsMixin<User>;
   declare addUser: BelongsToManyAddAssociationMixin<User, number>;
   declare addUsers: BelongsToManyAddAssociationsMixin<User, number>;

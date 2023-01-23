@@ -14,7 +14,10 @@ import {
   BelongsToManyRemoveAssociationMixin,
   BelongsToManyRemoveAssociationsMixin,
   BelongsToManySetAssociationsMixin,
-  CreationOptional,
+  ForeignKey,
+  InferAttributes,
+  InferCreationAttributes,
+  NonAttribute,
 } from 'sequelize';
 import Test from './Test.js';
 import User from './User.js';
@@ -22,22 +25,22 @@ import User from './User.js';
 /**
  * A task is part of a test.
  */
-class Task extends Model {
+class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
   // Since TS cannot determine model attributes at compile time
   // we have to declare them here virtually
   declare number: number;
-  declare readonly name: CreationOptional<string>;
+  declare readonly name: NonAttribute<string>;
   declare pointsMax: number;
 
   // Since TS cannot determine model association at compile time
   // we have to declare them here virtually
   // association with test
-  declare TestId: number;
+  declare TestId: ForeignKey<Test['id']>;
   declare getTest: BelongsToGetAssociationMixin<Test>;
   declare setTest: BelongsToSetAssociationMixin<Test, number>;
   declare createTest: BelongsToCreateAssociationMixin<Test>;
   // association with user
-  declare Users: CreationOptional<User[]>;
+  declare Users: NonAttribute<User[]>;
   declare getUsers: BelongsToManyGetAssociationsMixin<User>;
   declare addUser: BelongsToManyAddAssociationMixin<User, number>;
   declare addUsers: BelongsToManyAddAssociationsMixin<User, number>;
