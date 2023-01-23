@@ -22,7 +22,7 @@ const cookiesHandler = {
   set: (name: string, value: string, lifetime = 1000 * 86400 * 90) => {
     const timestamp = new Date().getTime() + lifetime;
     const expireDate = new Date(timestamp);
-    cookies.set(name, value, {expires: expireDate});
+    cookies.set(name, value, {expires: expireDate, secure: true, sameSite: 'strict'});
   },
   /**
    * Removes a cookie.
