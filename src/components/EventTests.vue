@@ -1,14 +1,19 @@
+
 <script setup lang="ts">
-defineProps({
+import {computed} from 'vue';
+
+const props = defineProps({
   tests: {type: Array, default: null},
 });
+
+const eventTests = computed(() => props.tests as any);
 </script>
 
 <template>
   <div class="event-test-list">
-    <div v-if="tests && tests.length">
+    <div v-if="eventTests && eventTests.length">
       <div
-        v-for="test of tests"
+        v-for="test of eventTests"
         :key="test.id"
       >
         <h3>{{ test.name }} ({{ test.points }}/{{ test.pointsMax }})</h3>
