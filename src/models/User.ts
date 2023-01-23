@@ -40,18 +40,20 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare username: string;
   declare firstName: string;
   declare lastName: string;
-  declare fullName: string;
+  declare readonly fullName: CreationOptional<string>;
   declare gender: gender;
-  declare genderLabel: genderLabel;
+  declare readonly genderLabel: CreationOptional<genderLabel>;
   declare matriculationNumber: string | null;
   declare email: string;
   declare password: string;
   declare isAdmin: CreationOptional<boolean>;
   declare isTutor: CreationOptional<boolean>;
+  declare role: CreationOptional<string>;
 
   // Since TS cannot determine model association at compile time
   // we have to declare them here virtually
   // association with task
+  declare Tasks: CreationOptional<Task[]>;
   declare getTasks: HasManyGetAssociationsMixin<Task>;
   declare addTask: HasManyAddAssociationMixin<Task, number>;
   declare addTasks: HasManyAddAssociationsMixin<Task, number>;
@@ -63,6 +65,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare countTasks: HasManyCountAssociationsMixin;
   declare createTask: HasManyCreateAssociationMixin<Task, 'ownerId'>;
   // association with event
+  declare Events: CreationOptional<Event[]>;
   declare getEvents: HasManyGetAssociationsMixin<Event>;
   declare addEvent: HasManyAddAssociationMixin<Event, number>;
   declare addEvents: HasManyAddAssociationsMixin<Event, number>;
@@ -74,6 +77,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare countEvents: HasManyCountAssociationsMixin;
   declare createEvent: HasManyCreateAssociationMixin<Event, 'ownerId'>;
   // association with team
+  declare Teams: CreationOptional<Team[]>;
   declare getTeams: HasManyGetAssociationsMixin<Team>;
   declare addTeam: HasManyAddAssociationMixin<Team, number>;
   declare addTeams: HasManyAddAssociationsMixin<Team, number>;

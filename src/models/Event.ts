@@ -42,10 +42,12 @@ class Event extends Model {
   declare pointsMax: number;
   declare pointsPassed: number;
   declare visible: CreationOptional<boolean>;
+  declare readonly visibleLabel: CreationOptional<boolean>;
 
   // Since TS cannot determine model association at compile time
   // we have to declare them here virtually
   // association with team
+  declare Teams: CreationOptional<Team[]>;
   declare getTeams: HasManyGetAssociationsMixin<Team>;
   declare addTeam: HasManyAddAssociationMixin<Team, number>;
   declare addTeams: HasManyAddAssociationsMixin<Team, number>;
@@ -57,6 +59,7 @@ class Event extends Model {
   declare countTeams: HasManyCountAssociationsMixin;
   declare createTeam: HasManyCreateAssociationMixin<Team, 'ownerId'>;
   // association with test
+  declare Tests: CreationOptional<Test[]>;
   declare getTests: HasManyGetAssociationsMixin<Test>;
   declare addTest: HasManyAddAssociationMixin<Test, number>;
   declare addTests: HasManyAddAssociationsMixin<Test, number>;
@@ -68,6 +71,7 @@ class Event extends Model {
   declare countTests: HasManyCountAssociationsMixin;
   declare createTest: HasManyCreateAssociationMixin<Test, 'ownerId'>;
   // association with user
+  declare Users: CreationOptional<User[]>;
   declare getUsers: BelongsToManyGetAssociationsMixin<User>;
   declare addUser: BelongsToManyAddAssociationMixin<User, number>;
   declare addUsers: BelongsToManyAddAssociationsMixin<User, number>;

@@ -14,6 +14,7 @@ import {
   BelongsToManyRemoveAssociationMixin,
   BelongsToManyRemoveAssociationsMixin,
   BelongsToManySetAssociationsMixin,
+  CreationOptional,
 } from 'sequelize';
 import Test from './Test.js';
 import User from './User.js';
@@ -25,7 +26,7 @@ class Task extends Model {
   // Since TS cannot determine model attributes at compile time
   // we have to declare them here virtually
   declare number: number;
-  declare name: string;
+  declare readonly name: CreationOptional<string>;
   declare pointsMax: number;
 
   // Since TS cannot determine model association at compile time
@@ -36,6 +37,7 @@ class Task extends Model {
   declare setTest: BelongsToSetAssociationMixin<Test, number>;
   declare createTest: BelongsToCreateAssociationMixin<Test>;
   // association with user
+  declare Users: CreationOptional<User[]>;
   declare getUsers: BelongsToManyGetAssociationsMixin<User>;
   declare addUser: BelongsToManyAddAssociationMixin<User, number>;
   declare addUsers: BelongsToManyAddAssociationsMixin<User, number>;

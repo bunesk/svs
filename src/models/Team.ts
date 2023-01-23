@@ -14,6 +14,7 @@ import {
   BelongsToGetAssociationMixin,
   BelongsToSetAssociationMixin,
   BelongsToCreateAssociationMixin,
+  CreationOptional,
 } from 'sequelize';
 import Event from './Event.js';
 import User from './User.js';
@@ -38,6 +39,7 @@ class Team extends Model {
   declare setEvent: BelongsToSetAssociationMixin<Event, number>;
   declare createEvent: BelongsToCreateAssociationMixin<Event>;
   // association with user
+  declare Users: CreationOptional<User[]>;
   declare getUsers: BelongsToManyGetAssociationsMixin<User>;
   declare addUser: BelongsToManyAddAssociationMixin<User, number>;
   declare addUsers: BelongsToManyAddAssociationsMixin<User, number>;

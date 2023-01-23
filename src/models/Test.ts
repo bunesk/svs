@@ -26,7 +26,7 @@ class Test extends Model {
   // Since TS cannot determine model attributes at compile time
   // we have to declare them here virtually
   declare number: number;
-  declare name: string;
+  declare readonly name: CreationOptional<string>;
   declare isSheet: CreationOptional<boolean>;
 
   // Since TS cannot determine model association at compile time
@@ -37,7 +37,7 @@ class Test extends Model {
   declare setEvent: BelongsToSetAssociationMixin<Event, number>;
   declare createEvent: BelongsToCreateAssociationMixin<Event>;
   // association with task
-  declare Tasks: Task[];
+  declare Tasks: CreationOptional<Task[]>;
   declare getTasks: HasManyGetAssociationsMixin<Task>;
   declare addTask: HasManyAddAssociationMixin<Task, number>;
   declare addTasks: HasManyAddAssociationsMixin<Task, number>;
