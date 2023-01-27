@@ -82,7 +82,6 @@ const getValidationFunction = (id: string): Function | null => {
       return validateUsername;
     case 'reg_firstName':
     case 'reg_lastName':
-    case 'reg_name':
       return validateName;
     case 'reg_amountTests':
     case 'reg_amountSheets':

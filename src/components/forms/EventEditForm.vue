@@ -39,7 +39,7 @@ const submit = async () => {
   const response = await sendRequest('event', functionName, params);
   const resData = await response.json();
   if (response.status === 200) {
-    router.push('/admin/events');
+    router.back();
   } else {
     (error.value as HTMLParagraphElement).textContent = resData.message;
   }
@@ -166,8 +166,8 @@ onBeforeMount(async () => {
         class="invalid"
       ></p>
       <Button
-        label="Anlegen"
-        @blur="submit"
+        :label="id === '-1' ? 'Anlegen' : 'Aktualisieren'"
+        @click="submit"
         :disabled="!isValid"
       />
       <Button

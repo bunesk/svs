@@ -11,7 +11,7 @@
       ></Button>
     </RouterLink>
     <h1>Admin</h1>
-    <p>Willkommen auf der Admin-Seite zum Verwalten der Benutzer, Veranstaltungen, Tests etc. Bitte wählen Sie aus, wie Sie hinmöchten.</p>
+    <p>Willkommen auf der Admin-Seite zum Verwalten der Benutzer, Veranstaltungen, Tests etc. Bitte wählen Sie aus, wo Sie hinmöchten.</p>
     <RouterLink to="/admin/users">
       <Button label="Benutzer verwalten" />
     </RouterLink>&nbsp;

@@ -122,6 +122,9 @@ export const update = async (req: Request, res: Response) => {
   if (!req.body.id) {
     return sendJsonError(res, 'Veranstaltungs-ID fehlt');
   }
+  if (Number(req.body.pointsMax) < Number(req.body.pointsPassed)) {
+    return sendJsonError(res, 'Maximale Punktzahl kann nicht niedriger als notwendige Punkte zum Bestehen sein.');
+  }
   try {
     await Event.update(req.body, {
       where: {id: req.body.id},
