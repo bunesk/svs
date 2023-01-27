@@ -43,7 +43,9 @@ const submit = async () => {
     const commentTeam = document.getElementById(`rate_${team.id}_commentTeam`) as HTMLInputElement;
     const commentAdmin = document.getElementById(`rate_${team.id}_commentAdmin`) as HTMLInputElement;
     params[team.id].commentTeam = commentTeam.value;
-    params[team.id].commentAdmin = commentAdmin.value;
+    if (authUser.value.isAdmin) {
+      params[team.id].commentAdmin = commentAdmin.value;
+    }
   }
   const response = await sendRequest('test', 'rate-sheet', params);
   const resData = await response.json();
