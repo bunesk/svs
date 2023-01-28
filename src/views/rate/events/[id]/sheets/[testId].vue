@@ -114,7 +114,7 @@ onBeforeMount(async () => {
                 class="comment"
                 :for="`rate_${team.id}_commentTeam`"
               >Teamkommentar</label>
-              <InputText
+              <Textarea
                 :id="`rate_${team.id}_commentTeam`"
                 :value="team.commentTeam"
               />
@@ -127,7 +127,7 @@ onBeforeMount(async () => {
                 class="comment"
                 :for="`rate_${team.id}_commentAdmin`"
               >Adminkommentar</label>
-              <InputText
+              <Textarea
                 :id="`rate_${team.id}_commentAdmin`"
                 :value="team.commentAdmin"
               />
@@ -178,7 +178,8 @@ h1 {
       width: 8.5rem;
     }
   }
-  input {
+  input,
+  textarea {
     max-width: 20rem;
   }
   span {

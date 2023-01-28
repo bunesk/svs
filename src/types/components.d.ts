@@ -50,6 +50,7 @@ declare module '@vue/runtime-core' {
     TeamMembers: typeof import('./../components/members/TeamMembers.vue')['default']
     Teams: typeof import('./../components/Teams.vue')['default']
     Tests: typeof import('./../components/Tests.vue')['default']
+    Textarea: typeof import('primevue/textarea')['default']
     UserCreateForm: typeof import('./../components/forms/users/UserCreateForm.vue')['default']
     UserList: typeof import('./../components/lists/UserList.vue')['default']
     UserTable: typeof import('./../components/tables/UserTable.vue')['default']
