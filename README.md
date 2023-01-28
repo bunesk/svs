@@ -69,14 +69,6 @@ Then you can execute the build running:
 npm run serve
 ```
 
-If you want to build the app as a static site instead:
-
-```
-npm run build::static
-```
-
-After that you can copy the files within `dist/static` to your web server.
-
 ### Update dependencies
 
 ```
