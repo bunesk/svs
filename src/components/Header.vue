@@ -10,6 +10,7 @@
       <img src="/logo.jpg">
       <span class="title">SVS</span>
     </RouterLink>
+    <Logout />
   </header>
 </template>
 
@@ -18,6 +19,7 @@ header {
   text-align: center;
   padding: 0.75em 0;
   border-bottom: 0.1em solid var(--color-primary);
+  position: relative;
 
   :deep(a) {
     display: inline-flex;

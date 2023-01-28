@@ -34,7 +34,6 @@ import user from '../client/user';
       >
         <Button label="Test oder Blatt bewerten" />
       </RouterLink>
-      <Logout />
     </div>
     <div v-else>
       Bitte warten...

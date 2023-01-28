@@ -14,11 +14,18 @@ const logout = () => {
 
 <template>
   <Button
+    v-if="user"
     @click="logout"
     icon="pi pi-sign-out"
     label="Abmelden"
+    class="p-button-sm "
   />
 </template>
 
 <style lang="scss" scoped>
+.p-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
 </style>
