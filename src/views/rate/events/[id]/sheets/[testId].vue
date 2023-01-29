@@ -117,6 +117,7 @@ onBeforeMount(async () => {
               <Textarea
                 :id="`rate_${team.id}_commentTeam`"
                 :value="team.commentTeam"
+                :autoResize="true"
               />
             </div>
             <div
@@ -130,6 +131,7 @@ onBeforeMount(async () => {
               <Textarea
                 :id="`rate_${team.id}_commentAdmin`"
                 :value="team.commentAdmin"
+                :autoResize="true"
               />
             </div>
             <div
