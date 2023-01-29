@@ -14,7 +14,7 @@ const logout = () => {
 
 <template>
   <Button
-    v-if="user"
+    v-show="user"
     @click="logout"
     icon="pi pi-sign-out"
     label="Abmelden"

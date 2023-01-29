@@ -3,18 +3,20 @@ import user from '../client/user';
 </script>
 
 <template>
-  <div v-if="user">
-    <RouterLink :to="`/`">
-      <Button
-        class="navigation-button"
-        icon="pi pi-home"
-        label="Zurück zur Startseite"
-      ></Button>
-    </RouterLink>
-    <h1>Mein Profil</h1>
-    <UserTable :user="user" />
-    <ChangeGenderForm />
-    <ChangePasswordForm />
+  <div class="user">
+    <div v-if="user">
+      <RouterLink :to="`/`">
+        <Button
+          class="navigation-button"
+          icon="pi pi-home"
+          label="Zurück zur Startseite"
+        ></Button>
+      </RouterLink>
+      <h1>Mein Profil</h1>
+      <UserTable :user="user" />
+      <ChangeGenderForm />
+      <ChangePasswordForm />
+    </div>
   </div>
 </template>
 
