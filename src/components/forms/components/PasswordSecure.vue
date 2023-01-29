@@ -8,6 +8,11 @@ const props = defineProps({
 });
 const pwLength = 8;
 
+/**
+ * Requirements for the secure password where
+ * text is the error message and the valid function
+ * checks if it's valid.
+ */
 const requirements = [
   {
     text: `Mindestens ${pwLength} Zeichen`,
@@ -32,6 +37,9 @@ const requirements = [
   },
 ];
 
+/**
+ * If password matches all requirements.
+ */
 const valid = () => {
   for (const requirement of requirements) {
     if (!requirement.valid()) {

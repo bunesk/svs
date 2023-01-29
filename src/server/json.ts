@@ -5,6 +5,10 @@ import Event from '../models/Event.js';
 import Team from '../models/Team.js';
 import Test from '../models/Test.js';
 
+/**
+ * Attributes to use if sql select is called for event to prevent
+ * the password hash be sent to the frontend
+ */
 export const eventSelectAttributes = [
   'amountSheets',
   'amountTests',
@@ -18,6 +22,13 @@ export const eventSelectAttributes = [
   'visibleLabel',
 ];
 
+/**
+ * Copies an object, not the reference.
+ *
+ * @param object object to copy
+ * @param entriesToRemove entries to remove for copy
+ * @returns copied object
+ */
 export const copy = (object: object, entriesToRemove: Array<string> = []) => {
   const copiedObject = JSON.parse(JSON.stringify(object));
   for (const entry of entriesToRemove) {
@@ -27,11 +38,11 @@ export const copy = (object: object, entriesToRemove: Array<string> = []) => {
 };
 
 /**
- * Checks if all the passed parameters exist
+ * Checks if all the passed parameters exist by returning
+ * an error message if a parameter is missing.
  *
- * @param req
- * @param params
- * @returns
+ * @param req request
+ * @param params parameters
  */
 export const checkRequiredParams = (req: Request, params: string[]): string | undefined => {
   for (const param of params) {
@@ -41,6 +52,13 @@ export const checkRequiredParams = (req: Request, params: string[]): string | un
   }
 };
 
+/**
+ * Creates and returns an object by calling keys on the request body for all parameters.
+ *
+ * @param req request
+ * @param params parameters
+ * @returns object
+ */
 export const paramsToObject = (req: Request, params: string[]) => {
   const paramsObject: any = {};
   for (const param of params) {
@@ -49,6 +67,14 @@ export const paramsToObject = (req: Request, params: string[]) => {
   return paramsObject;
 };
 
+/**
+ * Checks if the authenticated user exists and has permission.
+ * By default it needs to be an administrator, but tutors can also be allowed.
+ *
+ * @param req request
+ * @param allowTutor also allow tutors
+ * @returns status and message
+ */
 export const isAuthenticatedAdmin = async (
   req: Request,
   allowTutor = false
@@ -66,6 +92,13 @@ export const isAuthenticatedAdmin = async (
   return {status: false, message: 'Du bist nicht berechtigt.', statusCode: 403};
 };
 
+/**
+ * Returns the event or test if authenticated user has permission. It validates authentication
+ * and allows all admins and other users which are member of the associated event.
+ *
+ * @param req request
+ * @returns status and message
+ */
 export const getEventOrTestData = async (
   req: Request
 ): Promise<{status: boolean; message?: string; statusCode?: number; item?: Event | Test}> => {
@@ -103,6 +136,14 @@ export const getEventOrTestData = async (
   return {status: false, message: 'Du bist nicht berechtigt.', statusCode: 403};
 };
 
+/**
+ * Returns the event or team if authenticated user has permission. It validates authentication
+ * and allows all admins and other users which are member of the event or team.
+ *
+ * @param req request
+ * @param memberOf joinable name
+ * @returns status and message
+ */
 export const getJoinableData = async (
   req: Request,
   memberOf: 'Event' | 'Team'

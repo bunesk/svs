@@ -5,7 +5,6 @@ Enter your models here as `.ts` files using pascal case. You can see a full exam
 For the database connection including the models the node package [Sequelize](https://sequelize.org/) is used.
 Every model must inherit from `../database/Model.js` which extends the functionality of the [sequelize model](https://sequelize.org/docs/v6/core-concepts/model-basics/) by
 adding an automatically generated integer primary key field `id`.
-It also activates the paranoid mode where items can be just soft-deleted.
 
 ```ts
 import Model from '../database/Model.js';
@@ -113,16 +112,19 @@ Also in this case we use generics importing from `sequelize` as mentioned [here]
 // Example: we have an associations between 'Foo' and 'Bar'
 // One bar belongs to one foo -> oneToOne(Foo, Bar)
 // class Foo
+declare BarId: ForeignKey<Bar['id']>;
 declare getBar: HasOneGetAssociationMixin<Bar>;
 declare setBar: HasOneSetAssociationMixin<Bar, number>;
 declare createBar: HasOneCreateAssociationMixin<Bar>;
 // class Bar
+declare FooId: ForeignKey<Foo['id']>;
 declare getFoo: BelongsToGetAssociationMixin<Foo>;
 declare setFoo: BelongsToSetAssociationMixin<Foo, number>;
 declare createFoo: BelongsToCreateAssociationMixin<Foo>;
 
 // Foos have multiple Bars but one Bar belongs to one Foo -> oneToMany(Foo, Bar)
 // class Foo
+declare Bars?: NonAttribute<Bar[]>;
 declare getBars: HasManyGetAssociationsMixin<Bar>;
 declare addBar: HasManyAddAssociationMixin<Bar, number>;
 declare addBars: HasManyAddAssociationsMixin<Bar, number>;
@@ -134,12 +136,14 @@ declare hasBars: HasManyHasAssociationsMixin<Bar, number>;
 declare countBars: HasManyCountAssociationsMixin;
 declare createBar: HasManyCreateAssociationMixin<Bar, 'ownerId'>;
 // class Bar
+declare FooId: ForeignKey<Foo['id']>;
 declare getFoo: BelongsToGetAssociationMixin<Foo>;
 declare setFoo: BelongsToSetAssociationMixin<Foo, number>;
 declare createFoo: BelongsToCreateAssociationMixin<Foo>;
 
 // Foos have multiple Bars and Bars belong to many Foo -> manyToMany(Foo, Bar)
 // class Foo
+declare Bars?: NonAttribute<Bar[]>;
 declare getBars: HasManyGetAssociationsMixin<Bar>;
 declare addBar: HasManyAddAssociationMixin<Bar, number>;
 declare addBars: HasManyAddAssociationsMixin<Bar, number>;
@@ -151,6 +155,7 @@ declare hasBars: HasManyHasAssociationsMixin<Bar, number>;
 declare countBars: HasManyCountAssociationsMixin;
 declare createBar: HasManyCreateAssociationMixin<Bar, 'ownerId'>;
 // class Bar
+declare Foos?: NonAttribute<Foo[]>;
 declare getFoos: BelongsToManyGetAssociationsMixin<Foo>;
 declare addFoo: BelongsToManyAddAssociationMixin<Foo, number>;
 declare addFoos: BelongsToManyAddAssociationsMixin<Foo, number>;

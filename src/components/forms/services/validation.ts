@@ -8,6 +8,14 @@ import {
   validateUsername,
 } from '../../../services/validators';
 
+/**
+ * Validates a form control, usually input, by adding a red border and probably showing an error message if invalid.
+ * Starts the validation after first blur and afterwards on every change until it get's valid.
+ * Checks the validity by custom functions if it's a special validated field and else by a
+ * regular validity check of the form control.
+ *
+ * @param event validation trigger event
+ */
 export const validate = (event: Event) => {
   const input = event.target as HTMLInputElement;
   if (event instanceof KeyboardEvent && !input.classList.contains('invalid-border')) {
@@ -17,6 +25,7 @@ export const validate = (event: Event) => {
   const help = document.getElementById(`${input.id}_help`) as HTMLElement;
   let validity = false;
   if (validationFunction) {
+    // has custom validation
     try {
       validationFunction(input.value);
       validity = true;
@@ -29,6 +38,7 @@ export const validate = (event: Event) => {
       }
     }
   } else {
+    // just regular validation
     validity = input.checkValidity();
     if (help) {
       if (validity) {
@@ -45,6 +55,12 @@ export const validate = (event: Event) => {
   }
 };
 
+/**
+ * Checks if all form controls of a passed form are valid.
+ *
+ * @param form form
+ * @returns if form is valid
+ */
 export const formIsValid = (form: HTMLFormElement | null): boolean => {
   if (!form?.checkValidity()) {
     return false;

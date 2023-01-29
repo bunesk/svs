@@ -7,6 +7,10 @@ dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
+/**
+ * Attributes to use if sql select is called for user to prevent
+ * the password hash be sent to the frontend
+ */
 export const userSelectAttributes = [
   'createdAt',
   'email',
@@ -24,14 +28,29 @@ export const userSelectAttributes = [
   'username',
 ];
 
+/**
+ * Creates a jwt token by given username and jwt secret.
+ *
+ * @param username username
+ * @returns jwt token
+ */
 export const createJwtToken = (username: string) => {
   return jwt.sign({username: username}, JWT_SECRET);
 };
 
+/**
+ * Encrypts a given password using SHA-256 algorithm.
+ *
+ * @param password password
+ * @returns encrpyted password
+ */
 export const encryptPassword = (password: string) => {
   return crypto.createHash('sha256').update(password).digest('base64');
 };
 
+/**
+ * Express request handler for jwt using HS-256 algorithm.
+ */
 const auth = expressjwt({
   secret: JWT_SECRET,
   algorithms: ['HS256'],

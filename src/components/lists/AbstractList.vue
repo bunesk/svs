@@ -5,12 +5,35 @@ import sendRequest from '../../client/request';
 import {FilterMatchMode} from 'primevue/api';
 
 const props = defineProps({
+  /**
+   * Item name to use for requests, i.e. user
+   */
   name: {type: String, required: true},
+  /**
+   * Plural item name label
+   */
   plural: {type: String, required: true},
+  /**
+   * Message for removing an item
+   */
   removeMessage: {type: String, required: true},
+  /**
+   * Function to execute to request items
+   * (default: get all on item name)
+   */
   readFunction: {type: Function, default: null},
+  /**
+   * Function to execute to send delete request for item
+   * (default: remove on item name)
+   */
   removeFunction: {type: Function, default: null},
+  /**
+   * Custom item name for item to view on view/edit button
+   */
   viewItemName: {type: String, default: ''},
+  /**
+   * Fields for global search to filter on
+   */
   globalFilterFields: {type: Array, default: []},
   showCreate: {type: Boolean, default: false},
   showRefresh: {type: Boolean, default: false},
