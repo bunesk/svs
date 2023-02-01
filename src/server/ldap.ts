@@ -51,7 +51,8 @@ export const login = async (username: string, password: string): Promise<any> =>
       }
 
       result.on('searchEntry', (entry) => {
-        const matriculationNumber = typeof entry.object.mail === 'string' ? entry.object.mail.split('@')[0] : '';
+        let matriculationNumber = typeof entry.object.mail === 'string' ? entry.object.mail.split('@')[0] : '';
+        matriculationNumber = Number.isNaN(Number(matriculationNumber)) ? '' : matriculationNumber;
         return resolve({
           firstName: entry.object.givenName,
           lastName: entry.object.sn,
