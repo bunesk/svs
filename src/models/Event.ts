@@ -84,7 +84,7 @@ class Event extends Model<InferAttributes<Event>, InferCreationAttributes<Event>
   declare hasUser: BelongsToManyHasAssociationMixin<User, number>;
   declare hasUsers: BelongsToManyHasAssociationsMixin<User, number>;
   declare countUsers: BelongsToManyCountAssociationsMixin;
-  declare createUser: BelongsToManyCreateAssociationMixin<Test>;
+  declare createUser: BelongsToManyCreateAssociationMixin<User>;
 }
 
 Event.init({

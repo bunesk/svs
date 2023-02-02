@@ -186,7 +186,7 @@ User.init({
     set(value) {
       if (value === 'Admin') {
         this.setDataValue('isAdmin', true);
-        this.setDataValue('isTutor', true);
+        this.setDataValue('isTutor', false);
       } else if (value === 'Tutor') {
         this.setDataValue('isAdmin', false);
         this.setDataValue('isTutor', true);
