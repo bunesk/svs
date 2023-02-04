@@ -14,7 +14,7 @@
     <p>Willkommen auf der Admin-Seite zum Verwalten der Benutzer, Veranstaltungen, Tests etc. Bitte wählen Sie aus, wo Sie hinmöchten.</p>
     <RouterLink to="/admin/users">
       <Button label="Benutzer verwalten" />
-    </RouterLink>&nbsp;
+    </RouterLink>
     <RouterLink to="/admin/events">
       <Button label="Veranstaltungen verwalten" />
     </RouterLink>
@@ -22,4 +22,8 @@
 </template>
 
 <style lang="scss" scoped>
+.p-button {
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
 </style>

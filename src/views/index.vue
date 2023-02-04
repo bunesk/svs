@@ -44,5 +44,6 @@ import user from '../client/user';
 <style lang="scss" scoped>
 .p-button {
   margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 </style>

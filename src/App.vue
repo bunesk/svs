@@ -78,4 +78,10 @@ onBeforeMount(async () => {
     }
   }
 }
+
+@media only screen and (max-width: 700px) {
+  #root {
+    width: 100%;
+  }
+}
 </style>
