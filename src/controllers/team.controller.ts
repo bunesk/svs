@@ -48,18 +48,12 @@ export const getMembers = async (req: Request, res: Response) => {
   if (!result.status) {
     return sendJsonError(res, result.message, result.statusCode);
   }
-  const members = await (result.item as Team).getUsers({attributes: userSelectAttributes});
+  const members = await (result.item as Team).getUsers({
+    attributes: userSelectAttributes,
+    order: ['firstName', 'lastName'],
+  });
   return sendJsonSuccess(res, members);
 };
-
-// export const getTeams = async (req: Request, res: Response) => {
-//   const result = await getJoinableData(req, 'Event');
-//   if (!result.status) {
-//     return sendJsonError(res, result.message, result.statusCode);
-//   }
-//   const teams = await (result.item as Event).getTeams({order: ['block']});
-//   return sendJsonSuccess(res, teams);
-// };
 
 export const create = async (req: Request, res: Response) => {
   const hasPermission = await isAuthenticatedAdmin(req);

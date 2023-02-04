@@ -27,7 +27,7 @@ export const getAll = async (req: Request, res: Response) => {
   if (!hasPermission.status) {
     return sendJsonError(res, hasPermission.message, hasPermission.statusCode);
   }
-  const users = await User.findAll({attributes: userSelectAttributes});
+  const users = await User.findAll({attributes: userSelectAttributes, order: ['firstName', 'lastName']});
   return sendJsonSuccess(res, users);
 };
 

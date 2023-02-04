@@ -86,7 +86,7 @@ export const getMembers = async (req: Request, res: Response) => {
   if (!event) {
     return sendJsonError(res, `Keine Veranstaltung mit der ID ${req.body.id} gefunden.`, 404);
   }
-  const users = await event.getUsers({attributes: userSelectAttributes});
+  const users = await event.getUsers({attributes: userSelectAttributes, order: ['firstName', 'lastName']});
   return sendJsonSuccess(res, users);
 };
 
