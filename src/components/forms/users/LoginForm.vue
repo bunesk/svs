@@ -33,6 +33,7 @@ const submit = async () => {
   <form
     ref="form"
     class="login-form"
+    @keyup.enter="form?.checkValidity() && submit()"
   >
     <div class="p-inputgroup">
       <span class="p-inputgroup-addon">

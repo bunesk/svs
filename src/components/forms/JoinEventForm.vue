@@ -26,24 +26,26 @@ const join = async () => {
 
 <template>
   <h1>Veranstaltung beitreten</h1><br>
-  <Password
-    v-model="password"
-    placeholder="Passwort"
-    :feedback="false"
-    toggleMask
-    required
-    @blur="validate"
-    @keyup="validate"
-  />&nbsp;
-  <Button
-    @click="join"
-    label="Beitreten"
-    :disabled="!password"
-  />
-  <p
-    ref="error"
-    status="invalid"
-  />
+  <form @keyup.enter="join">
+    <Password
+      v-model="password"
+      placeholder="Passwort"
+      :feedback="false"
+      toggleMask
+      required
+      @blur="validate"
+      @keyup="validate"
+    />&nbsp;
+    <Button
+      @click="join"
+      label="Beitreten"
+      :disabled="!password"
+    />
+    <p
+      ref="error"
+      status="invalid"
+    />
+  </form>
 </template>
 
 <style lang="scss" scoped>

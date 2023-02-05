@@ -32,6 +32,7 @@ const createTask = async () => {
   <form
     ref="form"
     @input="isValid = formIsValid(form)"
+    @keyup.enter="isValid && createTask()"
   >
     <div class="field">
       <label for="task_points">Maximale Punktzahl</label>

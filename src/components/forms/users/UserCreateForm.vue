@@ -53,6 +53,7 @@ const handleInput = () => {
     ref="form"
     class="register-form"
     @input="handleInput"
+    @keyup.enter="isValid && submit()"
   >
     <div class="p-fluid">
       <div class="field">

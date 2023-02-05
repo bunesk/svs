@@ -26,7 +26,7 @@ const createTeam = async () => {
 
 <template>
   <h3>Team erstellen</h3>
-  <form>
+  <form @keyup.enter="isValid && createTeam()">
     <div class="field">
       <label for="team_block">Block</label>
       <InputText

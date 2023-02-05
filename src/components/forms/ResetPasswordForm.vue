@@ -37,6 +37,7 @@ const changePassword = async () => {
     ref="form"
     class="reset-password-form"
     @input="isValid = formIsValid(form)"
+    @keyup.enter="isValid && changePassword()"
   >
     <div class="p-fluid">
       <PasswordSecure

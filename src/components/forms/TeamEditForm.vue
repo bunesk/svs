@@ -38,6 +38,7 @@ const editTeam = async () => {
   <form
     ref="form"
     @input="isValid = formIsValid(form)"
+    @keyup.enter="isValid && editTeam()"
   >
     <div class="p-fluid">
       <div class="field">
