@@ -69,7 +69,7 @@ export const create = async (req: Request, res: Response) => {
   if (!event) {
     return sendJsonError(res, `Keine Veranstaltung mit der ID ${req.body.EventId} angegeben.`);
   }
-  const max = (await Team.max('number', {where: {block: req.body.block}})) ?? '0';
+  const max = (await Team.max('number', {where: {block: req.body.block, EventId: req.body.EventId}})) ?? '0';
   try {
     const params = paramsToObject(req, [...requiredParams]);
     params.number = (max as number) + 1;
