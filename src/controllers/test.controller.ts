@@ -173,7 +173,7 @@ export const getTestRatings = async (req: Request, res: Response) => {
   const tasks = await test.getTasks();
   const pointsMax = await Task.sum('pointsMax', {where: {TestId: test.id}});
   const event = await test.getEvent();
-  const users = await event.getUsers({attributes: userSelectAttributes});
+  const users = await event.getUsers({attributes: userSelectAttributes, order: ['firstName', 'lastName']});
   const result: any = {
     users: [],
     tasks: tasks,
@@ -216,7 +216,7 @@ export const getSheetRatings = async (req: Request, res: Response) => {
   const tasks = await test.getTasks();
   const pointsMax = await Task.sum('pointsMax', {where: {TestId: test.id}});
   const event = await test.getEvent();
-  const teams = await event.getTeams();
+  const teams = await event.getTeams({order: ['block', 'number']});
   const result: any = {
     teams: [],
     tasks: tasks,
@@ -224,7 +224,7 @@ export const getSheetRatings = async (req: Request, res: Response) => {
   };
   for (const team of teams) {
     const teamData: any = copy(team);
-    const users = await team.getUsers({attributes: userSelectAttributes});
+    const users = await team.getUsers({attributes: userSelectAttributes, order: ['firstName', 'lastName']});
     teamData.users = [];
     for (const user of users) {
       if (user.isAdmin || user.isTutor) {

@@ -39,7 +39,7 @@ export const getByEvent = async (req: Request, res: Response) => {
   if (!result.status) {
     return sendJsonError(res, result.message, result.statusCode);
   }
-  const teams = await (result.item as Event).getTeams({order: ['block']});
+  const teams = await (result.item as Event).getTeams({order: ['block', 'number']});
   return sendJsonSuccess(res, teams);
 };
 
@@ -107,9 +107,9 @@ export const update = async (req: Request, res: Response) => {
       where: {id: req.body.id},
       fields: requiredParams,
     });
-    return sendJsonSuccess(res, [], 'Test erfolgreich aktualisiert.');
+    return sendJsonSuccess(res, [], 'Team erfolgreich aktualisiert.');
   } catch (e: any) {
-    const message = 'Test aktualisieren fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.';
+    const message = 'Team aktualisieren fehlgeschlagen. Bitte Eingaben überprüfen oder später erneut versuchen.';
     return sendJsonError(res, message);
   }
 };
