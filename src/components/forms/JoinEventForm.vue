@@ -26,7 +26,10 @@ const join = async () => {
 
 <template>
   <h1>Veranstaltung beitreten</h1><br>
-  <form @keyup.enter="join">
+  <form
+    @keyup.enter="password && join()"
+    @submit.prevent
+  >
     <Password
       v-model="password"
       placeholder="Passwort"

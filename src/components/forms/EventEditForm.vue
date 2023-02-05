@@ -80,7 +80,8 @@ onBeforeMount(async () => {
     ref="form"
     class="event-form"
     @input="isValid = formIsValid(form)"
-    @keyup.enter="submit"
+    @keyup.enter="isValid && submit()"
+    @submit.prevent
   >
     <div class="p-fluid">
       <div class="field">

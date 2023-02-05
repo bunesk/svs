@@ -34,6 +34,7 @@ const changePassword = async () => {
     class="change-password-form"
     @input="isValid = formIsValid(form)"
     @keyup.enter="isValid && changePassword()"
+    @submit.prevent
   >
     <div class="p-fluid">
       <div class="field">

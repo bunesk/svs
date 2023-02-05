@@ -30,7 +30,10 @@ const changeRole = async () => {
 
 <template>
   <h2>Rolle ändern</h2>
-  <form @keyup.enter="role && changeRole()">
+  <form
+    @keyup.enter="role && changeRole()"
+    @submit.prevent
+  >
     <div class="field">
       <label for="profile_role">Rolle</label>
       <Dropdown

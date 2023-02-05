@@ -58,6 +58,8 @@ onBeforeMount(async () => {
       ref="form"
       class="event-form"
       @input="isValid = formIsValid(form)"
+      @keyup.enter="isValid && submit()"
+      @submit.prevent
     >
       <div class="p-fluid">
         <Accordion v-if="users && tasks">

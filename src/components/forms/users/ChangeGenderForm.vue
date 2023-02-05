@@ -50,7 +50,10 @@ const changeGenderById = async () => {
 
 <template>
   <h2>Geschlecht ändern</h2>
-  <form @keyup.enter="gender && changeGender()">
+  <form
+    @keyup.enter="gender && changeGender()"
+    @submit.prevent
+  >
     <div class="field">
       <label for="profile_gender">Geschlecht</label>
       <Dropdown

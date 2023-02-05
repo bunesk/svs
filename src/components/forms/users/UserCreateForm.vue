@@ -54,6 +54,7 @@ const handleInput = () => {
     class="register-form"
     @input="handleInput"
     @keyup.enter="isValid && submit()"
+    @submit.prevent
   >
     <div class="p-fluid">
       <div class="field">
