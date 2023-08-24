@@ -1,6 +1,24 @@
 # SVS
 
-The SVS is a role-based adminstration tool.
+The SVS (Studentenverwaltungssystem) is a role-based adminstration tool implemented as a Single Page Application using server-side rendering.
+It was developed during a bachelor thesis from October 2022 to February 2023 at the Mannheim University of Applied Sciences.
+
+## Goal of this project
+
+The Mannheim University of Applied Sciences has been using a tool for years to manage scores that students receive for tests and sheets within an event.
+However, the previous version of the tool is older and uses technologies that are no longer state-of-the-art, such as Jakarta Servlet and JSP.
+Therefore, this tool is to be redeveloped once again using modern technologies, such as Vue.js and TypeScript.
+All functionality of the old SVS should also be available in the new one, such as an LDAP connection.
+In addition, the tool should have an intuitive and more modern design.
+
+## User roles in the SVS
+
+Users will be automatically created if they exist in the LDAP directory. Alternately they can be added by admins or register themselves.
+
+There are 3 roles for users:
+- students: are able to join events, view points for tests & sheets and see their team members
+- tutors: are able to join events, can rate tests & sheets of students
+- admins: can manage events, teams, tests & sheets (add, edit, delete)
 
 ## Used technologies
 
@@ -35,7 +53,7 @@ The recommended IDE is [VSCode](https://code.visualstudio.com/) using the follow
 
 First ensure to have [NodeJS](https://nodejs.org/en/) installed.
 It's recommended to use NodeJS 18 and the current version of NPM, required is NodeJS 16.14+.
-Also you need to have [MySQL](https://www.mysql.com/) installed.
+Also you need to have [MariaDB](https://mariadb.org/) installed.
 
 #### Install dependencies
 
